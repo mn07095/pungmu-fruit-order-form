@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>풍무농산 관리자</title>
+  <style>
+    :root {
+      --bg: #faf4ea;
+      --paper: #fffdf8;
+      --ink: #2f261d;
+      --muted: #766658;
+      --line: rgba(103, 76, 53, 0.14);
+      --accent: #d46a2e;
+      --accent-deep: #a9491f;
+      --soft: #fff4e6;
+      --leaf: #6d8b3d;
+      --warn: #bc4f2f;
+      --shadow: 0 20px 40px rgba(94, 58, 28, 0.1);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #fffaf3 0%, var(--bg) 100%);
+    }
+    .wrap {
+      width: min(1100px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+    .hero, .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(127, 62, 24, 0.97), rgba(213, 106, 46, 0.9));
+      color: #fff9f1;
+    }
+    .hero h1 {
+      margin: 10px 0 8px;
+      font-size: 30px;
+    }
+    .hero p {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(255, 246, 238, 0.9);
+    }
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .panel {
+      padding: 18px;
+    }
+    h2, h3 {
+      margin: 0 0 10px;
+    }
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .summary-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fffdf8, #fff6eb);
+    }
+    .summary-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 22px;
+    }
+    .toolbar, .settings-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    input, select, textarea, button {
+      font: inherit;
+    }
+    input, select, textarea {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(93, 70, 51, 0.18);
+      background: #fffdf9;
+      color: var(--ink);
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 15px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .primary {
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+    }
+    .secondary {
+      color: var(--accent-deep);
+      background: #fbe9dc;
+    }
+    .ghost {
+      color: var(--muted);
+      background: #f3ece3;
+    }
+    .status {
+      min-height: 20px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .product-admin-list, .order-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .product-admin-item, .order-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fffdf8, #fff7ee);
+      padding: 14px;
+    }
+    .product-admin-head, .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+    .product-admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      gap: 12px;
+      margin-top: 12px;
+      align-items: end;
+    }
+    .order-head {
+      align-items: flex-start;
+    }
+    .order-meta {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #f9eadc;
+      color: var(--accent-deep);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pill.done {
+      background: #edf4df;
+      color: var(--leaf);
+    }
+    .pill.pending {
+      background: #fff0df;
+      color: var(--warn);
+    }
+    .order-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .full {
+      grid-column: 1 / -1;
+    }
+    .hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .auth-box {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fffdf8, #fff6ec);
+    }
+    .auth-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 12px;
+    }
+    .hidden {
+      display: none !important;
+    }
+    @media (max-width: 760px) {
+      .summary-grid,
+      .settings-grid,
+      .product-admin-grid,
+      .auth-row {
+        grid-template-columns: 1fr;
+      }
+      .wrap {
+        width: min(100% - 16px, 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>🍊 풍무농산 관리자</div>
+      <h1>주문 · 재고 관리</h1>
+      <p>주문 목록 확인, 접수 상태 변경, 남은 수량 수정, 공지 문구 업데이트를 한 화면에서 관리할 수 있습니다.</p>
+      <div class="top-actions">
+        <a href="./index.html" style="text-decoration:none;"><button type="button" class="secondary">주문서 보기</button></a>
+        <button type="button" class="ghost" id="refreshBtn">새로고침</button>
+        <button type="button" class="ghost hidden" id="logoutBtn">로그아웃</button>
+      </div>
+      <div class="auth-box" id="authBox">
+        <strong>관리자 로그인</strong>
+        <div class="muted" id="authDescription">Supabase 실운영 모드에서는 로그인 후 주문 목록을 볼 수 있습니다.</div>
+        <div class="auth-row">
+          <div>
+            <label for="adminEmailInput">관리자 이메일</label>
+            <input id="adminEmailInput" type="email" placeholder="admin@example.com" />
+          </div>
+          <button type="button" class="primary" id="sendMagicLinkBtn">매직링크 보내기</button>
+          <button type="button" class="ghost" id="checkSessionBtn">로그인 확인</button>
+        </div>
+        <div class="status" id="authStatus"></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>운영 현황</h2>
+        <p class="muted" id="modeText">저장 모드 확인 중...</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="muted">전체 주문</div>
+            <strong id="totalOrders">0</strong>
+          </div>
+          <div class="summary-card">
+            <div class="muted">신규 주문</div>
+            <strong id="newOrders">0</strong>
+          </div>
+          <div class="summary-card">
+            <div class="muted">접수 완료</div>
+            <strong id="confirmedOrders">0</strong>
+          </div>
+          <div class="summary-card">
+            <div class="muted">총 주문금액</div>
+            <strong id="totalAmount">0원</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>재고 빠른 수정</h2>
+        <p class="muted">남은 수량을 직접 숫자로 바꾸고 저장하면 고객 주문서에도 같은 값이 반영됩니다. 실운영 반영은 Supabase 모드에서 공통 적용됩니다.</p>
+        <div class="product-admin-list" id="productAdminList"></div>
+        <div class="toolbar">
+          <button type="button" class="primary" id="saveInventoryBtn">재고 저장</button>
+        </div>
+        <div class="status" id="inventoryStatus"></div>
+      </section>
+
+      <section class="panel">
+        <h2>운영 설정</h2>
+        <p class="muted">관리자 페이지에서 마감/배송/문의/공지 문구도 같이 관리할 수 있습니다.</p>
+        <div class="settings-grid">
+          <div class="full">
+            <label for="descriptionInput">상단 소개 문구</label>
+            <textarea id="descriptionInput"></textarea>
+          </div>
+          <div>
+            <label for="deadlineInput">주문 마감 문구</label>
+            <input id="deadlineInput" type="text" />
+          </div>
+          <div>
+            <label for="deliveryInput">배송 일정 문구</label>
+            <input id="deliveryInput" type="text" />
+          </div>
+          <div>
+            <label for="contactInput">문의 연락처</label>
+            <input id="contactInput" type="text" />
+          </div>
+          <div>
+            <label for="paymentTitleInput">결제 안내 제목</label>
+            <input id="paymentTitleInput" type="text" />
+          </div>
+          <div class="full">
+            <label for="noticeInput">주문 안내 문구</label>
+            <textarea id="noticeInput"></textarea>
+            <div class="hint">한 줄에 1개씩 입력</div>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button type="button" class="primary" id="saveSettingsBtn">설정 저장</button>
+        </div>
+        <div class="status" id="settingsStatus"></div>
+      </section>
+
+      <section class="panel">
+        <h2>주문 목록</h2>
+        <p class="muted">고객이 주문 접수하기를 누르면 여기에 쌓입니다.</p>
+        <div class="order-list" id="orderList"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./app-config.js"></script>
+  <script src="./shared.js"></script>
+  <script src="./admin.js"></script>
+</body>
+</html>
