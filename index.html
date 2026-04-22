@@ -1350,6 +1350,24 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.18s ease;
+    }
+
+    .product-card:active .product-thumb img,
+    .event-card:active .product-thumb img {
+      transform: scale(1.03);
+    }
+
+    .product-thumb.image-failed {
+      display: grid;
+      place-items: center;
+      color: #004225;
+      background: #eef4ed;
+      font-size: 34px;
+    }
+
+    .product-thumb.image-failed::before {
+      content: attr(data-emoji);
     }
 
     .product-copy {
@@ -1585,6 +1603,7 @@
       min-height: 56px;
       border-color: #d6ddd4;
       border-radius: 8px;
+      box-shadow: none;
     }
 
     .detail-button {
@@ -1593,13 +1612,35 @@
       font-weight: 700;
     }
 
+    .detail-button:active,
+    .stepper button:active,
+    .mobile-quickbar button:active {
+      transform: translateY(1px);
+      opacity: 0.82;
+    }
+
     .stepper {
       grid-template-columns: 52px 1fr 52px;
+      overflow: hidden;
     }
 
     .stepper button {
       min-height: 54px;
       font-size: 24px;
+      border-radius: 0;
+    }
+
+    .stepper button:first-child {
+      border-right: 1px solid #edf0ec;
+    }
+
+    .stepper button:last-child {
+      border-left: 1px solid #edf0ec;
+    }
+
+    .stepper button:disabled {
+      background: #f6f7f5;
+      color: #b8beb8;
     }
 
     .qty-view {
@@ -2028,19 +2069,33 @@
     }
 
     const productImageMap = {
-      "🍓": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=360&q=80",
-      "🍇": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=360&q=80",
-      "🍊": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=360&q=80",
-      "🍎": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=360&q=80",
-      "🍐": "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?auto=format&fit=crop&w=360&q=80",
-      "🍅": "https://images.unsplash.com/photo-1546470427-e5ac89d618e8?auto=format&fit=crop&w=360&q=80",
-      "🥒": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=360&q=80",
-      "🥬": "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&w=360&q=80",
-      "default": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=360&q=80"
+      "🍓": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🍇": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🍊": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🍎": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🍐": "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🍅": "https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🥒": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🥬": "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🥕": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🥔": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "🧅": "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&crop=entropy&w=520&q=82",
+      "default": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&crop=entropy&w=520&q=82"
     };
 
     function getProductImage(product) {
-      return product.image || productImageMap[product.emoji] || productImageMap.default;
+      const name = `${product.name || ""} ${product.desc || ""}`;
+      if (product.image) return product.image;
+      if (productImageMap[product.emoji]) return productImageMap[product.emoji];
+      if (name.includes("딸기")) return productImageMap["🍓"];
+      if (name.includes("포도") || name.includes("샤인")) return productImageMap["🍇"];
+      if (name.includes("오렌지") || name.includes("감귤")) return productImageMap["🍊"];
+      if (name.includes("사과")) return productImageMap["🍎"];
+      if (name.includes("배")) return productImageMap["🍐"];
+      if (name.includes("토마토")) return productImageMap["🍅"];
+      if (name.includes("오이")) return productImageMap["🥒"];
+      if (name.includes("상추") || name.includes("쌈")) return productImageMap["🥬"];
+      return productImageMap.default;
     }
 
     function getAllOrderItems() {
@@ -2068,8 +2123,8 @@
           <article class="event-card${open ? "" : " event-closed"}">
             <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
             <div class="event-main">
-              <div class="product-thumb" aria-hidden="true">
-                <img src="${getProductImage(event)}" alt="" loading="lazy" />
+              <div class="product-thumb" data-emoji="${event.emoji || "🔥"}">
+                <img src="${getProductImage(event)}" alt="${event.name} 사진" loading="lazy" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
               </div>
               <div>
                 <h3 class="event-title">${event.name}</h3>
@@ -2138,8 +2193,8 @@
       card.innerHTML = `
         <div class="product-top">
           <div class="product-main">
-            <div class="product-thumb" aria-hidden="true">
-              <img src="${getProductImage(product)}" alt="" loading="lazy" />
+            <div class="product-thumb" data-emoji="${emoji}">
+              <img src="${getProductImage(product)}" alt="${product.name} 사진" loading="lazy" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
             </div>
             <div class="product-copy">
               <h3 class="product-title">${product.name}</h3>
