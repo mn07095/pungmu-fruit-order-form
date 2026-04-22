@@ -241,12 +241,55 @@
       background: #edf7ee;
       color: var(--leaf);
     }
+
+    /* Final order-management polish */
+    .hero {
+      border-radius: 22px;
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .top-actions a {
+      text-decoration: none !important;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid transparent;
+      box-shadow: none;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      opacity: 0.84;
+    }
+
+    .panel {
+      border-radius: 20px;
+    }
+
+    .order-card,
+    .summary-card,
+    .auth-box {
+      background: #fff;
+    }
+
+    .summary-card {
+      background: #fbfcfa;
+    }
+
+    .order-search-grid input {
+      background: #fbfcfa;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
-      <div>🍊 풍무농산 관리자</div>
+      <div>풍무농산 관리자</div>
       <h1>주문관리</h1>
       <p>주문 목록, 결제완료, 이전 주문을 이 페이지에서 관리합니다. 주문 데이터는 접수일 기준 3일간 보관됩니다.</p>
       <div class="top-actions">

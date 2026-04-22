@@ -1652,6 +1652,186 @@
       font-size: 18px;
     }
 
+    /* Final mobile commerce pass: clear labels, fewer mystery controls */
+    .icon-button {
+      width: auto;
+      min-width: 56px;
+      height: 40px;
+      min-height: 40px;
+      padding: 0 8px;
+      color: #242924;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .app-header {
+      grid-template-columns: 70px 1fr 70px;
+      min-height: 68px;
+    }
+
+    .brand-mark strong {
+      font-size: 22px;
+    }
+
+    .brand-mark span {
+      color: #4f5b50;
+      font-size: 13px;
+    }
+
+    .date-rail-wrap {
+      position: sticky;
+      top: 68px;
+      z-index: 20;
+      box-shadow: 0 4px 10px rgba(17, 24, 17, 0.03);
+    }
+
+    .date-arrow {
+      display: none;
+    }
+
+    .date-rail {
+      justify-content: flex-start;
+      padding: 9px 10px 11px;
+    }
+
+    .date-pill {
+      min-width: auto;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .date-pill strong {
+      display: inline;
+      margin-right: 4px;
+      font-size: 13px;
+    }
+
+    .panel {
+      width: min(100% - 28px, 638px);
+    }
+
+    .panel:first-child {
+      padding-top: 18px;
+    }
+
+    .product-top,
+    .event-main {
+      grid-template-columns: 118px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .product-thumb {
+      width: 118px;
+      height: 92px;
+      border-radius: 10px;
+    }
+
+    .product-title,
+    .event-title {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-size: 17px;
+      line-height: 1.32;
+    }
+
+    .product-meta {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      margin-top: 5px;
+      color: #4d554d;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .stock-badge,
+    .event-main .stock-badge {
+      display: inline-flex;
+      grid-column: 2;
+      width: fit-content;
+      margin-top: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #0f5b36;
+      background: #eef7f0;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .stock-badge.low {
+      color: #b2472f;
+      background: #fff1eb;
+    }
+
+    .stock-badge.sold-out {
+      color: #737a73;
+      background: #f1f2ef;
+    }
+
+    .product-controls {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 8px;
+      margin-top: 12px;
+      padding-left: 132px;
+    }
+
+    .detail-button,
+    .stepper {
+      min-height: 46px;
+      border-radius: 8px;
+    }
+
+    .detail-button {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .stepper {
+      grid-template-columns: 44px 1fr 44px;
+    }
+
+    .stepper button {
+      min-height: 44px;
+      font-size: 20px;
+    }
+
+    .qty-view {
+      font-size: 15px;
+    }
+
+    .mobile-quickbar {
+      grid-template-columns: 108px 1fr;
+      box-shadow: 0 -8px 24px rgba(17, 24, 17, 0.08);
+    }
+
+    .mobile-quickbar button {
+      min-height: 52px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 390px) {
+      .product-top,
+      .event-main {
+        grid-template-columns: 104px minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .product-thumb {
+        width: 104px;
+        height: 86px;
+      }
+
+      .product-controls {
+        padding-left: 116px;
+      }
+    }
+
     @media (max-width: 640px) {
       .wrap {
         width: 100%;
@@ -1738,22 +1918,20 @@
   </nav>
   <div class="wrap">
     <header class="app-header">
-      <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">☰</button>
+      <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">메뉴</button>
       <div class="brand-mark">
         <strong>풍무농산</strong>
         <span>오늘의 산지 장보기</span>
       </div>
-      <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">▢</button>
+      <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">내역</button>
     </header>
 
     <div class="date-rail-wrap">
-      <button type="button" class="date-arrow left" aria-label="이전 날짜">‹</button>
       <div class="date-rail" aria-label="주문 가능 날짜">
         <div class="date-pill active"><strong>오늘</strong><span>예약중</span></div>
         <div class="date-pill"><strong>내일</strong><span>입고예정</span></div>
         <div class="date-pill"><strong>모레</strong><span>준비중</span></div>
       </div>
-      <button type="button" class="date-arrow right" aria-label="다음 날짜">›</button>
     </div>
 
     <section class="hero">
