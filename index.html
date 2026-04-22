@@ -1336,17 +1336,27 @@
 
     .product-thumb {
       position: relative;
+      display: grid;
+      place-items: center;
       width: 132px;
       height: 98px;
       overflow: hidden;
       border: 1px solid #e2e5df;
       border-radius: 8px;
-      background: #f4f5f1;
-      color: transparent;
+      background: linear-gradient(135deg, #eef5e7, #fff7e7);
+      color: #004225;
+      font-size: 34px;
       box-shadow: none;
     }
 
+    .product-thumb::before {
+      content: attr(data-emoji);
+    }
+
     .product-thumb img {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       display: block;
       width: 100%;
       height: 100%;
@@ -2819,6 +2829,55 @@
         width: 126px;
       }
     }
+
+    .brand-showcase {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .brand-mark strong {
+        display: block !important;
+        color: #101510;
+        font-size: 21px;
+        font-weight: 950;
+      }
+
+      .brand-mark span,
+      .brand-mark .brand-logo {
+        display: none !important;
+      }
+
+      .app-header {
+        background: #fff;
+      }
+
+      .icon-button {
+        color: #101510;
+        border: 0;
+        background: transparent;
+      }
+
+      .brand-showcase {
+        display: flex;
+        justify-content: center;
+        padding: 16px 14px 8px;
+        background: #fff;
+      }
+
+      .brand-showcase img {
+        display: block;
+        width: min(240px, 70vw);
+        height: auto;
+      }
+
+      .date-rail-wrap {
+        top: 66px;
+      }
+
+      .storefront-intro {
+        padding-top: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2840,6 +2899,10 @@
       </div>
       <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">내역</button>
     </header>
+
+    <section class="brand-showcase" aria-label="풍무농산 로고">
+      <img src="./assets/pungmu-logo.svg" alt="풍무농산 청년가게" />
+    </section>
 
     <div class="date-rail-wrap">
       <div class="date-rail" aria-label="주문 가능 날짜">
@@ -3230,7 +3293,7 @@
             <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
             <div class="event-main">
               <div class="product-thumb" data-emoji="${event.emoji || "🔥"}">
-                <img src="${getProductImage(event)}" alt="${event.name} 사진" loading="lazy" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
+                <img src="${getProductImage(event)}" alt="${event.name} 사진" loading="eager" decoding="async" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
               </div>
               <div>
                 <h3 class="event-title">${event.name}</h3>
@@ -3300,7 +3363,7 @@
         <div class="product-top">
           <div class="product-main">
             <div class="product-thumb" data-emoji="${emoji}">
-              <img src="${getProductImage(product)}" alt="${product.name} 사진" loading="lazy" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
+              <img src="${getProductImage(product)}" alt="${product.name} 사진" loading="lazy" decoding="async" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
             </div>
             <div class="product-copy">
               <h3 class="product-title">${product.name}</h3>
