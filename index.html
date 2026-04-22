@@ -91,83 +91,6 @@
       line-height: 1.7;
     }
 
-    .hero-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .hero-links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      text-decoration: none;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.13);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      transition: transform 0.18s ease, background 0.18s ease;
-    }
-
-    .hero-links a:hover {
-      transform: translateY(-1px);
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .hero-fruits {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .fruit-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(255, 249, 240, 0.14);
-      border: 1px solid rgba(255, 248, 240, 0.18);
-      color: #fff8ee;
-      font-size: 13px;
-      line-height: 1;
-    }
-
-    .fruit-chip em {
-      font-style: normal;
-      font-size: 18px;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .hero-stat {
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255, 247, 236, 0.12);
-      border: 1px solid rgba(255, 248, 240, 0.16);
-    }
-
-    .hero-stat span {
-      display: block;
-      font-size: 12px;
-      color: rgba(255, 245, 236, 0.78);
-      letter-spacing: 0.06em;
-    }
-
-    .hero-stat strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 18px;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
@@ -324,6 +247,17 @@
       color: var(--muted);
       line-height: 1.55;
       font-size: 14px;
+    }
+
+    .promo-badge {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #fff0dc;
+      color: var(--accent-deep);
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .stock-badge {
@@ -653,7 +587,6 @@
     @media (max-width: 920px) {
       .grid,
       .settings-grid,
-      .hero-stats,
       .info-grid {
         grid-template-columns: 1fr;
       }
@@ -691,32 +624,12 @@
         font-size: 14px;
       }
 
-      .hero-links a,
       button,
       input,
       select,
       textarea,
       .radio-box span {
         min-height: 52px;
-      }
-
-      .hero-links {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .hero-fruits {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .hero-stat {
-        padding: 12px 14px;
-      }
-
-      .hero-stat strong {
-        font-size: 16px;
-        line-height: 1.35;
       }
 
       .product-card,
@@ -790,38 +703,7 @@
     <section class="hero">
       <span class="eyebrow">풍무농산 과일 · 신선식품 공동구매</span>
       <h1>과일주문서</h1>
-      <p id="heroDescription">
-        제철 과일과 신선 먹거리를 단지배송으로 받아보는 공동구매 주문서입니다.
-        당일 입고 상품 위주로 재고 수량을 확인하고, 주문 마감과 배송 안내를 확인한 뒤 바로 접수할 수 있게 구성했습니다.
-      </p>
-      <div class="hero-links">
-        <a id="liveLink" href="https://shoppinglive.naver.com/" target="_blank" rel="noreferrer">오늘 과일 방송 보기</a>
-        <a id="bandLink" href="https://band.us/" target="_blank" rel="noreferrer">입고 공지 보러가기</a>
-      </div>
-      <div class="hero-fruits">
-        <div class="fruit-chip"><em>🍓</em><span>제철 딸기</span></div>
-        <div class="fruit-chip"><em>🍇</em><span>프리미엄 포도</span></div>
-        <div class="fruit-chip"><em>🍎</em><span>아삭한 사과</span></div>
-        <div class="fruit-chip"><em>🍐</em><span>달큰한 배</span></div>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span>ORDER CLOSE</span>
-          <strong id="orderDeadlineHero">오늘 오후 6시 마감</strong>
-        </div>
-        <div class="hero-stat">
-          <span>DELIVERY</span>
-          <strong id="deliveryHero">오늘 저녁 7시~9시</strong>
-        </div>
-        <div class="hero-stat">
-          <span>CONTACT</span>
-          <strong id="contactHero">문의 010-0000-0000</strong>
-        </div>
-        <div class="hero-stat">
-          <span>PAYMENT</span>
-          <strong id="paymentHero">현장결제</strong>
-        </div>
-      </div>
+      <p id="heroDescription">제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있습니다.</p>
     </section>
 
     <div class="grid">
@@ -834,25 +716,13 @@
           <h3>주문 전 꼭 확인해주세요</h3>
           <ul class="notice-list" id="noticeList"></ul>
         </div>
-        <div class="info-grid">
-          <div class="info-card">
-            <span class="hint" style="margin-top:0;">주문 마감</span>
-            <strong id="orderDeadlineCard">오늘 오후 6시 마감</strong>
-          </div>
-          <div class="info-card">
-            <span class="hint" style="margin-top:0;">배송 일정</span>
-            <strong id="deliveryCard">오늘 저녁 7시~9시</strong>
-          </div>
-        </div>
         <h3 style="margin-bottom:12px;">오늘의 과일</h3>
         <div class="products" id="productList"></div>
       </section>
 
       <section class="panel">
         <h2>주문 정보 입력</h2>
-        <p class="panel-desc">
-          주문자 정보와 배송 정보를 입력하면 밴드 댓글이나 채팅으로 바로 보낼 수 있는 주문 문구를 만들 수 있습니다.
-        </p>
+        <p class="panel-desc">주문자 정보만 입력하면 바로 주문 접수됩니다.</p>
 
         <form id="orderForm">
           <div class="form-grid">
@@ -873,11 +743,6 @@
             </div>
           </div>
         </form>
-
-        <div class="mini-card">
-          <h3>입금 안내</h3>
-          <div class="hint" id="paymentGuideText">과일 주문 입금 안내 문구를 설정에서 수정할 수 있습니다.</div>
-        </div>
 
         <div class="summary-box">
           <h3>주문 요약</h3>
@@ -920,33 +785,13 @@
                 <input id="deadlineInput" type="text" />
               </div>
               <div>
-                <label for="deliveryInput">배송 일정 문구</label>
-                <input id="deliveryInput" type="text" />
-              </div>
-              <div>
                 <label for="contactInput">문의 연락처</label>
                 <input id="contactInput" type="text" />
-              </div>
-              <div>
-                <label for="paymentTitleInput">상단 결제 안내 제목</label>
-                <input id="paymentTitleInput" type="text" />
-              </div>
-              <div>
-                <label for="liveLinkInput">라이브 링크</label>
-                <input id="liveLinkInput" type="url" placeholder="https://..." />
-              </div>
-              <div>
-                <label for="bandLinkInput">밴드 링크</label>
-                <input id="bandLinkInput" type="url" placeholder="https://..." />
               </div>
               <div class="full">
                 <label for="noticeInput">주문 안내 문구</label>
                 <textarea id="noticeInput" rows="6"></textarea>
                 <div class="hint">한 줄에 안내사항 1개씩 적어주세요.</div>
-              </div>
-              <div class="full">
-                <label for="paymentGuideInput">입금 안내 문구</label>
-                <textarea id="paymentGuideInput" rows="3"></textarea>
               </div>
               <div class="full">
                 <label for="productsInput">상품 목록</label>
@@ -985,29 +830,28 @@
   <script src="./shared.js"></script>
   <script>
     const defaultSettings = {
-      description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 결제는 현장에서 진행됩니다.",
+      description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있습니다.",
       orderDeadline: "오늘 오후 6시 마감",
-      deliverySchedule: "오늘 저녁 7시~9시 순차배송",
+      deliverySchedule: "",
       contact: "문의 010-0000-0000",
-      paymentTitle: "당일입금 확인 후 접수",
-      liveLink: "https://shoppinglive.naver.com/",
-      bandLink: "https://band.us/",
+      paymentTitle: "",
+      liveLink: "",
+      bandLink: "",
       notices: [
         "과일은 당일 입고 수량 기준으로 주문을 받으며, 입금 확인 순으로 최종 확정됩니다.",
         "품목별 재고 소진 시 조기 마감 또는 품절 처리될 수 있습니다.",
         "중량과 당도는 농산물 특성상 약간의 차이가 있을 수 있습니다.",
-        "단지배송 특성상 정확한 시간 지정은 어려울 수 있으니 여유 있게 부탁드립니다.",
-        "공동현관 비밀번호 또는 호출 방법을 꼭 남겨주세요."
+        "현장결제 기준으로 주문이 접수됩니다."
       ],
       apartments: [],
-      paymentGuide: "결제는 현장에서 진행됩니다. 주문 접수 후 현장 수령/결제 안내를 확인해주세요.",
+      paymentGuide: "",
       products: [
-        { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
-        { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
-        { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
-        { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
-        { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
-        { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
+        { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12, promo: "12:00 오픈 특가" },
+        { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7, promo: "수량한정 20개" },
+        { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20, promo: "" },
+        { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9, promo: "품절임박!!" },
+        { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10, promo: "" },
+        { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8, promo: "" }
       ]
     };
 
@@ -1026,29 +870,15 @@
     const historyPanel = document.getElementById("historyPanel");
     const historyList = document.getElementById("historyList");
     const heroDescription = document.getElementById("heroDescription");
-    const liveLink = document.getElementById("liveLink");
-    const bandLink = document.getElementById("bandLink");
-    const orderDeadlineHero = document.getElementById("orderDeadlineHero");
-    const deliveryHero = document.getElementById("deliveryHero");
-    const contactHero = document.getElementById("contactHero");
-    const paymentHero = document.getElementById("paymentHero");
-    const orderDeadlineCard = document.getElementById("orderDeadlineCard");
-    const deliveryCard = document.getElementById("deliveryCard");
     const noticeList = document.getElementById("noticeList");
-    const paymentGuideText = document.getElementById("paymentGuideText");
     const settingsPanel = document.getElementById("settingsPanel");
     const settingsToggleWrap = document.getElementById("settingsToggleWrap");
     const settingsStatus = document.getElementById("settingsStatus");
 
     const storeTitleInput = document.getElementById("storeTitleInput");
     const deadlineInput = document.getElementById("deadlineInput");
-    const deliveryInput = document.getElementById("deliveryInput");
     const contactInput = document.getElementById("contactInput");
-    const paymentTitleInput = document.getElementById("paymentTitleInput");
     const noticeInput = document.getElementById("noticeInput");
-    const liveLinkInput = document.getElementById("liveLinkInput");
-    const bandLinkInput = document.getElementById("bandLinkInput");
-    const paymentGuideInput = document.getElementById("paymentGuideInput");
     const productsInput = document.getElementById("productsInput");
     const fallbackProductEmoji = "🍏";
 
@@ -1087,6 +917,7 @@
             <div class="product-copy">
               <h3 class="product-title">${product.name}</h3>
               <p class="product-meta">${product.desc}<br />판매가 ${currency.format(product.price)}원</p>
+              ${product.promo ? `<div class="promo-badge">${product.promo}</div>` : ""}
             </div>
           </div>
           <div class="stock-badge${soldOut ? " sold-out" : ""}" id="stock-${product.id}">
@@ -1126,15 +957,6 @@
 
     function applySettingsToView() {
       heroDescription.innerHTML = settings.description.replace(/\n/g, "<br />");
-      liveLink.href = settings.liveLink || "#";
-      bandLink.href = settings.bandLink || "#";
-      orderDeadlineHero.textContent = settings.orderDeadline;
-      deliveryHero.textContent = settings.deliverySchedule;
-      contactHero.textContent = settings.contact;
-      paymentHero.textContent = settings.paymentTitle;
-      orderDeadlineCard.textContent = settings.orderDeadline;
-      deliveryCard.textContent = settings.deliverySchedule;
-      paymentGuideText.textContent = settings.paymentGuide;
       renderNoticeList();
       renderProducts();
       fillSettingsForm();
@@ -1143,15 +965,10 @@
     function fillSettingsForm() {
       storeTitleInput.value = settings.description;
       deadlineInput.value = settings.orderDeadline;
-      deliveryInput.value = settings.deliverySchedule;
       contactInput.value = settings.contact;
-      paymentTitleInput.value = settings.paymentTitle;
       noticeInput.value = settings.notices.join("\n");
-      liveLinkInput.value = settings.liveLink;
-      bandLinkInput.value = settings.bandLink;
-      paymentGuideInput.value = settings.paymentGuide;
       productsInput.value = settings.products
-        .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}`)
+        .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}|${item.promo || ""}`)
         .join("\n");
     }
 
@@ -1334,11 +1151,7 @@
         "",
         "[주문 안내]",
         `주문 마감: ${settings.orderDeadline}`,
-        `배송 일정: ${settings.deliverySchedule}`,
         `문의: ${settings.contact}`,
-        "",
-        "[입금 안내]",
-        settings.paymentGuide
       ].join("\n");
 
       return {
@@ -1401,8 +1214,8 @@
       const lines = parseLines(text, "상품 목록이 비어 있습니다.");
       return lines.map((line, index) => {
         const parts = line.split("|").map((part) => part.trim());
-        const hasEmoji = parts.length === 5;
-        if (parts.length !== 4 && parts.length !== 5) {
+        const hasEmoji = parts.length >= 5;
+        if (parts.length < 4 || parts.length > 6) {
           throw new Error(`${index + 1}번째 상품 형식이 올바르지 않습니다.`);
         }
 
@@ -1411,6 +1224,7 @@
         const desc = hasEmoji ? parts[2] : parts[1];
         const price = Number((hasEmoji ? parts[3] : parts[2]).replace(/,/g, ""));
         const stock = Number((hasEmoji ? parts[4] : parts[3]).replace(/,/g, ""));
+        const promo = hasEmoji ? (parts[5] || "") : (parts[4] || "");
 
         if (Number.isNaN(price) || Number.isNaN(stock)) {
           throw new Error(`${index + 1}번째 상품의 가격 또는 재고가 숫자가 아닙니다.`);
@@ -1422,7 +1236,8 @@
           name,
           desc,
           price,
-          stock
+          stock,
+          promo
         };
       });
     }
@@ -1440,14 +1255,14 @@
         settings = {
           description: storeTitleInput.value.trim() || defaultSettings.description,
           orderDeadline: deadlineInput.value.trim() || defaultSettings.orderDeadline,
-          deliverySchedule: deliveryInput.value.trim() || defaultSettings.deliverySchedule,
+          deliverySchedule: "",
           contact: contactInput.value.trim() || defaultSettings.contact,
-          paymentTitle: paymentTitleInput.value.trim() || defaultSettings.paymentTitle,
-          liveLink: liveLinkInput.value.trim() || defaultSettings.liveLink,
-          bandLink: bandLinkInput.value.trim() || defaultSettings.bandLink,
+          paymentTitle: "",
+          liveLink: "",
+          bandLink: "",
           notices: parseLines(noticeInput.value, "주문 안내 문구가 비어 있습니다."),
           apartments: [],
-          paymentGuide: paymentGuideInput.value.trim() || defaultSettings.paymentGuide,
+          paymentGuide: "",
           products: parseProducts(productsInput.value)
         };
 

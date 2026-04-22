@@ -2,17 +2,16 @@
   const defaultSettings = {
     description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 결제는 현장에서 진행됩니다.",
     orderDeadline: "오늘 오후 6시 마감",
-    deliverySchedule: "오늘 저녁 7시~9시 순차배송",
+    deliverySchedule: "",
     contact: "문의 010-0000-0000",
-    paymentTitle: "당일입금 확인 후 접수",
+    paymentTitle: "",
     notices: [
       "과일은 당일 입고 수량 기준으로 주문을 받으며, 입금 확인 순으로 최종 확정됩니다.",
       "품목별 재고 소진 시 조기 마감 또는 품절 처리될 수 있습니다.",
       "중량과 당도는 농산물 특성상 약간의 차이가 있을 수 있습니다.",
-      "단지배송 특성상 정확한 시간 지정은 어려울 수 있으니 여유 있게 부탁드립니다.",
-      "공동현관 비밀번호 또는 호출 방법을 꼭 남겨주세요."
+      "현장결제 기준으로 주문이 접수됩니다."
     ],
-    paymentGuide: "주문 후 1시간 이내 입금 부탁드립니다.",
+    paymentGuide: "",
     apartments: [
       "풍무푸르지오",
       "풍무센트럴푸르지오",
@@ -22,12 +21,12 @@
       "기타 단지"
     ],
     products: [
-      { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
-      { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
-      { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
-      { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
-      { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
-      { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
+      { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12, promo: "12:00 오픈 특가" },
+      { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7, promo: "수량한정 20개" },
+      { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20, promo: "" },
+      { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9, promo: "품절임박!!" },
+      { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10, promo: "" },
+      { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8, promo: "" }
     ]
   };
 
@@ -53,9 +52,7 @@
 
   const descriptionInput = document.getElementById("descriptionInput");
   const deadlineInput = document.getElementById("deadlineInput");
-  const deliveryInput = document.getElementById("deliveryInput");
   const contactInput = document.getElementById("contactInput");
-  const paymentTitleInput = document.getElementById("paymentTitleInput");
   const noticeInput = document.getElementById("noticeInput");
 
   function createProductId(name, index) {
@@ -95,9 +92,7 @@
   function fillSettingsForm() {
     descriptionInput.value = settings.description;
     deadlineInput.value = settings.orderDeadline;
-    deliveryInput.value = settings.deliverySchedule;
     contactInput.value = settings.contact;
-    paymentTitleInput.value = settings.paymentTitle;
     noticeInput.value = settings.notices.join("\n");
   }
 
@@ -123,6 +118,10 @@
           <div>
             <label for="desc-${index}">설명</label>
             <input id="desc-${index}" data-field="desc" data-product-index="${index}" type="text" value="${product.desc}" />
+          </div>
+          <div>
+            <label for="promo-${index}">프로모션 문구</label>
+            <input id="promo-${index}" data-field="promo" data-product-index="${index}" type="text" value="${product.promo || ""}" placeholder="12:00 오픈 특가" />
           </div>
           <div>
             <label for="price-${index}">가격</label>
@@ -253,6 +252,7 @@
         emoji: document.getElementById(`emoji-${index}`).value.trim() || "🍏",
         name,
         desc: document.getElementById(`desc-${index}`).value.trim() || "",
+        promo: document.getElementById(`promo-${index}`).value.trim() || "",
         stock: Number(document.getElementById(`stock-${index}`).value || 0),
         price: Number(document.getElementById(`price-${index}`).value || 0)
       };
@@ -267,6 +267,7 @@
       emoji: "🍏",
       name: "새 상품",
       desc: "상품 설명을 입력해주세요",
+      promo: "",
       price: 0,
       stock: 0
     });
@@ -296,9 +297,9 @@
     try {
       settings.description = descriptionInput.value.trim() || settings.description;
       settings.orderDeadline = deadlineInput.value.trim() || settings.orderDeadline;
-      settings.deliverySchedule = deliveryInput.value.trim() || settings.deliverySchedule;
+      settings.deliverySchedule = "";
       settings.contact = contactInput.value.trim() || settings.contact;
-      settings.paymentTitle = paymentTitleInput.value.trim() || settings.paymentTitle;
+      settings.paymentTitle = "";
       settings.notices = noticeInput.value.split("\n").map((line) => line.trim()).filter(Boolean);
 
       await storage.saveSettings(settings);
