@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>풍무농산 주문서</title>
+  <link rel="icon" href="./assets/pungmu-logo.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #fbf4ea;
@@ -2364,6 +2365,37 @@
         padding-left: 124px;
       }
     }
+
+    .brand-logo {
+      display: block;
+      width: 156px;
+      height: auto;
+      margin: 0 auto;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
+    }
+
+    .brand-logo-light {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .brand-mark strong {
+        display: none;
+      }
+
+      .brand-mark span {
+        display: none;
+      }
+
+      .brand-logo {
+        width: 128px;
+        filter: none;
+      }
+
+      .app-header {
+        grid-template-columns: 58px 1fr 58px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2379,6 +2411,7 @@
     <header class="app-header">
       <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">메뉴</button>
       <div class="brand-mark">
+        <img class="brand-logo" src="./assets/pungmu-logo.svg" alt="풍무농산" />
         <strong>풍무농산</strong>
         <span>오늘의 산지 장보기</span>
       </div>

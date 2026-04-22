@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>풍무농산 관리자</title>
+  <link rel="icon" href="./assets/pungmu-logo.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #faf4ea;
@@ -417,12 +418,45 @@
     .status {
       color: #5f6b61;
     }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+    }
+
+    .admin-brand img {
+      width: 148px;
+      height: auto;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 10px 24px rgba(0, 42, 24, 0.12);
+    }
+
+    .admin-brand span {
+      color: rgba(247, 255, 248, 0.88);
+    }
+
+    @media (max-width: 760px) {
+      .admin-brand {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .admin-brand img {
+        width: 132px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
-      <div>풍무농산 관리자</div>
+      <div class="admin-brand">
+        <img src="./assets/pungmu-logo.svg" alt="풍무농산" />
+        <span>관리자</span>
+      </div>
       <h1>상품관리</h1>
       <p>주문서에 노출되는 이벤트, 과일, 채소, 운영 문구를 수정합니다. 주문 접수와 결제 처리는 오른쪽의 주문관리에서 진행합니다.</p>
       <div class="top-actions">
