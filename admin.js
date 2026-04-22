@@ -282,7 +282,7 @@
               <input id="event-limit-${index}" type="number" min="0" value="${event.stock || event.limit || 20}" />
             </div>
             <div>
-              <label>자동 할인율</label>
+              <label>할인율</label>
               <div class="pill" id="event-discount-${index}">${discount ? `${discount}% 할인` : "0%"}</div>
             </div>
           </div>
@@ -315,6 +315,9 @@
   }
 
   function renderSummary() {
+    if (!document.getElementById("totalOrders")) {
+      return;
+    }
     const total = orders.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
     const newCount = orders.filter((order) => order.status === "new").length;
     const paidCount = orders.filter((order) => order.status === "paid").length;
@@ -371,6 +374,9 @@
   }
 
   function renderOrders() {
+    if (!orderList || !paidOrderList || !previousOrderList) {
+      return;
+    }
     const todayOrders = orders.filter((order) => isToday(getOrderDate(order)));
     const previousOrders = orders.filter((order) => !isToday(getOrderDate(order)));
 
@@ -574,6 +580,9 @@
   }
 
   async function refreshOrders() {
+    if (!orderList) {
+      return;
+    }
     if (storage.isCloudMode() && !session) {
       orders = [];
       renderSummary();
@@ -665,21 +674,23 @@
   document.getElementById("saveEventsBtn").addEventListener("click", saveEvents);
   document.getElementById("saveSettingsBtn").addEventListener("click", savePageSettings);
   document.getElementById("refreshBtn").addEventListener("click", init);
-  orderSearchInput.addEventListener("input", renderOrders);
-  paidSearchInput.addEventListener("input", renderOrders);
-  previousSearchInput.addEventListener("input", renderOrders);
-  document.getElementById("clearOrderSearchBtn").addEventListener("click", () => {
-    orderSearchInput.value = "";
-    renderOrders();
-  });
-  document.getElementById("clearPaidSearchBtn").addEventListener("click", () => {
-    paidSearchInput.value = "";
-    renderOrders();
-  });
-  document.getElementById("clearPreviousSearchBtn").addEventListener("click", () => {
-    previousSearchInput.value = "";
-    renderOrders();
-  });
+  if (orderSearchInput) {
+    orderSearchInput.addEventListener("input", renderOrders);
+    paidSearchInput.addEventListener("input", renderOrders);
+    previousSearchInput.addEventListener("input", renderOrders);
+    document.getElementById("clearOrderSearchBtn").addEventListener("click", () => {
+      orderSearchInput.value = "";
+      renderOrders();
+    });
+    document.getElementById("clearPaidSearchBtn").addEventListener("click", () => {
+      paidSearchInput.value = "";
+      renderOrders();
+    });
+    document.getElementById("clearPreviousSearchBtn").addEventListener("click", () => {
+      previousSearchInput.value = "";
+      renderOrders();
+    });
+  }
   document.getElementById("sendMagicLinkBtn").addEventListener("click", sendMagicLink);
   document.getElementById("checkSessionBtn").addEventListener("click", checkSession);
   logoutBtn.addEventListener("click", logout);

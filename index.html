@@ -855,11 +855,17 @@
           <div class="form-grid">
             <div>
               <label for="customerName">주문자명</label>
-              <input id="customerName" name="customerName" type="text" placeholder="예: 김민서" required />
+              <input id="customerName" name="customerName" type="text" placeholder="예: 홍길동" required />
             </div>
             <div>
               <label for="phone">연락처</label>
               <input id="phone" name="phone" type="tel" placeholder="예: 010-1234-5678" required />
+            </div>
+            <div class="full">
+              <label class="agreement">
+                <input id="rememberProfile" name="rememberProfile" type="checkbox" />
+                <span>이름과 연락처 기억하기</span>
+              </label>
             </div>
 
             <div class="full">
@@ -936,7 +942,7 @@
 
         <div class="history-panel" id="historyPanel">
           <h3>내 주문내역</h3>
-          <div class="hint">이 휴대폰 브라우저에 저장된 주문내역입니다. 다른 기기나 브라우저에서는 보이지 않을 수 있습니다.</div>
+          <div class="hint">이 휴대폰 브라우저에 7일간 저장됩니다. 관리자 주문 데이터는 운영 기준으로 3일간 보관됩니다.</div>
           <div class="history-list" id="historyList"></div>
         </div>
 
@@ -993,6 +999,7 @@
     const currency = new Intl.NumberFormat("ko-KR");
     const manageMode = new URLSearchParams(window.location.search).has("manage");
     const customerProfileKey = "pungmu-customer-profile";
+    const customerRememberKey = "pungmu-customer-remember-profile";
     const customerHistoryKey = "pungmu-customer-order-history";
     let settings = storage.clone(defaultSettings);
     let eventRefreshTimer = null;
@@ -1096,7 +1103,8 @@
       if (item.type === "event" && !isEventOpen(item)) {
         return 0;
       }
-      return Math.min(Math.max(Number(item.stock || 0), 0), 20);
+      const stock = Math.max(Number(item.stock || 0), 0);
+      return item.type === "event" ? Math.min(stock, 1) : Math.min(stock, 20);
     }
 
     function getQuantityOptions(maxQuantity) {
@@ -1131,7 +1139,7 @@
         const open = isEventOpen(event);
         const discount = getDiscountRate(event.originalPrice, event.salePrice);
         const maxQuantity = getMaxQuantity({ ...event, type: "event" });
-        const limitText = Number(event.stock || 0) > 0 ? `수량한정 ${event.stock}개` : "수량한정";
+        const limitText = "1인 최대 1개";
         return `
           <article class="event-card${open ? "" : " event-closed"}">
             <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
@@ -1288,6 +1296,12 @@
     }
 
     function saveCustomerProfile() {
+      const remember = document.getElementById("rememberProfile").checked;
+      writeLocalJson(customerRememberKey, remember);
+      if (!remember) {
+        localStorage.removeItem(customerProfileKey);
+        return;
+      }
       const formData = new FormData(form);
       writeLocalJson(customerProfileKey, {
         customerName: String(formData.get("customerName") || ""),
@@ -1296,6 +1310,11 @@
     }
 
     function loadCustomerProfile() {
+      const remember = readLocalJson(customerRememberKey, false);
+      document.getElementById("rememberProfile").checked = Boolean(remember);
+      if (!remember) {
+        return;
+      }
       const profile = readLocalJson(customerProfileKey, null);
       if (!profile) {
         return;
@@ -1319,7 +1338,7 @@
         total_amount: order.total_amount || 0,
         status: order.status || "new"
       });
-      const cutoff = Date.now() - (3 * 24 * 60 * 60 * 1000);
+      const cutoff = Date.now() - (7 * 24 * 60 * 60 * 1000);
       const keptHistory = history.filter((item) => new Date(item.created_at).getTime() >= cutoff);
       writeLocalJson(customerHistoryKey, keptHistory.slice(0, 20));
       renderOrderHistory();
@@ -1488,12 +1507,23 @@
         const savedOrder = await storage.createOrder(draft.payload);
         saveCustomerProfile();
         saveLocalOrderHistory(savedOrder || draft.payload);
+        resetAfterSubmit();
         submitStatus.textContent = storage.isCloudMode()
           ? "주문이 접수되었습니다. 감사합니다."
           : "주문이 접수되었습니다. 이 휴대폰의 주문내역에 저장됐습니다.";
       } catch (error) {
         console.error(error);
         submitStatus.textContent = `주문 저장 실패: ${error.message}`;
+      }
+    }
+
+    function resetAfterSubmit() {
+      const remember = document.getElementById("rememberProfile").checked;
+      resetQuantities();
+      document.getElementById("agree").checked = false;
+      if (!remember) {
+        document.getElementById("customerName").value = "";
+        document.getElementById("phone").value = "";
       }
     }
 

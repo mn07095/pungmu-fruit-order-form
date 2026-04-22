@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>풍무농산 주문관리</title>
+  <style>
+    :root {
+      --bg: #fbf4ea;
+      --paper: #fffaf3;
+      --ink: #2b211a;
+      --muted: #7d6b5a;
+      --accent: #d56a2e;
+      --accent-deep: #a9491f;
+      --leaf: #5c7c2f;
+      --warn: #b44820;
+      --line: rgba(96, 70, 50, 0.14);
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(69, 45, 26, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 20% 0%, #ffe3bd 0, transparent 34%), linear-gradient(180deg, #fff7ec, var(--bg));
+    }
+    .wrap {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+    .hero, .panel {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(127, 62, 24, 0.96), rgba(213, 106, 46, 0.9));
+      color: #fffaf0;
+    }
+    .hero h1 { margin: 8px 0; font-size: clamp(30px, 6vw, 54px); }
+    .hero p { color: rgba(255, 246, 237, 0.9); line-height: 1.6; }
+    .top-actions, .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+    .layout {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .panel { padding: 18px; }
+    h2 { margin: 0 0 10px; }
+    .muted { color: var(--muted); }
+    input, button {
+      font: inherit;
+    }
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(93, 70, 51, 0.18);
+      background: #fffdf9;
+      color: var(--ink);
+    }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 15px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .primary { color: #fff; background: linear-gradient(180deg, var(--accent), var(--accent-deep)); }
+    .secondary { color: var(--accent-deep); background: #fbe9dc; }
+    .ghost { color: var(--muted); background: #f3ece3; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .summary-card, .order-card, .auth-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffdf8, #fff7ee);
+      padding: 14px;
+    }
+    .summary-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 22px;
+    }
+    .order-search-grid {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .order-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .order-meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .pill {
+      display: inline-flex;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #fff0df;
+      color: var(--warn);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .pill.done { background: #edf4df; color: var(--leaf); }
+    .order-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .auth-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 12px;
+    }
+    .status {
+      min-height: 20px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 760px) {
+      .summary-grid, .order-search-grid, .auth-row { grid-template-columns: 1fr; }
+      .wrap { width: min(100% - 16px, 100%); }
+      .hero, .panel { border-radius: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>🍊 풍무농산 관리자</div>
+      <h1>주문관리</h1>
+      <p>주문 목록, 결제완료, 이전 주문을 이 페이지에서 관리합니다. 주문 데이터는 접수일 기준 3일간 보관됩니다.</p>
+      <div class="top-actions">
+        <a href="./index.html" style="text-decoration:none;"><button type="button" class="secondary">주문서 보기</button></a>
+        <button type="button" class="ghost" id="refreshBtn">새로고침</button>
+        <a href="./admin.html" style="text-decoration:none;margin-left:auto;"><button type="button" class="primary">상품관리</button></a>
+        <button type="button" class="ghost hidden" id="logoutBtn">로그아웃</button>
+      </div>
+      <div class="auth-box" id="authBox">
+        <strong>관리자 로그인</strong>
+        <div class="muted" id="authDescription">Supabase 실운영 모드에서는 로그인 후 주문 목록을 볼 수 있습니다.</div>
+        <div class="auth-row">
+          <div>
+            <label for="adminEmailInput">관리자 이메일</label>
+            <input id="adminEmailInput" type="email" placeholder="admin@example.com" />
+          </div>
+          <button type="button" class="primary" id="sendMagicLinkBtn">매직링크 보내기</button>
+          <button type="button" class="ghost" id="checkSessionBtn">로그인 확인</button>
+        </div>
+        <div class="status" id="authStatus"></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>운영 현황</h2>
+        <p class="muted" id="modeText">저장 모드 확인 중...</p>
+        <div class="summary-grid">
+          <div class="summary-card"><div class="muted">전체 주문</div><strong id="totalOrders">0</strong></div>
+          <div class="summary-card"><div class="muted">신규 주문</div><strong id="newOrders">0</strong></div>
+          <div class="summary-card"><div class="muted">결제 완료</div><strong id="paidOrders">0</strong></div>
+          <div class="summary-card"><div class="muted">총 주문금액</div><strong id="totalAmount">0원</strong></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>주문 목록</h2>
+        <p class="muted">오늘 접수된 미결제 주문입니다. 이름, 연락처, 상품명으로 검색할 수 있습니다.</p>
+        <div class="order-search-grid">
+          <input id="orderSearchInput" type="search" placeholder="주문자명, 연락처, 상품 검색" />
+          <button type="button" class="ghost" id="clearOrderSearchBtn">검색 초기화</button>
+        </div>
+        <div class="order-list" id="orderList"></div>
+      </section>
+
+      <section class="panel">
+        <h2>결제완료</h2>
+        <p class="muted">오늘 결제완료 처리한 주문입니다. 결제 취소를 누르면 주문 목록으로 돌아갑니다.</p>
+        <div class="order-search-grid">
+          <input id="paidSearchInput" type="search" placeholder="결제완료 주문 검색" />
+          <button type="button" class="ghost" id="clearPaidSearchBtn">검색 초기화</button>
+        </div>
+        <div class="order-list" id="paidOrderList"></div>
+      </section>
+
+      <section class="panel">
+        <h2>이전 주문관리</h2>
+        <p class="muted">오늘 이전 접수 주문입니다. 주문 데이터는 접수일 기준 3일 뒤 자동 정리됩니다.</p>
+        <div class="order-search-grid">
+          <input id="previousSearchInput" type="search" placeholder="이전 주문 검색" />
+          <button type="button" class="ghost" id="clearPreviousSearchBtn">검색 초기화</button>
+        </div>
+        <div class="order-list" id="previousOrderList"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./app-config.js"></script>
+  <script src="./shared.js"></script>
+  <script src="./orders.js"></script>
+</body>
+</html>
