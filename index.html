@@ -1815,6 +1815,56 @@
       font-size: 16px;
     }
 
+    .storefront-intro {
+      padding: 14px 14px 4px;
+      background: #fff;
+    }
+
+    .storefront-intro h2 {
+      margin: 0;
+      color: #111711;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .storefront-intro p {
+      margin: 5px 0 0;
+      color: #5f6b61;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .storefront-tags {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      margin-top: 10px;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .storefront-tags::-webkit-scrollbar {
+      display: none;
+    }
+
+    .storefront-tag {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border: 1px solid #dde5dc;
+      border-radius: 999px;
+      color: #1f2c22;
+      background: #fbfcfa;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .storefront-tag.strong {
+      border-color: #004225;
+      color: #fff;
+      background: #004225;
+    }
+
     @media (max-width: 390px) {
       .product-top,
       .event-main {
@@ -1959,6 +2009,10 @@
       .date-pill {
         flex: 0 0 auto;
         padding: 7px 10px;
+      }
+
+      .storefront-intro {
+        padding-top: 12px;
       }
 
       .panel {
@@ -2127,6 +2181,18 @@
         <div class="date-pill"><strong>모레</strong><span>준비중</span></div>
       </div>
     </div>
+
+    <section class="storefront-intro" aria-label="오늘 공동구매 안내">
+      <h2>오늘의 공동구매</h2>
+      <p>풍무농산 입고 상품을 남은 수량 기준으로 예약합니다. 수량 선택 후 하단 주문하기를 눌러주세요.</p>
+      <div class="storefront-tags">
+        <span class="storefront-tag strong">전체 상품</span>
+        <span class="storefront-tag">이벤트 특가</span>
+        <span class="storefront-tag">과일</span>
+        <span class="storefront-tag">채소</span>
+        <span class="storefront-tag">현장결제</span>
+      </div>
+    </section>
 
     <section class="hero">
       <span class="eyebrow">풍무농산 과일 · 신선식품 공동구매</span>
@@ -2340,6 +2406,7 @@
     const settingsStatus = document.getElementById("settingsStatus");
     const sideMenu = document.getElementById("sideMenu");
     const menuOverlay = document.getElementById("menuOverlay");
+    const submitOrderBtnMobile = document.getElementById("submitOrderBtnMobile");
 
     const storeTitleInput = document.getElementById("storeTitleInput");
     const deadlineInput = document.getElementById("deadlineInput");
@@ -2856,6 +2923,7 @@
           </div>
         `;
         grandTotal.textContent = "0원";
+        submitOrderBtnMobile.textContent = "주문하기";
         return;
       }
 
@@ -2872,6 +2940,7 @@
       }).join("");
 
       grandTotal.textContent = `${currency.format(total)}원`;
+      submitOrderBtnMobile.textContent = `주문하기 · ${currency.format(total)}원`;
     }
 
     function getOrderDraft() {
