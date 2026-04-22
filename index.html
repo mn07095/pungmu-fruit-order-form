@@ -260,6 +260,85 @@
       font-weight: 800;
     }
 
+    .event-strip {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+
+    .event-strip:empty {
+      display: none;
+    }
+
+    .event-card {
+      border: 1px solid rgba(206, 92, 36, 0.22);
+      border-radius: 22px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255, 238, 183, 0.9), transparent 30%),
+        linear-gradient(135deg, #fff7e8, #fff0dd 58%, #ffe5ce);
+      box-shadow: 0 16px 36px rgba(166, 80, 30, 0.14);
+    }
+
+    .event-card.event-closed {
+      filter: saturate(0.85);
+      opacity: 0.84;
+    }
+
+    .event-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(169, 73, 31, 0.1);
+      color: var(--accent-deep);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .event-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      align-items: flex-end;
+    }
+
+    .event-title {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .event-price {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .event-original {
+      color: #9d7b63;
+      text-decoration: line-through;
+      font-weight: 700;
+    }
+
+    .event-sale {
+      color: var(--warn);
+      font-size: 24px;
+      font-weight: 950;
+    }
+
+    .event-discount {
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: #fff;
+      color: var(--warn);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .stock-badge {
       flex-shrink: 0;
       padding: 9px 12px;
@@ -610,6 +689,11 @@
         grid-template-columns: 1fr;
       }
 
+      .event-main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       h1 {
         font-size: 30px;
         line-height: 1.1;
@@ -716,6 +800,7 @@
           <h3>주문 전 꼭 확인해주세요</h3>
           <ul class="notice-list" id="noticeList"></ul>
         </div>
+        <div class="event-strip" id="eventList"></div>
         <h3 style="margin-bottom:12px;">오늘의 과일</h3>
         <div class="products" id="productList"></div>
       </section>
@@ -846,12 +931,12 @@
       apartments: [],
       paymentGuide: "",
       products: [
-        { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12, promo: "12:00 오픈 특가" },
-        { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7, promo: "수량한정 20개" },
-        { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20, promo: "" },
-        { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9, promo: "품절임박!!" },
-        { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10, promo: "" },
-        { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8, promo: "" }
+        { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12, event: { enabled: true, label: "12:00 오픈 특가", openTime: "12:00", originalPrice: 12000, salePrice: 8900, limit: 20 } },
+        { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7, event: { enabled: false, label: "수량한정 특가", openTime: "12:00", originalPrice: 18900, salePrice: 15900, limit: 20 } },
+        { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 7900, salePrice: 6900, limit: 20 } },
+        { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9, event: { enabled: false, label: "품절임박!!", openTime: "12:00", originalPrice: 13900, salePrice: 11900, limit: 20 } },
+        { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 12900, salePrice: 10900, limit: 20 } },
+        { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 11900, salePrice: 9900, limit: 20 } }
       ]
     };
 
@@ -861,8 +946,10 @@
     const customerProfileKey = "pungmu-customer-profile";
     const customerHistoryKey = "pungmu-customer-order-history";
     let settings = storage.clone(defaultSettings);
+    let eventRefreshTimer = null;
 
     const productList = document.getElementById("productList");
+    const eventList = document.getElementById("eventList");
     const summaryList = document.getElementById("summaryList");
     const grandTotal = document.getElementById("grandTotal");
     const form = document.getElementById("orderForm");
@@ -886,14 +973,77 @@
       return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
     }
 
+    function getDefaultEvent(product, index) {
+      const matched = defaultSettings.products.find((item) => item.id === product.id) || defaultSettings.products[index];
+      return matched && matched.event
+        ? storage.clone(matched.event)
+        : { enabled: false, label: "", openTime: "12:00", originalPrice: product.price || 0, salePrice: product.price || 0, limit: 20 };
+    }
+
+    function normalizeSettings(nextSettings) {
+      return {
+        ...defaultSettings,
+        ...nextSettings,
+        products: (nextSettings.products || defaultSettings.products).map((product, index) => ({
+          ...product,
+          event: product.event || getDefaultEvent(product, index)
+        }))
+      };
+    }
+
     function renderNoticeList() {
       noticeList.innerHTML = settings.notices
         .map((item) => `<li>${item}</li>`)
         .join("");
     }
 
-    function getQuantityOptions(stock) {
-      const max = Math.max(Math.min(stock, 20), 0);
+    function getEvent(product) {
+      return product.event && product.event.enabled ? product.event : null;
+    }
+
+    function getTodayOpenDate(openTime) {
+      const [hour = "0", minute = "0"] = String(openTime || "00:00").split(":");
+      const openDate = new Date();
+      openDate.setHours(Number(hour), Number(minute), 0, 0);
+      return openDate;
+    }
+
+    function isEventOpen(event) {
+      if (!event || !event.enabled) {
+        return false;
+      }
+      return new Date() >= getTodayOpenDate(event.openTime);
+    }
+
+    function getDiscountRate(originalPrice, salePrice) {
+      const original = Number(originalPrice || 0);
+      const sale = Number(salePrice || 0);
+      if (original <= 0 || sale <= 0 || sale >= original) {
+        return 0;
+      }
+      return Math.round(((original - sale) / original) * 100);
+    }
+
+    function getEffectivePrice(product) {
+      const event = getEvent(product);
+      if (event && isEventOpen(event) && Number(event.salePrice || 0) > 0) {
+        return Number(event.salePrice);
+      }
+      return Number(product.price || 0);
+    }
+
+    function getMaxQuantity(product) {
+      const event = getEvent(product);
+      if (event && !isEventOpen(event)) {
+        return 0;
+      }
+      const stock = Math.max(Number(product.stock || 0), 0);
+      const limit = event && Number(event.limit || 0) > 0 ? Number(event.limit) : stock;
+      return Math.min(stock, limit, 20);
+    }
+
+    function getQuantityOptions(maxQuantity) {
+      const max = Math.max(Math.min(maxQuantity, 20), 0);
       let options = '<option value="0">0개</option>';
       for (let i = 1; i <= max; i += 1) {
         options += `<option value="${i}">${i}개</option>`;
@@ -905,9 +1055,71 @@
       return product.emoji || fallbackProductEmoji;
     }
 
+    function renderEventList() {
+      const eventProducts = settings.products.filter((product) => getEvent(product));
+      eventList.innerHTML = eventProducts.map((product) => {
+        const event = getEvent(product);
+        const open = isEventOpen(event);
+        const discount = getDiscountRate(event.originalPrice, event.salePrice);
+        const maxQuantity = getMaxQuantity(product);
+        const limitText = Number(event.limit || 0) > 0 ? `수량한정 ${event.limit}개` : "수량한정";
+        return `
+          <article class="event-card${open ? "" : " event-closed"}">
+            <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
+            <div class="event-main">
+              <div>
+                <h3 class="event-title">${getProductEmoji(product)} ${product.name}</h3>
+                <div class="event-price">
+                  <span class="event-original">${currency.format(event.originalPrice)}원</span>
+                  <span class="event-sale">${currency.format(event.salePrice)}원</span>
+                  ${discount ? `<span class="event-discount">${discount}% 할인</span>` : ""}
+                </div>
+              </div>
+              <div class="stock-badge${maxQuantity <= 0 ? " sold-out" : ""}">
+                ${open ? (maxQuantity <= 0 ? "품절" : `남은 수량 ${maxQuantity}개`) : "대기중"}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function scheduleNextEventRefresh() {
+      if (eventRefreshTimer) {
+        window.clearTimeout(eventRefreshTimer);
+      }
+      const now = new Date();
+      const nextOpenDate = settings.products
+        .map((product) => getEvent(product))
+        .filter((event) => event && !isEventOpen(event))
+        .map((event) => getTodayOpenDate(event.openTime))
+        .filter((openDate) => openDate > now)
+        .sort((a, b) => a - b)[0];
+
+      if (!nextOpenDate) {
+        return;
+      }
+
+      eventRefreshTimer = window.setTimeout(() => {
+        renderProducts();
+      }, Math.max(nextOpenDate.getTime() - now.getTime() + 1000, 1000));
+    }
+
     function createProductCard(product) {
-      const soldOut = product.stock <= 0;
+      const event = getEvent(product);
+      const open = event ? isEventOpen(event) : true;
+      const maxQuantity = getMaxQuantity(product);
+      const soldOut = maxQuantity <= 0;
       const emoji = getProductEmoji(product);
+      const effectivePrice = getEffectivePrice(product);
+      const discount = event ? getDiscountRate(event.originalPrice, event.salePrice) : 0;
+      const eventPriceHtml = event
+        ? `<div class="event-price">
+            <span class="event-original">${currency.format(event.originalPrice)}원</span>
+            <span class="event-sale">${currency.format(event.salePrice)}원</span>
+            ${discount ? `<span class="event-discount">${discount}% 할인</span>` : ""}
+          </div>`
+        : "";
       const card = document.createElement("article");
       card.className = `product-card${soldOut ? " sold-out" : ""}`;
       card.innerHTML = `
@@ -916,12 +1128,13 @@
             <div class="product-thumb" aria-hidden="true">${emoji}</div>
             <div class="product-copy">
               <h3 class="product-title">${product.name}</h3>
-              <p class="product-meta">${product.desc}<br />판매가 ${currency.format(product.price)}원</p>
-              ${product.promo ? `<div class="promo-badge">${product.promo}</div>` : ""}
+              <p class="product-meta">${product.desc}<br />판매가 ${currency.format(effectivePrice)}원</p>
+              ${eventPriceHtml}
+              ${event ? `<div class="promo-badge">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`}</div>` : ""}
             </div>
           </div>
           <div class="stock-badge${soldOut ? " sold-out" : ""}" id="stock-${product.id}">
-            ${soldOut ? "품절" : `남은 수량 ${product.stock}개`}
+            ${soldOut ? (open ? "품절" : "대기중") : `남은 수량 ${maxQuantity}개`}
           </div>
         </div>
         <div class="product-controls">
@@ -931,7 +1144,7 @@
               id="qty-${product.id}"
               data-product-id="${product.id}"
               ${soldOut ? "disabled" : ""}
-            >${getQuantityOptions(product.stock)}</select>
+            >${getQuantityOptions(maxQuantity)}</select>
           </div>
           <div class="qty-wrap">
             <label>선택 금액</label>
@@ -944,6 +1157,7 @@
 
     function renderProducts() {
       productList.innerHTML = "";
+      renderEventList();
       settings.products.forEach((product) => {
         productList.appendChild(createProductCard(product));
       });
@@ -953,6 +1167,7 @@
       });
 
       updateStockAndSummary();
+      scheduleNextEventRefresh();
     }
 
     function applySettingsToView() {
@@ -968,7 +1183,7 @@
       contactInput.value = settings.contact;
       noticeInput.value = settings.notices.join("\n");
       productsInput.value = settings.products
-        .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}|${item.promo || ""}`)
+        .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}`)
         .join("\n");
     }
 
@@ -990,7 +1205,7 @@
         .map((product) => {
           const input = document.getElementById(`qty-${product.id}`);
           const qty = input ? Number(input.value || 0) : 0;
-          return { ...product, qty };
+          return { ...product, unitPrice: getEffectivePrice(product), qty };
         })
         .filter((item) => item.qty > 0);
     }
@@ -1076,13 +1291,16 @@
           return;
         }
 
-        const safeQty = Math.min(Math.max(Number(qtyInput.value || 0), 0), Math.max(product.stock, 0));
+        const maxQuantity = getMaxQuantity(product);
+        const safeQty = Math.min(Math.max(Number(qtyInput.value || 0), 0), maxQuantity);
         qtyInput.value = safeQty;
 
-        const remaining = product.stock - safeQty;
+        const remaining = maxQuantity - safeQty;
         const stockBadge = document.getElementById(`stock-${product.id}`);
-        if (product.stock <= 0) {
-          stockBadge.textContent = "품절";
+        const event = getEvent(product);
+        const eventOpen = event ? isEventOpen(event) : true;
+        if (maxQuantity <= 0) {
+          stockBadge.textContent = eventOpen ? "품절" : "대기중";
           stockBadge.classList.add("sold-out");
           stockBadge.classList.remove("low");
         } else {
@@ -1092,7 +1310,7 @@
         }
 
         const priceView = document.getElementById(`price-${product.id}`);
-        priceView.textContent = `${currency.format(product.price * safeQty)}원`;
+        priceView.textContent = `${currency.format(getEffectivePrice(product) * safeQty)}원`;
       });
 
       if (selectedItems.length === 0) {
@@ -1108,7 +1326,7 @@
 
       let total = 0;
       summaryList.innerHTML = selectedItems.map((item) => {
-        const itemTotal = item.price * item.qty;
+        const itemTotal = item.unitPrice * item.qty;
         total += itemTotal;
         return `
           <div class="summary-item">
@@ -1133,9 +1351,9 @@
       }
 
       const formData = new FormData(form);
-      const total = selectedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const total = selectedItems.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
       const itemsText = selectedItems
-        .map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.price * item.qty)}원)`)
+        .map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.unitPrice * item.qty)}원)`)
         .join("\n");
 
       const result = [
@@ -1224,7 +1442,6 @@
         const desc = hasEmoji ? parts[2] : parts[1];
         const price = Number((hasEmoji ? parts[3] : parts[2]).replace(/,/g, ""));
         const stock = Number((hasEmoji ? parts[4] : parts[3]).replace(/,/g, ""));
-        const promo = hasEmoji ? (parts[5] || "") : (parts[4] || "");
 
         if (Number.isNaN(price) || Number.isNaN(stock)) {
           throw new Error(`${index + 1}번째 상품의 가격 또는 재고가 숫자가 아닙니다.`);
@@ -1237,7 +1454,7 @@
           desc,
           price,
           stock,
-          promo
+          event: getDefaultEvent({ id: createProductId(name, index), price }, index)
         };
       });
     }
@@ -1277,7 +1494,7 @@
     }
 
     async function loadDefaults() {
-      settings = storage.clone(defaultSettings);
+      settings = normalizeSettings(storage.clone(defaultSettings));
       await storage.saveSettings(settings);
       applySettingsToView();
       settingsStatus.textContent = "기본값으로 되돌렸습니다.";
@@ -1302,7 +1519,7 @@
       if (!manageMode) {
         settingsToggleWrap.style.display = "none";
       }
-      settings = await storage.loadSettings(defaultSettings);
+      settings = normalizeSettings(await storage.loadSettings(defaultSettings));
       applySettingsToView();
       loadCustomerProfile();
       renderOrderHistory();
