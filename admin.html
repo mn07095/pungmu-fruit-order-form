@@ -166,7 +166,7 @@
     }
     .event-admin-grid {
       display: grid;
-      grid-template-columns: 1fr 120px 120px 120px 120px 120px;
+      grid-template-columns: 150px 1fr 1.2fr 120px 120px 120px 120px;
       gap: 12px;
       margin-top: 12px;
       align-items: end;
@@ -319,24 +319,36 @@
       </section>
 
       <section class="panel">
-        <h2>상품 · 재고 관리</h2>
-        <p class="muted">상품명, 이모지, 설명, 기본 가격, 남은 수량을 수정하고 상품을 추가/삭제할 수 있습니다.</p>
-        <div class="product-admin-list" id="productAdminList"></div>
-        <div class="toolbar">
-          <button type="button" class="secondary" id="addProductBtn">상품 추가</button>
-          <button type="button" class="primary" id="saveInventoryBtn">상품 저장</button>
-        </div>
-        <div class="status" id="inventoryStatus"></div>
-      </section>
-
-      <section class="panel">
         <h2>이벤트 관리</h2>
-        <p class="muted">오픈 시간, 원래 가격, 할인가, 한정 수량을 설정합니다. 할인율은 주문서에서 자동 계산됩니다.</p>
+        <p class="muted">주문서 상단에 별도로 노출되는 이벤트 상품입니다. 과일/채소 재고와 연동되지 않습니다.</p>
         <div class="event-admin-list" id="eventAdminList"></div>
         <div class="toolbar">
+          <button type="button" class="secondary" id="addEventBtn">이벤트 추가</button>
           <button type="button" class="primary" id="saveEventsBtn">이벤트 저장</button>
         </div>
         <div class="status" id="eventStatus"></div>
+      </section>
+
+      <section class="panel">
+        <h2>과일 재고 관리</h2>
+        <p class="muted">과일 상품명, 이모지, 설명, 기본 가격, 남은 수량을 수정하고 추가/삭제할 수 있습니다.</p>
+        <div class="product-admin-list" id="fruitAdminList"></div>
+        <div class="toolbar">
+          <button type="button" class="secondary" id="addFruitBtn">과일 추가</button>
+          <button type="button" class="primary" id="saveFruitBtn">과일 저장</button>
+        </div>
+        <div class="status" id="fruitStatus"></div>
+      </section>
+
+      <section class="panel">
+        <h2>채소 재고 관리</h2>
+        <p class="muted">채소 상품명, 이모지, 설명, 기본 가격, 남은 수량을 수정하고 추가/삭제할 수 있습니다.</p>
+        <div class="product-admin-list" id="vegetableAdminList"></div>
+        <div class="toolbar">
+          <button type="button" class="secondary" id="addVegetableBtn">채소 추가</button>
+          <button type="button" class="primary" id="saveVegetableBtn">채소 저장</button>
+        </div>
+        <div class="status" id="vegetableStatus"></div>
       </section>
 
       <section class="panel">

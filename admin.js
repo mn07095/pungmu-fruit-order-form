@@ -20,13 +20,20 @@
       "풍무동양파라곤",
       "기타 단지"
     ],
+    events: [
+      { id: "event-strawberry", emoji: "🍓", name: "제철 딸기 오픈 특가", desc: "12시 오픈 한정 특가 상품", label: "12:00 오픈 특가", openTime: "12:00", originalPrice: 12000, salePrice: 8900, stock: 20, enabled: true }
+    ],
     products: [
-      { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12, event: { enabled: true, label: "12:00 오픈 특가", openTime: "12:00", originalPrice: 12000, salePrice: 8900, limit: 20 } },
-      { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7, event: { enabled: false, label: "수량한정 특가", openTime: "12:00", originalPrice: 18900, salePrice: 15900, limit: 20 } },
-      { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 7900, salePrice: 6900, limit: 20 } },
-      { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9, event: { enabled: false, label: "품절임박!!", openTime: "12:00", originalPrice: 13900, salePrice: 11900, limit: 20 } },
-      { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 12900, salePrice: 10900, limit: 20 } },
-      { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8, event: { enabled: false, label: "", openTime: "12:00", originalPrice: 11900, salePrice: 9900, limit: 20 } }
+      { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
+      { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
+      { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
+      { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
+      { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
+    ],
+    vegetables: [
+      { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
+      { id: "cucumber", emoji: "🥒", name: "오이 3입", desc: "아삭한 당일 입고 채소", price: 3900, stock: 15 },
+      { id: "lettuce", emoji: "🥬", name: "상추 1봉", desc: "쌈채소 / 신선 포장", price: 2900, stock: 18 }
     ]
   };
 
@@ -36,7 +43,8 @@
   let orders = [];
 
   const modeText = document.getElementById("modeText");
-  const productAdminList = document.getElementById("productAdminList");
+  const fruitAdminList = document.getElementById("fruitAdminList");
+  const vegetableAdminList = document.getElementById("vegetableAdminList");
   const eventAdminList = document.getElementById("eventAdminList");
   const orderList = document.getElementById("orderList");
   const orderSearchInput = document.getElementById("orderSearchInput");
@@ -44,7 +52,8 @@
   const paidSearchInput = document.getElementById("paidSearchInput");
   const previousOrderList = document.getElementById("previousOrderList");
   const previousSearchInput = document.getElementById("previousSearchInput");
-  const inventoryStatus = document.getElementById("inventoryStatus");
+  const fruitStatus = document.getElementById("fruitStatus");
+  const vegetableStatus = document.getElementById("vegetableStatus");
   const eventStatus = document.getElementById("eventStatus");
   const settingsStatus = document.getElementById("settingsStatus");
   const authBox = document.getElementById("authBox");
@@ -63,21 +72,31 @@
     return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
   }
 
-  function getDefaultEvent(product, index) {
-    const matched = defaultSettings.products.find((item) => item.id === product.id) || defaultSettings.products[index];
-    return matched && matched.event
-      ? storage.clone(matched.event)
-      : { enabled: false, label: "", openTime: "12:00", originalPrice: product.price || 0, salePrice: product.price || 0, limit: 20 };
-  }
-
   function normalizeSettings(nextSettings) {
+    const vegetableIds = new Set(["tomato", "cucumber", "lettuce", "carrot", "corn", "potato", "sweet-potato", "onion", "garlic", "broccoli", "pepper", "eggplant"]);
+    const sourceProducts = nextSettings.products || defaultSettings.products;
+    const migratedVegetables = sourceProducts.filter((product) => vegetableIds.has(product.id)).map(({ event, ...product }) => product);
+    const legacyEvents = (nextSettings.products || [])
+      .filter((product) => product.event && product.event.enabled)
+      .map((product) => ({
+        id: `event-${product.id}`,
+        emoji: product.emoji || "🍏",
+        name: product.name,
+        desc: product.desc || "",
+        label: product.event.label || "오늘의 특가",
+        openTime: product.event.openTime || "12:00",
+        originalPrice: Number(product.event.originalPrice || product.price || 0),
+        salePrice: Number(product.event.salePrice || product.price || 0),
+        stock: Number(product.event.limit || product.stock || 0),
+        enabled: true
+      }));
+
     return {
       ...defaultSettings,
       ...nextSettings,
-      products: (nextSettings.products || defaultSettings.products).map((product, index) => ({
-        ...product,
-        event: product.event || getDefaultEvent(product, index)
-      }))
+      events: (nextSettings.events || legacyEvents.length) ? (nextSettings.events || legacyEvents) : defaultSettings.events,
+      products: sourceProducts.filter((product) => !vegetableIds.has(product.id)).map(({ event, ...product }) => product),
+      vegetables: nextSettings.vegetables || (migratedVegetables.length ? migratedVegetables : defaultSettings.vegetables)
     };
   }
 
@@ -127,10 +146,13 @@
     noticeInput.value = settings.notices.join("\n");
   }
 
-  function renderProducts() {
-    const emojiOptions = ["🍓", "🍇", "🍎", "🍐", "🍊", "🍅", "🍑", "🥝", "🍉", "🥭", "🍒", "🍏"];
-    productAdminList.innerHTML = settings.products.map((product, index) => `
-      <div class="product-admin-item" data-product-index="${index}">
+  const fruitEmojiOptions = ["🍓", "🍇", "🍎", "🍐", "🍊", "🍑", "🥝", "🍉", "🥭", "🍒", "🍋", "🍏"];
+  const vegetableEmojiOptions = ["🍅", "🥒", "🥬", "🥕", "🌽", "🥔", "🍠", "🧅", "🧄", "🥦", "🫑", "🍆"];
+  const eventEmojiOptions = [...fruitEmojiOptions, ...vegetableEmojiOptions, "🔥", "⏰", "⭐"];
+
+  function renderInventoryList(listEl, items, type, emojiOptions) {
+    listEl.innerHTML = items.map((product, index) => `
+      <div class="product-admin-item" data-${type}-index="${index}">
         <div class="product-admin-head">
           <div>
             <strong>${product.emoji || "🍏"} ${product.name}</strong>
@@ -140,67 +162,79 @@
         </div>
         <div class="product-admin-grid">
           <div>
-            <label for="emoji-preset-${index}">이모지</label>
+            <label for="${type}-emoji-preset-${index}">이모지</label>
             <div class="emoji-picker">
-              <select id="emoji-preset-${index}" data-emoji-preset="${index}">
+              <select id="${type}-emoji-preset-${index}" data-emoji-preset="${type}-${index}">
                 ${emojiOptions.map((emoji) => `<option value="${emoji}" ${emoji === product.emoji ? "selected" : ""}>${emoji}</option>`).join("")}
                 <option value="custom" ${emojiOptions.includes(product.emoji) ? "" : "selected"}>기타</option>
               </select>
-              <input id="emoji-${index}" data-field="emoji" data-product-index="${index}" type="text" maxlength="4" value="${product.emoji || "🍏"}" />
+              <input id="${type}-emoji-${index}" type="text" maxlength="4" value="${product.emoji || "🍏"}" />
             </div>
           </div>
           <div>
-            <label for="name-${index}">상품명</label>
-            <input id="name-${index}" data-field="name" data-product-index="${index}" type="text" value="${product.name}" />
+            <label for="${type}-name-${index}">상품명</label>
+            <input id="${type}-name-${index}" type="text" value="${product.name}" />
           </div>
           <div>
-            <label for="desc-${index}">설명</label>
-            <input id="desc-${index}" data-field="desc" data-product-index="${index}" type="text" value="${product.desc}" />
+            <label for="${type}-desc-${index}">설명</label>
+            <input id="${type}-desc-${index}" type="text" value="${product.desc}" />
           </div>
           <div>
-            <label for="price-${index}">가격</label>
-            <input id="price-${index}" data-field="price" data-product-index="${index}" type="number" min="0" value="${product.price}" />
+            <label for="${type}-price-${index}">가격</label>
+            <input id="${type}-price-${index}" type="number" min="0" value="${product.price}" />
           </div>
           <div>
-            <label for="stock-${product.id}">남은 수량</label>
-            <input id="stock-${index}" data-field="stock" data-product-index="${index}" type="number" min="0" value="${product.stock}" />
+            <label for="${type}-stock-${index}">남은 수량</label>
+            <input id="${type}-stock-${index}" type="number" min="0" value="${product.stock}" />
           </div>
         </div>
         <div class="product-admin-foot">
-          <button type="button" class="ghost" data-delete-product="${index}">삭제</button>
+          <button type="button" class="ghost" data-delete-inventory="${type}-${index}">삭제</button>
         </div>
       </div>
     `).join("");
+  }
 
-    document.querySelectorAll("[data-delete-product]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const index = Number(button.dataset.deleteProduct);
-        settings.products = collectUpdatedProducts();
-        settings.products.splice(index, 1);
-        renderProducts();
-        renderEvents();
-      });
-    });
-
+  function bindEmojiPickers() {
     document.querySelectorAll("[data-emoji-preset]").forEach((select) => {
       select.addEventListener("change", () => {
         if (select.value === "custom") {
           return;
         }
-        document.getElementById(`emoji-${select.dataset.emojiPreset}`).value = select.value;
+        document.getElementById(`${select.dataset.emojiPreset.replace(/-\d+$/, "")}-emoji-${select.dataset.emojiPreset.split("-").pop()}`).value = select.value;
       });
     });
   }
 
+  function renderProducts() {
+    renderInventoryList(fruitAdminList, settings.products, "fruit", fruitEmojiOptions);
+    renderInventoryList(vegetableAdminList, settings.vegetables, "vegetable", vegetableEmojiOptions);
+
+    document.querySelectorAll("[data-delete-inventory]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const [type, indexText] = button.dataset.deleteInventory.split("-");
+        const index = Number(indexText);
+        settings.products = collectUpdatedInventory("fruit", settings.products);
+        settings.vegetables = collectUpdatedInventory("vegetable", settings.vegetables);
+        if (type === "fruit") {
+          settings.products.splice(index, 1);
+        } else {
+          settings.vegetables.splice(index, 1);
+        }
+        renderProducts();
+      });
+    });
+    bindEmojiPickers();
+  }
+
   function renderEvents() {
-    eventAdminList.innerHTML = settings.products.map((product, index) => {
-      const event = product.event || getDefaultEvent(product, index);
+    eventAdminList.innerHTML = settings.events.map((event, index) => {
       const discount = getDiscountRate(event.originalPrice, event.salePrice);
       return `
         <div class="event-admin-item" data-event-index="${index}">
           <div class="product-admin-head">
             <div>
-              <strong>${product.emoji || "🍏"} ${product.name}</strong>
+              <strong>${event.emoji || "🔥"} ${event.name}</strong>
               <div class="muted">${event.enabled ? "주문서 상단에 노출" : "이벤트 꺼짐"} · ${discount ? `${discount}% 할인` : "할인율 없음"}</div>
             </div>
             <label class="pill" for="event-enabled-${index}">
@@ -209,6 +243,24 @@
             </label>
           </div>
           <div class="event-admin-grid">
+            <div>
+              <label for="event-emoji-preset-${index}">이모지</label>
+              <div class="emoji-picker">
+                <select id="event-emoji-preset-${index}" data-emoji-preset="event-${index}">
+                  ${eventEmojiOptions.map((emoji) => `<option value="${emoji}" ${emoji === event.emoji ? "selected" : ""}>${emoji}</option>`).join("")}
+                  <option value="custom" ${eventEmojiOptions.includes(event.emoji) ? "" : "selected"}>기타</option>
+                </select>
+                <input id="event-emoji-${index}" type="text" maxlength="4" value="${event.emoji || "🔥"}" />
+              </div>
+            </div>
+            <div>
+              <label for="event-name-${index}">이벤트 상품명</label>
+              <input id="event-name-${index}" type="text" value="${event.name || ""}" placeholder="제철 딸기 오픈 특가" />
+            </div>
+            <div>
+              <label for="event-desc-${index}">설명</label>
+              <input id="event-desc-${index}" type="text" value="${event.desc || ""}" placeholder="주문서 이벤트 영역에만 표시" />
+            </div>
             <div>
               <label for="event-label-${index}">이벤트 문구</label>
               <input id="event-label-${index}" type="text" value="${event.label || ""}" placeholder="12:00 오픈 특가" />
@@ -219,24 +271,28 @@
             </div>
             <div>
               <label for="event-original-${index}">원래 가격</label>
-              <input id="event-original-${index}" data-discount-source="${index}" type="number" min="0" value="${event.originalPrice || product.price || 0}" />
+              <input id="event-original-${index}" data-discount-source="${index}" type="number" min="0" value="${event.originalPrice || 0}" />
             </div>
             <div>
               <label for="event-sale-${index}">할인가</label>
-              <input id="event-sale-${index}" data-discount-source="${index}" type="number" min="0" value="${event.salePrice || product.price || 0}" />
+              <input id="event-sale-${index}" data-discount-source="${index}" type="number" min="0" value="${event.salePrice || 0}" />
             </div>
             <div>
               <label for="event-limit-${index}">한정 수량</label>
-              <input id="event-limit-${index}" type="number" min="0" value="${event.limit || 20}" />
+              <input id="event-limit-${index}" type="number" min="0" value="${event.stock || event.limit || 20}" />
             </div>
             <div>
               <label>자동 할인율</label>
               <div class="pill" id="event-discount-${index}">${discount ? `${discount}% 할인` : "0%"}</div>
             </div>
           </div>
+          <div class="product-admin-foot">
+            <button type="button" class="ghost" data-delete-event="${index}">삭제</button>
+          </div>
         </div>
       `;
     }).join("");
+    bindEmojiPickers();
 
     document.querySelectorAll("[data-discount-source]").forEach((input) => {
       input.addEventListener("input", () => {
@@ -246,6 +302,14 @@
           document.getElementById(`event-sale-${index}`).value
         );
         document.getElementById(`event-discount-${index}`).textContent = discount ? `${discount}% 할인` : "0%";
+      });
+    });
+
+    document.querySelectorAll("[data-delete-event]").forEach((button) => {
+      button.addEventListener("click", () => {
+        settings.events = collectUpdatedEvents();
+        settings.events.splice(Number(button.dataset.deleteEvent), 1);
+        renderEvents();
       });
     });
   }
@@ -389,65 +453,88 @@
     });
   }
 
-  function collectUpdatedProducts() {
-    return settings.products.map((product, index) => {
-      const name = document.getElementById(`name-${index}`).value.trim() || product.name;
+  function collectUpdatedInventory(type, items) {
+    return items.map((product, index) => {
+      const name = document.getElementById(`${type}-name-${index}`).value.trim() || product.name;
       return {
         ...product,
         id: product.id || createProductId(name, index),
-        emoji: document.getElementById(`emoji-${index}`).value.trim() || "🍏",
+        emoji: document.getElementById(`${type}-emoji-${index}`).value.trim() || "🍏",
         name,
-        desc: document.getElementById(`desc-${index}`).value.trim() || "",
-        stock: Number(document.getElementById(`stock-${index}`).value || 0),
-        price: Number(document.getElementById(`price-${index}`).value || 0),
-        event: product.event || getDefaultEvent(product, index)
+        desc: document.getElementById(`${type}-desc-${index}`).value.trim() || "",
+        stock: Number(document.getElementById(`${type}-stock-${index}`).value || 0),
+        price: Number(document.getElementById(`${type}-price-${index}`).value || 0)
       };
     });
   }
 
-  function collectUpdatedEvents(products = settings.products) {
-    return products.map((product, index) => ({
-      ...product,
-      event: {
-        enabled: document.getElementById(`event-enabled-${index}`)?.checked || false,
-        label: document.getElementById(`event-label-${index}`)?.value.trim() || "",
-        openTime: document.getElementById(`event-open-${index}`)?.value || "12:00",
-        originalPrice: Number(document.getElementById(`event-original-${index}`)?.value || product.price || 0),
-        salePrice: Number(document.getElementById(`event-sale-${index}`)?.value || product.price || 0),
-        limit: Number(document.getElementById(`event-limit-${index}`)?.value || 0)
-      }
+  function collectUpdatedEvents() {
+    return settings.events.map((event, index) => ({
+      ...event,
+      id: event.id || createProductId(document.getElementById(`event-name-${index}`)?.value || "event", index),
+      emoji: document.getElementById(`event-emoji-${index}`)?.value.trim() || "🔥",
+      name: document.getElementById(`event-name-${index}`)?.value.trim() || event.name || "새 이벤트",
+      desc: document.getElementById(`event-desc-${index}`)?.value.trim() || "",
+      enabled: document.getElementById(`event-enabled-${index}`)?.checked || false,
+      label: document.getElementById(`event-label-${index}`)?.value.trim() || "",
+      openTime: document.getElementById(`event-open-${index}`)?.value || "12:00",
+      originalPrice: Number(document.getElementById(`event-original-${index}`)?.value || 0),
+      salePrice: Number(document.getElementById(`event-sale-${index}`)?.value || 0),
+      stock: Number(document.getElementById(`event-limit-${index}`)?.value || 0)
     }));
   }
 
-  function addProduct() {
-    settings.products = collectUpdatedProducts();
-    const index = settings.products.length;
-    settings.products.push({
-      id: createProductId("새 상품", index),
-      emoji: "🍏",
-      name: "새 상품",
+  function addInventory(type) {
+    settings.products = collectUpdatedInventory("fruit", settings.products);
+    settings.vegetables = collectUpdatedInventory("vegetable", settings.vegetables);
+    const target = type === "fruit" ? settings.products : settings.vegetables;
+    const emoji = type === "fruit" ? "🍎" : "🥬";
+    const label = type === "fruit" ? "새 과일" : "새 채소";
+    const index = target.length;
+    target.push({
+      id: createProductId(label, index),
+      emoji,
+      name: label,
       desc: "상품 설명을 입력해주세요",
       price: 0,
-      stock: 0,
-      event: { enabled: false, label: "", openTime: "12:00", originalPrice: 0, salePrice: 0, limit: 20 }
+      stock: 0
     });
     renderProducts();
+  }
+
+  function addEvent() {
+    settings.events = collectUpdatedEvents();
+    const index = settings.events.length;
+    settings.events.push({
+      id: createProductId("새 이벤트", index),
+      emoji: "🔥",
+      name: "새 이벤트",
+      desc: "이벤트 설명을 입력해주세요",
+      label: "오픈 특가",
+      openTime: "12:00",
+      originalPrice: 0,
+      salePrice: 0,
+      stock: 20,
+      enabled: true
+    });
     renderEvents();
   }
 
-  async function saveInventory() {
+  async function saveInventory(type) {
     if (storage.isCloudMode() && !session) {
-      inventoryStatus.textContent = "먼저 관리자 로그인을 완료해주세요.";
+      const statusEl = type === "fruit" ? fruitStatus : vegetableStatus;
+      statusEl.textContent = "먼저 관리자 로그인을 완료해주세요.";
       return;
     }
+    const statusEl = type === "fruit" ? fruitStatus : vegetableStatus;
     try {
-      settings.products = collectUpdatedProducts();
+      settings.products = collectUpdatedInventory("fruit", settings.products);
+      settings.vegetables = collectUpdatedInventory("vegetable", settings.vegetables);
       await storage.saveSettings(settings);
-      inventoryStatus.textContent = "재고와 가격을 저장했습니다.";
+      statusEl.textContent = type === "fruit" ? "과일 재고를 저장했습니다." : "채소 재고를 저장했습니다.";
       renderProducts();
-      renderEvents();
     } catch (error) {
-      inventoryStatus.textContent = `재고 저장 실패: ${error.message}`;
+      statusEl.textContent = `재고 저장 실패: ${error.message}`;
     }
   }
 
@@ -457,10 +544,9 @@
       return;
     }
     try {
-      settings.products = collectUpdatedEvents(collectUpdatedProducts());
+      settings.events = collectUpdatedEvents();
       await storage.saveSettings(settings);
       eventStatus.textContent = "이벤트를 저장했습니다.";
-      renderProducts();
       renderEvents();
     } catch (error) {
       eventStatus.textContent = `이벤트 저장 실패: ${error.message}`;
@@ -571,8 +657,11 @@
     await refreshOrders();
   }
 
-  document.getElementById("saveInventoryBtn").addEventListener("click", saveInventory);
-  document.getElementById("addProductBtn").addEventListener("click", addProduct);
+  document.getElementById("saveFruitBtn").addEventListener("click", () => saveInventory("fruit"));
+  document.getElementById("addFruitBtn").addEventListener("click", () => addInventory("fruit"));
+  document.getElementById("saveVegetableBtn").addEventListener("click", () => saveInventory("vegetable"));
+  document.getElementById("addVegetableBtn").addEventListener("click", () => addInventory("vegetable"));
+  document.getElementById("addEventBtn").addEventListener("click", addEvent);
   document.getElementById("saveEventsBtn").addEventListener("click", saveEvents);
   document.getElementById("saveSettingsBtn").addEventListener("click", savePageSettings);
   document.getElementById("refreshBtn").addEventListener("click", init);
