@@ -271,6 +271,99 @@
         width: min(100% - 16px, 100%);
       }
     }
+
+    /* 풍무농산 운영 페이지 톤 */
+    :root {
+      --bg: #f2f5ee;
+      --paper: #ffffff;
+      --ink: #172019;
+      --muted: #647064;
+      --line: rgba(23, 54, 33, 0.13);
+      --accent: #00643b;
+      --accent-deep: #003f26;
+      --soft: #edf7ee;
+      --leaf: #0b6b3a;
+      --warn: #d0442e;
+      --shadow: 0 16px 34px rgba(0, 42, 24, 0.09);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 12% -8%, rgba(183, 222, 149, 0.36), transparent 30%),
+        linear-gradient(180deg, #fbfaf5, var(--bg));
+    }
+
+    .wrap {
+      width: min(1160px, calc(100% - 28px));
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.2), transparent 26%),
+        linear-gradient(135deg, #003f26, #0f6d3d 62%, #6c8d39);
+      color: #f7fff8;
+    }
+
+    .hero p {
+      color: rgba(247, 255, 248, 0.86);
+    }
+
+    .panel,
+    .summary-card,
+    .product-admin-item,
+    .event-admin-item,
+    .order-card,
+    .auth-box {
+      background: #fff;
+      border-color: var(--line);
+      box-shadow: 0 10px 26px rgba(0, 42, 24, 0.05);
+    }
+
+    input,
+    select,
+    textarea {
+      border-color: rgba(0, 66, 37, 0.16);
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: rgba(0, 100, 59, 0.45);
+      box-shadow: 0 0 0 4px rgba(0, 100, 59, 0.1);
+    }
+
+    .primary {
+      background: linear-gradient(180deg, #00643b, #003f26);
+    }
+
+    .secondary {
+      color: var(--accent-deep);
+      background: #fff;
+      border: 1px solid rgba(0, 66, 37, 0.22);
+    }
+
+    .ghost {
+      color: var(--muted);
+      background: #eef3ed;
+    }
+
+    .nav-tab {
+      background: #003f26;
+      box-shadow: 0 10px 22px rgba(0, 63, 38, 0.22);
+    }
+
+    .pill,
+    .pill.done {
+      background: var(--soft);
+      color: var(--accent-deep);
+    }
+
+    .pill.pending {
+      background: #fff0df;
+      color: var(--warn);
+    }
   </style>
 </head>
 <body>

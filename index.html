@@ -700,21 +700,480 @@
       }
     }
 
+    .app-header,
+    .date-rail,
+    .menu-overlay,
+    .side-menu,
+    .quick-links {
+      display: none;
+    }
+
+    .qty-select {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      border: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      align-items: center;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(0, 66, 37, 0.18);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .stepper button {
+      min-height: 52px;
+      padding: 0;
+      border-radius: 0;
+      color: var(--brand, #004225);
+      background: transparent;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .stepper button:disabled {
+      color: #b8c3b7;
+      cursor: not-allowed;
+    }
+
+    .qty-view {
+      text-align: center;
+      color: var(--brand, #004225);
+      font-weight: 900;
+    }
+
+    /* 풍무농산 mobile storefront refresh */
+    :root {
+      --bg: #f6f4ec;
+      --panel: #ffffff;
+      --panel-strong: #fffef9;
+      --ink: #172019;
+      --muted: #647064;
+      --line: rgba(23, 54, 33, 0.13);
+      --accent: #00643b;
+      --accent-deep: #003f26;
+      --accent-soft: #e7f3e9;
+      --warn: #d0442e;
+      --leaf: #0b6b3a;
+      --leaf-soft: #edf7ee;
+      --berry: #c8454f;
+      --brand: #004225;
+      --brand-bright: #12a060;
+      --cream: #fbf7eb;
+      --shadow: 0 16px 34px rgba(0, 42, 24, 0.09);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 15% -10%, rgba(183, 222, 149, 0.35), transparent 32%),
+        linear-gradient(180deg, #fbfaf5 0%, #f1f4ed 100%);
+    }
+
+    .wrap {
+      width: min(720px, 100%);
+      padding: 0 0 112px;
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      align-items: center;
+      min-height: 76px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto;
+      border-radius: 14px;
+      color: var(--brand);
+      background: transparent;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .brand-mark {
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .brand-mark strong {
+      display: block;
+      color: var(--brand);
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .date-rail {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 16px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.8);
+      scrollbar-width: none;
+    }
+
+    .date-pill {
+      flex: 0 0 auto;
+      min-width: 86px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--muted);
+      background: #fff;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .date-pill.active {
+      border-color: var(--brand);
+      color: #fff;
+      background: var(--brand);
+      box-shadow: 0 10px 20px rgba(0, 66, 37, 0.18);
+    }
+
+    .date-pill strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .hero {
+      margin: 16px 16px 10px;
+      padding: 20px;
+      border: 1px solid rgba(0, 66, 37, 0.12);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.22), transparent 26%),
+        linear-gradient(135deg, #003f26, #0f6d3d 58%, #6c8d39);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      background: rgba(255, 255, 255, 0.14);
+      color: #e8fff0;
+    }
+
+    h1 {
+      margin-top: 10px;
+      font-size: 34px;
+    }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .quick-links a {
+      padding: 11px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 14px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      text-decoration: none;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .grid {
+      display: block;
+      margin-top: 0;
+    }
+
+    .panel {
+      margin: 12px 16px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .panel h2 {
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-desc {
+      font-size: 14px;
+    }
+
+    .order-meta-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 12px 0;
+    }
+
+    .order-meta-card,
+    .notice-box,
+    .summary-box,
+    .order-result,
+    .history-panel,
+    .mini-card {
+      border-color: var(--line);
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0, 42, 24, 0.05);
+    }
+
+    .event-strip,
+    .products {
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .event-card,
+    .product-card {
+      border-width: 0 0 1px;
+      border-color: var(--line);
+      border-radius: 0;
+      padding: 18px 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .event-card {
+      background: linear-gradient(90deg, rgba(255, 247, 218, 0.86), rgba(255, 255, 255, 0));
+    }
+
+    .product-card::before {
+      display: none;
+    }
+
+    .product-top,
+    .event-main {
+      align-items: flex-start;
+      padding-right: 0;
+    }
+
+    .product-title,
+    .event-title {
+      font-size: 19px;
+      line-height: 1.32;
+      letter-spacing: -0.03em;
+    }
+
+    .product-thumb {
+      width: 92px;
+      height: 72px;
+      border: 1px solid rgba(0, 66, 37, 0.12);
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.9), transparent 24%),
+        linear-gradient(135deg, #eef6df, #f8efd7);
+      font-size: 38px;
+    }
+
+    .product-meta {
+      margin-top: 5px;
+      color: #1f2b22;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .stock-badge {
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--brand);
+      font-size: 15px;
+      font-weight: 950;
+    }
+
+    .stock-badge.low {
+      background: transparent;
+      color: var(--warn);
+    }
+
+    .stock-badge.sold-out {
+      background: transparent;
+      color: #8a9188;
+    }
+
+    .product-controls {
+      grid-template-columns: minmax(110px, 1fr) minmax(190px, 1fr) auto;
+      align-items: center;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    .product-controls label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .detail-button {
+      min-height: 52px;
+      color: var(--brand);
+      background: #fff;
+      border: 1px solid rgba(0, 66, 37, 0.18);
+    }
+
+    .reset-mini {
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #f8faf6;
+      font-size: 13px;
+    }
+
+    .summary-price {
+      display: none;
+    }
+
+    .checkout-panel {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    input,
+    select,
+    textarea {
+      border-color: rgba(0, 66, 37, 0.16);
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(0, 100, 59, 0.45);
+      box-shadow: 0 0 0 4px rgba(0, 100, 59, 0.1);
+    }
+
+    .primary {
+      background: linear-gradient(180deg, #00643b, #003f26);
+    }
+
+    .secondary {
+      color: var(--brand);
+      background: #fff;
+      border: 1px solid rgba(0, 66, 37, 0.22);
+    }
+
+    .ghost {
+      color: var(--muted);
+      background: #eef3ed;
+    }
+
+    .mobile-quickbar {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 10px;
+      width: min(720px, 100%);
+      transform: translateX(-50%);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(14px);
+    }
+
+    .mobile-quickbar button {
+      min-height: 56px;
+      border-radius: 15px;
+      font-size: 17px;
+      font-weight: 950;
+    }
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, 0.36);
+    }
+
+    .menu-overlay.open {
+      display: block;
+    }
+
+    .side-menu {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 41;
+      display: block;
+      width: min(300px, 82vw);
+      padding: 24px;
+      background: #fff;
+      border-radius: 0 28px 28px 0;
+      box-shadow: 24px 0 60px rgba(0, 42, 24, 0.18);
+      transform: translateX(-105%);
+      transition: transform 0.22s ease;
+    }
+
+    .side-menu.open {
+      transform: translateX(0);
+    }
+
+    .side-menu strong {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--brand);
+      font-size: 20px;
+    }
+
+    .side-menu a,
+    .side-menu button {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
     @media (max-width: 640px) {
       .wrap {
-        width: min(100% - 18px, 100%);
-        padding-top: 18px;
-        padding-bottom: 28px;
-      }
-
-      .hero,
-      .panel {
-        padding: 18px;
+        width: 100%;
+        padding-top: 0;
+        padding-bottom: 104px;
       }
 
       .form-grid,
       .order-meta-grid,
-      .product-controls,
       .radio-grid {
         grid-template-columns: 1fr;
       }
@@ -755,24 +1214,8 @@
         padding: 16px;
       }
 
-      .product-top {
-        flex-direction: column;
-        padding-right: 0;
-      }
-
-      .product-main {
-        width: 100%;
-      }
-
-      .product-thumb {
-        width: 48px;
-        height: 48px;
-        font-size: 26px;
-      }
-
-      .stock-badge {
-        align-self: flex-start;
-        margin-top: 4px;
+      .product-controls {
+        grid-template-columns: 1fr 1.1fr;
       }
 
       .summary-total {
@@ -791,40 +1234,52 @@
         margin-top: 12px;
       }
 
-      .mobile-quickbar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 30;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-        background: rgba(251, 244, 234, 0.96);
-        backdrop-filter: blur(14px);
-        border-top: 1px solid rgba(103, 76, 53, 0.12);
-      }
-
-      .mobile-quickbar button {
-        min-height: 52px;
+      .reset-mini {
+        grid-column: 1 / -1;
       }
     }
   </style>
 </head>
 <body>
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <nav class="side-menu" id="sideMenu" aria-label="풍무농산 메뉴">
+    <strong>풍무농산</strong>
+    <a href="https://band.us/" target="_blank" rel="noreferrer">입고 공지 보러가기</a>
+    <a href="https://band.us/" target="_blank" rel="noreferrer">네이버 밴드 바로가기</a>
+    <button type="button" id="menuHistoryBtn">내 주문내역</button>
+    <a href="tel:010-0000-0000">문의 전화하기</a>
+  </nav>
   <div class="wrap">
+    <header class="app-header">
+      <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">☰</button>
+      <div class="brand-mark">
+        <strong>풍무농산</strong>
+        <span>오늘의 산지 장보기</span>
+      </div>
+      <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">▢</button>
+    </header>
+
+    <div class="date-rail" aria-label="주문 가능 날짜">
+      <div class="date-pill active"><strong>오늘 주문</strong><span>바로 접수</span></div>
+      <div class="date-pill"><strong>입고 알림</strong><span>밴드 확인</span></div>
+      <div class="date-pill"><strong>수량 확인</strong><span>실시간</span></div>
+    </div>
+
     <section class="hero">
       <span class="eyebrow">풍무농산 과일 · 신선식품 공동구매</span>
-      <h1>과일주문서</h1>
+      <h1>오늘 장보기</h1>
       <p id="heroDescription">제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있습니다.</p>
+      <div class="quick-links">
+        <a href="https://band.us/" target="_blank" rel="noreferrer">입고 공지</a>
+        <a href="https://band.us/" target="_blank" rel="noreferrer">밴드 보기</a>
+      </div>
     </section>
 
     <div class="grid">
       <section class="panel">
-        <h2>과일 주문 안내</h2>
+        <h2>오늘 들어온 상품</h2>
         <p class="panel-desc">
-          산지 입고와 재고 수량에 맞춰 운영하는 과일 공동구매 주문서입니다. 안내사항을 확인한 뒤 아래 상품에서 수량을 골라주세요.
+          남은 수량을 확인하고 필요한 만큼 담아주세요. 이벤트 상품은 1인 최대 1개만 주문됩니다.
         </p>
         <div class="order-meta-grid">
           <div class="order-meta-card">
@@ -841,13 +1296,13 @@
           <ul class="notice-list" id="noticeList"></ul>
         </div>
         <div class="event-strip" id="eventList"></div>
-        <h3 style="margin-bottom:12px;">오늘의 과일</h3>
+        <h3 style="margin-bottom:12px;">과일</h3>
         <div class="products" id="productList"></div>
-        <h3 style="margin:22px 0 12px;">오늘의 채소</h3>
+        <h3 style="margin:22px 0 12px;">채소</h3>
         <div class="products" id="vegetableList"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel checkout-panel">
         <h2>주문 정보 입력</h2>
         <p class="panel-desc">주문자 정보만 입력하면 바로 주문 접수됩니다.</p>
 
@@ -953,8 +1408,8 @@
     </div>
 
     <div class="mobile-quickbar">
-      <button type="button" class="primary" id="submitOrderBtnMobile">주문 접수하기</button>
       <button type="button" class="secondary" id="toggleHistoryBtnMobile">주문내역</button>
+      <button type="button" class="primary" id="submitOrderBtnMobile">주문하기</button>
     </div>
   </div>
 
@@ -1020,6 +1475,8 @@
     const settingsPanel = document.getElementById("settingsPanel");
     const settingsToggleWrap = document.getElementById("settingsToggleWrap");
     const settingsStatus = document.getElementById("settingsStatus");
+    const sideMenu = document.getElementById("sideMenu");
+    const menuOverlay = document.getElementById("menuOverlay");
 
     const storeTitleInput = document.getElementById("storeTitleInput");
     const deadlineInput = document.getElementById("deadlineInput");
@@ -1159,19 +1616,23 @@
               </div>
             </div>
             <div class="product-controls">
+              <button type="button" class="detail-button" data-detail-product="${event.id}">상세보기</button>
               <div>
                 <label for="qty-${event.id}">이벤트 수량 선택</label>
                 <select
+                  class="qty-select"
                   id="qty-${event.id}"
                   data-product-id="${event.id}"
                   ${maxQuantity <= 0 ? "disabled" : ""}
                 >${getQuantityOptions(maxQuantity)}</select>
-              </div>
-              <div class="qty-wrap">
-                <label>선택 금액</label>
+                <div class="stepper" aria-label="${event.name} 수량 선택">
+                  <button type="button" data-step-product="${event.id}" data-step="-1" ${maxQuantity <= 0 ? "disabled" : ""}>-</button>
+                  <span class="qty-view" id="qty-view-${event.id}">0개</span>
+                  <button type="button" data-step-product="${event.id}" data-step="1" ${maxQuantity <= 0 ? "disabled" : ""}>+</button>
+                </div>
                 <div class="summary-price" id="price-${event.id}">0원</div>
               </div>
-              <button type="button" class="ghost" data-reset-product="${event.id}">초기화</button>
+              <button type="button" class="reset-mini" data-reset-product="${event.id}">초기화</button>
             </div>
           </article>
         `;
@@ -1219,19 +1680,23 @@
           </div>
         </div>
         <div class="product-controls">
+          <button type="button" class="detail-button" data-detail-product="${product.id}">상세보기</button>
           <div>
             <label for="qty-${product.id}">수량 선택</label>
             <select
+              class="qty-select"
               id="qty-${product.id}"
               data-product-id="${product.id}"
               ${soldOut ? "disabled" : ""}
             >${getQuantityOptions(maxQuantity)}</select>
-          </div>
-          <div class="qty-wrap">
-            <label>선택 금액</label>
+            <div class="stepper" aria-label="${product.name} 수량 선택">
+              <button type="button" data-step-product="${product.id}" data-step="-1" ${soldOut ? "disabled" : ""}>-</button>
+              <span class="qty-view" id="qty-view-${product.id}">0개</span>
+              <button type="button" data-step-product="${product.id}" data-step="1" ${soldOut ? "disabled" : ""}>+</button>
+            </div>
             <div class="summary-price" id="price-${product.id}">0원</div>
           </div>
-          <button type="button" class="ghost" data-reset-product="${product.id}">초기화</button>
+          <button type="button" class="reset-mini" data-reset-product="${product.id}">초기화</button>
         </div>
       `;
       return card;
@@ -1258,6 +1723,29 @@
             input.value = "";
           }
           updateStockAndSummary();
+        });
+      });
+      document.querySelectorAll("[data-step-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const input = document.getElementById(`qty-${button.dataset.stepProduct}`);
+          if (!input || input.disabled) {
+            return;
+          }
+          const product = getAllOrderItems().find((item) => item.id === button.dataset.stepProduct);
+          const maxQuantity = product ? getMaxQuantity(product) : 0;
+          const current = Number(input.value || 0);
+          const next = Math.min(Math.max(current + Number(button.dataset.step || 0), 0), maxQuantity);
+          input.value = next || "";
+          updateStockAndSummary();
+        });
+      });
+      document.querySelectorAll("[data-detail-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const product = getAllOrderItems().find((item) => item.id === button.dataset.detailProduct);
+          if (!product) {
+            return;
+          }
+          alert(`${product.name}\n\n${product.desc || "상세 설명이 없습니다."}\n가격: ${currency.format(getEffectivePrice(product))}원`);
         });
       });
 
@@ -1453,7 +1941,13 @@
         }
 
         const priceView = document.getElementById(`price-${product.id}`);
-        priceView.textContent = `${currency.format(getEffectivePrice(product) * safeQty)}원`;
+        if (priceView) {
+          priceView.textContent = `${currency.format(getEffectivePrice(product) * safeQty)}원`;
+        }
+        const qtyView = document.getElementById(`qty-view-${product.id}`);
+        if (qtyView) {
+          qtyView.textContent = `${safeQty}개`;
+        }
       });
 
       if (selectedItems.length === 0) {
@@ -1705,10 +2199,22 @@
       submitStatus.textContent = "";
     }
 
+    function toggleMenu(open) {
+      sideMenu.classList.toggle("open", open);
+      menuOverlay.classList.toggle("open", open);
+    }
+
     document.getElementById("submitOrderBtn").addEventListener("click", submitOrder);
     document.getElementById("submitOrderBtnMobile").addEventListener("click", submitOrder);
     document.getElementById("toggleHistoryBtn").addEventListener("click", toggleOrderHistory);
     document.getElementById("toggleHistoryBtnMobile").addEventListener("click", toggleOrderHistory);
+    document.getElementById("headerHistoryBtn").addEventListener("click", toggleOrderHistory);
+    document.getElementById("menuHistoryBtn").addEventListener("click", () => {
+      toggleMenu(false);
+      toggleOrderHistory();
+    });
+    document.getElementById("menuOpenBtn").addEventListener("click", () => toggleMenu(true));
+    menuOverlay.addEventListener("click", () => toggleMenu(false));
     document.getElementById("resetBtn").addEventListener("click", resetQuantities);
     document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
     document.getElementById("loadDefaultBtn").addEventListener("click", loadDefaults);
