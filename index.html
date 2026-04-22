@@ -1337,38 +1337,19 @@
       position: relative;
       width: 132px;
       height: 98px;
-      border: 1px solid #dfe5dd;
+      overflow: hidden;
+      border: 1px solid #e2e5df;
       border-radius: 8px;
-      background:
-        linear-gradient(135deg, rgba(0, 66, 37, 0.78), rgba(12, 112, 62, 0.72)),
-        radial-gradient(circle at 35% 35%, #fff9ce, transparent 36%);
-      color: #fff;
-      font-size: 46px;
+      background: #f4f5f1;
+      color: transparent;
       box-shadow: none;
     }
 
-    .product-thumb::before {
-      content: "풍무농산";
-      position: absolute;
-      top: 7px;
-      left: 7px;
-      padding: 3px 6px;
-      border-radius: 999px;
-      color: #004225;
-      background: rgba(255, 255, 255, 0.86);
-      font-size: 10px;
-      font-weight: 950;
-    }
-
-    .product-thumb::after {
-      content: "TODAY";
-      position: absolute;
-      right: 8px;
-      bottom: 7px;
-      color: rgba(255, 255, 255, 0.84);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: 0.08em;
+    .product-thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .product-copy {
@@ -1404,6 +1385,10 @@
 
     .event-main .stock-badge {
       margin-top: 0;
+    }
+
+    .event-main .product-thumb {
+      grid-row: 1 / span 2;
     }
 
     .event-price {
@@ -1545,6 +1530,85 @@
       color: #050805;
       font-size: 17px;
       font-weight: 500;
+    }
+
+    /* Cleaner commerce polish */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      width: min(666px, 100%);
+      margin: 0 auto;
+      border-left: 1px solid #ecefea;
+      border-right: 1px solid #ecefea;
+    }
+
+    .date-rail-wrap {
+      width: min(666px, 100%);
+      margin: 0 auto;
+      border-left: 1px solid #ecefea;
+      border-right: 1px solid #ecefea;
+    }
+
+    .panel h3 {
+      padding-left: 0;
+      color: #222922;
+      font-size: 18px;
+    }
+
+    .event-card,
+    .product-card {
+      padding: 18px 0;
+    }
+
+    .product-title,
+    .event-title {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+    }
+
+    .product-meta {
+      color: #343a34;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .stock-badge {
+      margin-top: -28px;
+      color: #111;
+      font-size: 17px;
+      letter-spacing: -0.04em;
+    }
+
+    .detail-button,
+    .stepper {
+      min-height: 56px;
+      border-color: #d6ddd4;
+      border-radius: 8px;
+    }
+
+    .detail-button {
+      color: #1f2c22;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .stepper {
+      grid-template-columns: 52px 1fr 52px;
+    }
+
+    .stepper button {
+      min-height: 54px;
+      font-size: 24px;
+    }
+
+    .qty-view {
+      font-size: 18px;
+    }
+
+    .mobile-quickbar button {
+      min-height: 56px;
+      font-size: 18px;
     }
 
     @media (max-width: 640px) {
@@ -1963,6 +2027,22 @@
       return product.emoji || fallbackProductEmoji;
     }
 
+    const productImageMap = {
+      "🍓": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=360&q=80",
+      "🍇": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=360&q=80",
+      "🍊": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=360&q=80",
+      "🍎": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=360&q=80",
+      "🍐": "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?auto=format&fit=crop&w=360&q=80",
+      "🍅": "https://images.unsplash.com/photo-1546470427-e5ac89d618e8?auto=format&fit=crop&w=360&q=80",
+      "🥒": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=360&q=80",
+      "🥬": "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&w=360&q=80",
+      "default": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=360&q=80"
+    };
+
+    function getProductImage(product) {
+      return product.image || productImageMap[product.emoji] || productImageMap.default;
+    }
+
     function getAllOrderItems() {
       const events = getEnabledEvents().map((event) => ({
         ...event,
@@ -1988,8 +2068,11 @@
           <article class="event-card${open ? "" : " event-closed"}">
             <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
             <div class="event-main">
+              <div class="product-thumb" aria-hidden="true">
+                <img src="${getProductImage(event)}" alt="" loading="lazy" />
+              </div>
               <div>
-                <h3 class="event-title">${event.emoji || "🔥"} ${event.name}</h3>
+                <h3 class="event-title">${event.name}</h3>
                 <p class="product-meta">${event.desc || "이벤트 한정 상품"}</p>
                 <div class="event-price">
                   <span class="event-original">${currency.format(event.originalPrice)}원</span>
@@ -2055,7 +2138,9 @@
       card.innerHTML = `
         <div class="product-top">
           <div class="product-main">
-            <div class="product-thumb" aria-hidden="true">${emoji}</div>
+            <div class="product-thumb" aria-hidden="true">
+              <img src="${getProductImage(product)}" alt="" loading="lazy" />
+            </div>
             <div class="product-copy">
               <h3 class="product-title">${product.name}</h3>
               <p class="product-meta">${product.desc}<br />판매가 ${currency.format(effectivePrice)}원</p>
