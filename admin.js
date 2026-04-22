@@ -22,12 +22,12 @@
       "기타 단지"
     ],
     products: [
-      { id: "strawberry", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
-      { id: "shine-muscat", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
-      { id: "tomato", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
-      { id: "orange", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
-      { id: "apple", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
-      { id: "pear", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
+      { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
+      { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
+      { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
+      { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
+      { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
+      { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
     ]
   };
 
@@ -39,6 +39,8 @@
   const modeText = document.getElementById("modeText");
   const productAdminList = document.getElementById("productAdminList");
   const orderList = document.getElementById("orderList");
+  const orderSearchInput = document.getElementById("orderSearchInput");
+  const orderStatusFilter = document.getElementById("orderStatusFilter");
   const inventoryStatus = document.getElementById("inventoryStatus");
   const settingsStatus = document.getElementById("settingsStatus");
   const authBox = document.getElementById("authBox");
@@ -54,6 +56,10 @@
   const contactInput = document.getElementById("contactInput");
   const paymentTitleInput = document.getElementById("paymentTitleInput");
   const noticeInput = document.getElementById("noticeInput");
+
+  function createProductId(name, index) {
+    return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
+  }
 
   function setModeText() {
     modeText.textContent = storage.isCloudMode()
@@ -95,27 +101,51 @@
   }
 
   function renderProducts() {
-    productAdminList.innerHTML = settings.products.map((product) => `
-      <div class="product-admin-item">
+    productAdminList.innerHTML = settings.products.map((product, index) => `
+      <div class="product-admin-item" data-product-index="${index}">
         <div class="product-admin-head">
           <div>
-            <strong>${product.name}</strong>
+            <strong>${product.emoji || "🍏"} ${product.name}</strong>
             <div class="muted">${product.desc}</div>
           </div>
           <div class="pill">${currency.format(product.price)}원</div>
         </div>
         <div class="product-admin-grid">
           <div>
-            <label for="stock-${product.id}">남은 수량</label>
-            <input id="stock-${product.id}" type="number" min="0" value="${product.stock}" />
+            <label for="emoji-${index}">이모지</label>
+            <input id="emoji-${index}" data-field="emoji" data-product-index="${index}" type="text" value="${product.emoji || "🍏"}" />
           </div>
           <div>
-            <label for="price-${product.id}">가격</label>
-            <input id="price-${product.id}" type="number" min="0" value="${product.price}" />
+            <label for="name-${index}">상품명</label>
+            <input id="name-${index}" data-field="name" data-product-index="${index}" type="text" value="${product.name}" />
           </div>
+          <div>
+            <label for="desc-${index}">설명</label>
+            <input id="desc-${index}" data-field="desc" data-product-index="${index}" type="text" value="${product.desc}" />
+          </div>
+          <div>
+            <label for="price-${index}">가격</label>
+            <input id="price-${index}" data-field="price" data-product-index="${index}" type="number" min="0" value="${product.price}" />
+          </div>
+          <div>
+            <label for="stock-${product.id}">남은 수량</label>
+            <input id="stock-${index}" data-field="stock" data-product-index="${index}" type="number" min="0" value="${product.stock}" />
+          </div>
+        </div>
+        <div class="product-admin-foot">
+          <button type="button" class="ghost" data-delete-product="${index}">삭제</button>
         </div>
       </div>
     `).join("");
+
+    document.querySelectorAll("[data-delete-product]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.deleteProduct);
+        settings.products = collectUpdatedProducts();
+        settings.products.splice(index, 1);
+        renderProducts();
+      });
+    });
   }
 
   function renderSummary() {
@@ -134,18 +164,40 @@
       return { label: "접수 완료", className: "pill done" };
     }
     if (status === "done") {
-      return { label: "배송 완료", className: "pill done" };
+      return { label: "주문 완료", className: "pill done" };
     }
     return { label: "신규 주문", className: "pill pending" };
   }
 
+  function getFilteredOrders() {
+    const keyword = orderSearchInput.value.trim().toLowerCase();
+    const status = orderStatusFilter.value;
+
+    return orders.filter((order) => {
+      const itemsText = (order.items || []).map((item) => item.name).join(" ");
+      const haystack = [
+        order.customer_name,
+        order.phone,
+        order.apartment_name,
+        order.address_detail,
+        itemsText,
+        order.memo
+      ].join(" ").toLowerCase();
+
+      const matchesKeyword = !keyword || haystack.includes(keyword);
+      const matchesStatus = status === "all" || order.status === status;
+      return matchesKeyword && matchesStatus;
+    });
+  }
+
   function renderOrders() {
-    if (orders.length === 0) {
+    const filteredOrders = getFilteredOrders();
+    if (filteredOrders.length === 0) {
       orderList.innerHTML = '<div class="muted">아직 접수된 주문이 없습니다.</div>';
       return;
     }
 
-    orderList.innerHTML = orders.map((order) => {
+    orderList.innerHTML = filteredOrders.map((order) => {
       const status = getStatusLabel(order.status);
       const itemsHtml = (order.items || [])
         .map((item) => `${item.name} ${item.qty}개`)
@@ -167,7 +219,7 @@
           </div>
           <div class="order-actions">
             <button type="button" class="secondary" data-status-id="${order.id}" data-status="confirmed">접수 완료</button>
-            <button type="button" class="ghost" data-status-id="${order.id}" data-status="done">배송 완료</button>
+            <button type="button" class="primary" data-status-id="${order.id}" data-status="done">주문 완료</button>
           </div>
         </div>
       `;
@@ -186,11 +238,32 @@
   }
 
   function collectUpdatedProducts() {
-    return settings.products.map((product) => ({
-      ...product,
-      stock: Number(document.getElementById(`stock-${product.id}`).value || 0),
-      price: Number(document.getElementById(`price-${product.id}`).value || 0)
-    }));
+    return settings.products.map((product, index) => {
+      const name = document.getElementById(`name-${index}`).value.trim() || product.name;
+      return {
+        ...product,
+        id: product.id || createProductId(name, index),
+        emoji: document.getElementById(`emoji-${index}`).value.trim() || "🍏",
+        name,
+        desc: document.getElementById(`desc-${index}`).value.trim() || "",
+        stock: Number(document.getElementById(`stock-${index}`).value || 0),
+        price: Number(document.getElementById(`price-${index}`).value || 0)
+      };
+    });
+  }
+
+  function addProduct() {
+    settings.products = collectUpdatedProducts();
+    const index = settings.products.length;
+    settings.products.push({
+      id: createProductId("새 상품", index),
+      emoji: "🍏",
+      name: "새 상품",
+      desc: "상품 설명을 입력해주세요",
+      price: 0,
+      stock: 0
+    });
+    renderProducts();
   }
 
   async function saveInventory() {
@@ -312,8 +385,11 @@
   }
 
   document.getElementById("saveInventoryBtn").addEventListener("click", saveInventory);
+  document.getElementById("addProductBtn").addEventListener("click", addProduct);
   document.getElementById("saveSettingsBtn").addEventListener("click", savePageSettings);
   document.getElementById("refreshBtn").addEventListener("click", init);
+  orderSearchInput.addEventListener("input", renderOrders);
+  orderStatusFilter.addEventListener("change", renderOrders);
   document.getElementById("sendMagicLinkBtn").addEventListener("click", sendMagicLink);
   document.getElementById("checkSessionBtn").addEventListener("click", checkSession);
   logoutBtn.addEventListener("click", logout);
