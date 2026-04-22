@@ -80,6 +80,11 @@
     .primary { color: #fff; background: linear-gradient(180deg, var(--accent), var(--accent-deep)); }
     .secondary { color: var(--accent-deep); background: #fbe9dc; }
     .ghost { color: var(--muted); background: #f3ece3; }
+    .nav-tab {
+      color: #fff;
+      background: #2b211a;
+      box-shadow: 0 10px 22px rgba(43, 33, 26, 0.22);
+    }
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -167,7 +172,7 @@
       <div class="top-actions">
         <a href="./index.html" style="text-decoration:none;"><button type="button" class="secondary">주문서 보기</button></a>
         <button type="button" class="ghost" id="refreshBtn">새로고침</button>
-        <a href="./admin.html" style="text-decoration:none;margin-left:auto;"><button type="button" class="primary">상품관리</button></a>
+        <a href="./admin.html" style="text-decoration:none;margin-left:auto;"><button type="button" class="nav-tab">상품관리</button></a>
         <button type="button" class="ghost hidden" id="logoutBtn">로그아웃</button>
       </div>
       <div class="auth-box" id="authBox">

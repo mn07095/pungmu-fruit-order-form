@@ -143,6 +143,9 @@
 
     if (!isCloudMode()) {
       const currentOrders = readLocalJson(DEMO_ORDERS_KEY, []);
+      if (payload.event_key && currentOrders.some((order) => order.event_key === payload.event_key && order.status !== "canceled")) {
+        throw new Error("오늘 같은 이름과 연락처로 이미 주문한 이벤트 상품입니다.");
+      }
       const record = {
         id: crypto.randomUUID(),
         ...payload
@@ -160,6 +163,21 @@
       .single();
 
     if (error) {
+      if (String(error.code || "") === "23505") {
+        throw new Error("오늘 같은 이름과 연락처로 이미 주문한 이벤트 상품입니다.");
+      }
+      if (String(error.message || "").includes("event_key") || String(error.message || "").includes("cancel_token")) {
+        const { event_key, cancel_token, ...fallbackPayload } = payload;
+        const fallback = await supabase
+          .from("orders")
+          .insert(fallbackPayload)
+          .select()
+          .single();
+        if (fallback.error) {
+          throw fallback.error;
+        }
+        return fallback.data;
+      }
       throw error;
     }
 
@@ -238,6 +256,57 @@
     return data;
   }
 
+  async function cancelOrder(id, cancelToken) {
+    if (!id) {
+      throw new Error("취소할 주문을 찾지 못했습니다.");
+    }
+
+    if (!isCloudMode()) {
+      const orders = readLocalJson(DEMO_ORDERS_KEY, []);
+      const updatedOrders = orders.map((order) => {
+        if (String(order.id) !== String(id)) {
+          return order;
+        }
+        if (order.status === "paid") {
+          throw new Error("결제완료 주문은 취소할 수 없습니다.");
+        }
+        return { ...order, status: "canceled", event_key: null };
+      });
+      writeLocalJson(DEMO_ORDERS_KEY, updatedOrders);
+      return updatedOrders.find((order) => String(order.id) === String(id)) || null;
+    }
+
+    const supabase = getSupabaseClient();
+    let query = supabase
+      .from("orders")
+      .update({ status: "canceled", event_key: null })
+      .eq("id", id)
+      .neq("status", "paid");
+
+    if (cancelToken) {
+      query = query.eq("cancel_token", cancelToken);
+    }
+
+    const { data, error } = await query.select().single();
+    if (error) {
+      if (String(error.message || "").includes("event_key") || String(error.message || "").includes("cancel_token")) {
+        const fallback = await supabase
+          .from("orders")
+          .update({ status: "canceled" })
+          .eq("id", id)
+          .neq("status", "paid")
+          .select()
+          .single();
+        if (fallback.error) {
+          throw fallback.error;
+        }
+        return fallback.data;
+      }
+      throw error;
+    }
+    return data;
+  }
+
   window.OrderFormStorage = {
     clone,
     getConfig,
@@ -246,6 +315,7 @@
     saveSettings,
     createOrder,
     listOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    cancelOrder
   };
 }());

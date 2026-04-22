@@ -362,7 +362,7 @@
 
     .product-controls {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       gap: 14px;
       align-items: end;
       margin-top: 14px;
@@ -1109,7 +1109,7 @@
 
     function getQuantityOptions(maxQuantity) {
       const max = Math.max(Math.min(maxQuantity, 20), 0);
-      let options = '<option value="0">0개</option>';
+      let options = '<option value="">선택</option>';
       for (let i = 1; i <= max; i += 1) {
         options += `<option value="${i}">${i}개</option>`;
       }
@@ -1139,6 +1139,7 @@
         const open = isEventOpen(event);
         const discount = getDiscountRate(event.originalPrice, event.salePrice);
         const maxQuantity = getMaxQuantity({ ...event, type: "event" });
+        const stockQuantity = Math.max(Number(event.stock || 0), 0);
         const limitText = "1인 최대 1개";
         return `
           <article class="event-card${open ? "" : " event-closed"}">
@@ -1154,7 +1155,7 @@
                 </div>
               </div>
               <div class="stock-badge${maxQuantity <= 0 ? " sold-out" : ""}" id="stock-${event.id}">
-                ${open ? (maxQuantity <= 0 ? "품절" : `남은 수량 ${maxQuantity}개`) : "대기중"}
+                ${open ? (stockQuantity <= 0 ? "품절" : `남은 수량 ${stockQuantity}개`) : "대기중"}
               </div>
             </div>
             <div class="product-controls">
@@ -1170,6 +1171,7 @@
                 <label>선택 금액</label>
                 <div class="summary-price" id="price-${event.id}">0원</div>
               </div>
+              <button type="button" class="ghost" data-reset-product="${event.id}">초기화</button>
             </div>
           </article>
         `;
@@ -1229,6 +1231,7 @@
             <label>선택 금액</label>
             <div class="summary-price" id="price-${product.id}">0원</div>
           </div>
+          <button type="button" class="ghost" data-reset-product="${product.id}">초기화</button>
         </div>
       `;
       return card;
@@ -1247,6 +1250,15 @@
 
       document.querySelectorAll("[data-product-id]").forEach((input) => {
         input.addEventListener("change", updateStockAndSummary);
+      });
+      document.querySelectorAll("[data-reset-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const input = document.getElementById(`qty-${button.dataset.resetProduct}`);
+          if (input) {
+            input.value = "";
+          }
+          updateStockAndSummary();
+        });
       });
 
       updateStockAndSummary();
@@ -1332,6 +1344,8 @@
       const history = getLocalOrderHistory();
       history.unshift({
         id: order.id || crypto.randomUUID(),
+        cancel_token: order.cancel_token || null,
+        event_key: order.event_key || null,
         created_at: order.created_at || new Date().toISOString(),
         customer_name: order.customer_name,
         items: order.items || [],
@@ -1362,17 +1376,46 @@
         const paidText = order.paid_at
           ? `<br />결제일 ${new Date(order.paid_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}`
           : "";
+        const cancelButton = order.status === "paid" || order.status === "canceled"
+          ? ""
+          : `<button type="button" class="ghost" data-cancel-order="${order.id}" data-cancel-token="${order.cancel_token || ""}">주문 취소</button>`;
+        const statusText = order.status === "paid" ? "결제완료" : order.status === "canceled" ? "취소됨" : "접수됨";
 
         return `
           <div class="history-card">
-            <strong>${dateText} 주문</strong>
+            <strong>${dateText} 주문 · ${statusText}</strong>
             <div class="history-meta">
               ${itemsText || "상품 정보 없음"}<br />
               총 ${currency.format(order.total_amount || 0)}원${paidText}
             </div>
+            <div class="actions" style="padding-bottom:0;margin-top:10px;">${cancelButton}</div>
           </div>
         `;
       }).join("");
+
+      document.querySelectorAll("[data-cancel-order]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          if (!confirm("이 주문을 취소할까요? 결제완료 주문은 취소할 수 없습니다.")) {
+            return;
+          }
+          try {
+            await storage.cancelOrder(button.dataset.cancelOrder, button.dataset.cancelToken);
+            markLocalOrderCanceled(button.dataset.cancelOrder);
+            renderOrderHistory();
+          } catch (error) {
+            alert(`주문 취소 실패: ${error.message}`);
+          }
+        });
+      });
+    }
+
+    function markLocalOrderCanceled(orderId) {
+      const history = getLocalOrderHistory().map((order) => (
+        String(order.id) === String(orderId)
+          ? { ...order, status: "canceled" }
+          : order
+      ));
+      writeLocalJson(customerHistoryKey, history);
     }
 
     function toggleOrderHistory() {
@@ -1394,9 +1437,10 @@
 
         const maxQuantity = getMaxQuantity(product);
         const safeQty = Math.min(Math.max(Number(qtyInput.value || 0), 0), maxQuantity);
-        qtyInput.value = safeQty;
+        qtyInput.value = safeQty || "";
 
-        const remaining = maxQuantity - safeQty;
+        const remainingBase = product.type === "event" ? Math.max(Number(product.stock || 0), 0) : maxQuantity;
+        const remaining = remainingBase - safeQty;
         const stockBadge = document.getElementById(`stock-${product.id}`);
         if (maxQuantity <= 0) {
           stockBadge.textContent = product.type === "event" && !isEventOpen(product) ? "대기중" : "품절";
@@ -1450,6 +1494,14 @@
       }
 
       const formData = new FormData(form);
+      const customerName = String(formData.get("customerName") || "").trim();
+      const phone = String(formData.get("phone") || "").trim();
+      const eventItems = selectedItems.filter((item) => item.type === "event");
+      const duplicateEvent = findDuplicateEventOrder(customerName, phone, eventItems);
+      if (duplicateEvent) {
+        alert(`오늘 이미 주문한 이벤트 상품입니다: ${duplicateEvent.name}`);
+        return null;
+      }
       const total = selectedItems.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
       const itemsText = selectedItems
         .map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.unitPrice * item.qty)}원)`)
@@ -1474,8 +1526,8 @@
       return {
         text: result,
         payload: {
-          customer_name: String(formData.get("customerName") || "").trim(),
-          phone: String(formData.get("phone") || "").trim(),
+          customer_name: customerName,
+          phone,
           apartment_name: "",
           address_detail: "",
           gate_code: "",
@@ -1483,11 +1535,52 @@
           pay_method: "현장결제",
           memo: "",
           items: selectedItems,
+          event_key: eventItems[0] ? createEventOrderKey(customerName, phone, eventItems[0].id) : null,
+          cancel_token: crypto.randomUUID(),
           total_amount: total,
           order_text: result,
           status: "new"
         }
       };
+    }
+
+    function getBusinessDateKey(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function normalizeText(value) {
+      return String(value || "").replace(/\s+/g, "").toLowerCase();
+    }
+
+    function createEventOrderKey(customerName, phone, eventId) {
+      return [
+        getBusinessDateKey(),
+        normalizeText(customerName),
+        String(phone || "").replace(/\D/g, ""),
+        eventId
+      ].join("|");
+    }
+
+    function findDuplicateEventOrder(customerName, phone, eventItems) {
+      if (eventItems.length === 0) {
+        return null;
+      }
+      const activeHistory = getLocalOrderHistory().filter((order) => order.status !== "canceled");
+      return eventItems.find((eventItem) => {
+        const key = createEventOrderKey(customerName, phone, eventItem.id);
+        return activeHistory.some((order) => (
+          order.event_key === key
+          || (
+            normalizeText(order.customer_name) === normalizeText(customerName)
+            && String(order.phone || "").replace(/\D/g, "") === String(phone || "").replace(/\D/g, "")
+            && new Date(order.created_at).toDateString() === new Date().toDateString()
+            && (order.items || []).some((item) => item.id === eventItem.id)
+          )
+        ));
+      });
     }
 
     async function submitOrder() {
@@ -1506,7 +1599,7 @@
       try {
         const savedOrder = await storage.createOrder(draft.payload);
         saveCustomerProfile();
-        saveLocalOrderHistory(savedOrder || draft.payload);
+        saveLocalOrderHistory({ ...draft.payload, ...(savedOrder || {}) });
         resetAfterSubmit();
         submitStatus.textContent = storage.isCloudMode()
           ? "주문이 접수되었습니다. 감사합니다."
@@ -1531,7 +1624,7 @@
       getAllOrderItems().forEach((product) => {
         const input = document.getElementById(`qty-${product.id}`);
         if (input) {
-          input.value = 0;
+          input.value = "";
         }
       });
       updateStockAndSummary();

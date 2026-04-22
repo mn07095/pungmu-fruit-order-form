@@ -134,6 +134,11 @@
       color: var(--muted);
       background: #f3ece3;
     }
+    .nav-tab {
+      color: #fff;
+      background: #2b211a;
+      box-shadow: 0 10px 22px rgba(43, 33, 26, 0.22);
+    }
     .status {
       min-height: 20px;
       margin-top: 8px;
@@ -166,7 +171,7 @@
     }
     .event-admin-grid {
       display: grid;
-      grid-template-columns: 150px 1fr 1.2fr 120px 120px 120px 120px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 12px;
       align-items: end;
@@ -277,7 +282,7 @@
       <div class="top-actions">
         <a href="./index.html" style="text-decoration:none;"><button type="button" class="secondary">주문서 보기</button></a>
         <button type="button" class="ghost" id="refreshBtn">새로고침</button>
-        <a href="./orders.html" style="text-decoration:none;margin-left:auto;"><button type="button" class="primary">주문관리</button></a>
+        <a href="./orders.html" style="text-decoration:none;margin-left:auto;"><button type="button" class="nav-tab">주문관리</button></a>
         <button type="button" class="ghost hidden" id="logoutBtn">로그아웃</button>
       </div>
       <div class="auth-box" id="authBox">

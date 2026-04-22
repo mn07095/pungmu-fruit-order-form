@@ -85,6 +85,9 @@
     if (status === "paid") {
       return { label: "결제 완료", className: "pill done" };
     }
+    if (status === "canceled") {
+      return { label: "취소됨", className: "pill" };
+    }
     return { label: "신규 주문", className: "pill" };
   }
 
@@ -132,9 +135,11 @@
     const itemsHtml = (order.items || [])
       .map((item) => `${item.name} ${item.qty}개`)
       .join(", ");
-    const actionButton = order.status === "paid"
-      ? '<button type="button" class="ghost" data-status-id="' + order.id + '" data-status="new">결제 취소</button>'
-      : '<button type="button" class="primary" data-status-id="' + order.id + '" data-status="paid">결제완료</button>';
+    const actionButton = order.status === "canceled"
+      ? ""
+      : order.status === "paid"
+        ? '<button type="button" class="ghost" data-status-id="' + order.id + '" data-status="new">결제 취소</button>'
+        : '<button type="button" class="primary" data-status-id="' + order.id + '" data-status="paid">결제완료</button>';
     const paidDateHtml = order.paid_at
       ? `<br />결제일: ${formatDateTime(order.paid_at)}`
       : "";

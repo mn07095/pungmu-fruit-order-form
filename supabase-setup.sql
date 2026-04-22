@@ -21,11 +21,23 @@ create table if not exists public.orders (
   order_text text,
   status text not null default 'new',
   paid_at timestamptz,
+  event_key text,
+  cancel_token text,
   created_at timestamptz not null default now()
 );
 
 alter table public.orders
 add column if not exists paid_at timestamptz;
+
+alter table public.orders
+add column if not exists event_key text;
+
+alter table public.orders
+add column if not exists cancel_token text;
+
+create unique index if not exists orders_event_key_unique
+on public.orders (event_key)
+where event_key is not null and status <> 'canceled';
 
 alter table public.store_settings enable row level security;
 alter table public.orders enable row level security;
@@ -51,6 +63,14 @@ for update
 to authenticated
 using (true)
 with check (true);
+
+drop policy if exists "public can cancel own pending orders" on public.orders;
+create policy "public can cancel own pending orders"
+on public.orders
+for update
+to anon, authenticated
+using (status <> 'paid' and cancel_token is not null)
+with check (status = 'canceled');
 
 drop policy if exists "authenticated can delete old orders" on public.orders;
 create policy "authenticated can delete old orders"
