@@ -2506,6 +2506,289 @@
         padding-left: 116px;
       }
     }
+
+    /* Reference-inspired final mobile layout: white app shell, clean product rows */
+    @media (max-width: 640px) {
+      body,
+      .wrap {
+        background: #fff;
+      }
+
+      .app-header {
+        grid-template-columns: 52px minmax(0, 1fr) 52px;
+        height: 66px;
+        min-height: 66px;
+        padding: 0;
+        border-bottom: 1px solid #e5e7e2;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .icon-button {
+        width: 52px;
+        min-width: 52px;
+        height: 66px;
+        min-height: 66px;
+        border: 0;
+        border-radius: 0;
+        color: #101510;
+        background: transparent;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .brand-mark {
+        height: 66px;
+        color: #101510;
+      }
+
+      .brand-logo {
+        display: none;
+      }
+
+      .brand-mark strong {
+        display: block;
+        color: #101510;
+        font-size: 22px;
+        font-weight: 950;
+        letter-spacing: -0.06em;
+      }
+
+      .brand-mark span {
+        display: none;
+      }
+
+      .date-rail-wrap {
+        position: sticky;
+        top: 66px;
+        z-index: 20;
+        border-bottom: 1px solid #e8ebe5;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .date-rail {
+        justify-content: center;
+        gap: 4px;
+        padding: 8px 8px 10px;
+        background: #fff;
+      }
+
+      .date-pill {
+        min-width: 86px;
+        padding: 7px 9px;
+        border: 1px solid #e1e5df;
+        border-radius: 8px;
+        color: #161b16;
+        background: #fff;
+        text-align: center;
+      }
+
+      .date-pill.active {
+        border-color: #004225;
+        color: #fff;
+        background: #004225;
+      }
+
+      .date-pill strong {
+        display: block;
+        margin: 0 0 2px;
+        font-size: 13px;
+      }
+
+      .date-pill span {
+        display: block;
+        font-size: 11px;
+      }
+
+      .storefront-intro {
+        margin: 0;
+        padding: 16px 14px 10px;
+        border-radius: 0;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .storefront-intro h2 {
+        font-size: 22px;
+      }
+
+      .storefront-tags {
+        gap: 6px;
+      }
+
+      .storefront-tag {
+        border-color: #e1e5df;
+        background: #fff;
+      }
+
+      .storefront-tag.strong {
+        border-color: #004225;
+        background: #004225;
+      }
+
+      .panel {
+        padding: 0 14px;
+      }
+
+      .panel h3 {
+        margin: 12px 0 0;
+        padding: 10px 0 8px;
+        font-size: 18px;
+      }
+
+      .event-card,
+      .product-card {
+        margin: 0;
+        padding: 18px 0 16px;
+        border: 0;
+        border-bottom: 1px solid #e2e5df;
+        border-radius: 0;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .event-kicker {
+        margin-bottom: 8px;
+        padding: 0;
+        color: #004225;
+        background: transparent;
+        font-size: 12px;
+      }
+
+      .product-top,
+      .event-main {
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .product-thumb {
+        width: 120px;
+        height: 92px;
+        border: 1px solid #e3e6e0;
+        border-radius: 7px;
+        box-shadow: none;
+      }
+
+      .product-title,
+      .event-title {
+        color: #080c08;
+        font-size: 17px;
+        font-weight: 950;
+        line-height: 1.28;
+      }
+
+      .product-meta {
+        color: #171d17;
+        font-size: 13px;
+        line-height: 1.42;
+      }
+
+      .stock-badge,
+      .event-main .stock-badge {
+        margin-top: 7px;
+        padding: 0;
+        border-radius: 0;
+        color: #080c08;
+        background: transparent;
+        font-size: 15px;
+        font-weight: 950;
+      }
+
+      .stock-badge.low {
+        color: #b2472f;
+        background: transparent;
+      }
+
+      .stock-badge.sold-out {
+        color: #777d77;
+        background: transparent;
+      }
+
+      .product-controls {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+        padding-left: 0;
+      }
+
+      .detail-button,
+      .stepper {
+        min-height: 56px;
+        border: 1px solid #b8c0b7;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .detail-button {
+        color: #102015;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .stepper {
+        grid-template-columns: 48px 1fr 48px;
+      }
+
+      .stepper button {
+        min-height: 54px;
+        color: #080c08;
+        font-size: 24px;
+      }
+
+      .qty-view {
+        color: #080c08;
+        font-size: 17px;
+      }
+
+      .checkout-panel {
+        margin: 18px 0 0;
+        padding: 18px 14px;
+        border: 0;
+        border-top: 1px solid #e2e5df;
+        border-radius: 0;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .mobile-quickbar {
+        border-top: 1px solid #e2e5df;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: none;
+      }
+
+      .mobile-quickbar .primary {
+        background: #004225;
+        box-shadow: none;
+      }
+
+      .mobile-quickbar .secondary {
+        border-color: #004225;
+        color: #004225;
+        background: #fff;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .product-top,
+      .event-main {
+        grid-template-columns: 108px minmax(0, 1fr);
+      }
+
+      .product-thumb {
+        width: 108px;
+        height: 86px;
+      }
+
+      .detail-button,
+      .stepper {
+        min-height: 50px;
+      }
+
+      .stepper {
+        grid-template-columns: 42px 1fr 42px;
+      }
+    }
   </style>
 </head>
 <body>
