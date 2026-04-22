@@ -1905,6 +1905,200 @@
         grid-column: 1 / -1;
       }
     }
+
+    @media (max-width: 640px) {
+      body {
+        background: #fff;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: none;
+        padding-bottom: calc(82px + env(safe-area-inset-bottom));
+      }
+
+      .app-header {
+        grid-template-columns: 58px 1fr 58px;
+        min-height: 62px;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .icon-button {
+        min-width: 48px;
+        height: 38px;
+        min-height: 38px;
+        font-size: 13px;
+      }
+
+      .brand-mark strong {
+        font-size: 20px;
+      }
+
+      .brand-mark span {
+        font-size: 12px;
+      }
+
+      .date-rail-wrap {
+        top: 62px;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .date-rail {
+        gap: 6px;
+        overflow-x: auto;
+        padding: 8px 12px 10px;
+        scrollbar-width: none;
+      }
+
+      .date-rail::-webkit-scrollbar {
+        display: none;
+      }
+
+      .date-pill {
+        flex: 0 0 auto;
+        padding: 7px 10px;
+      }
+
+      .panel {
+        width: 100%;
+        margin: 0;
+        padding: 0 14px;
+      }
+
+      .panel:first-child {
+        padding-top: 14px;
+      }
+
+      .panel h3 {
+        padding: 12px 0 8px;
+        font-size: 17px;
+      }
+
+      .event-card,
+      .product-card {
+        padding: 14px 0;
+      }
+
+      .product-top,
+      .event-main {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+      }
+
+      .event-main {
+        flex-direction: initial;
+      }
+
+      .product-main {
+        display: contents;
+      }
+
+      .product-thumb {
+        width: 112px;
+        height: 88px;
+        border-radius: 9px;
+      }
+
+      .product-title,
+      .event-title {
+        font-size: 16px;
+        line-height: 1.32;
+      }
+
+      .product-meta {
+        font-size: 12px;
+        line-height: 1.42;
+      }
+
+      .stock-badge,
+      .event-main .stock-badge {
+        grid-column: 2;
+        margin-top: 7px;
+        padding: 4px 7px;
+        font-size: 11px;
+      }
+
+      .product-controls {
+        grid-template-columns: 92px minmax(0, 1fr);
+        gap: 8px;
+        margin-top: 10px;
+        padding-left: 124px;
+      }
+
+      .detail-button,
+      .stepper {
+        min-height: 42px;
+        border-radius: 8px;
+      }
+
+      .detail-button {
+        font-size: 13px;
+      }
+
+      .stepper {
+        grid-template-columns: 40px 1fr 40px;
+      }
+
+      .stepper button {
+        min-height: 40px;
+        font-size: 19px;
+      }
+
+      .qty-view {
+        font-size: 14px;
+      }
+
+      .checkout-panel {
+        margin-top: 18px;
+        padding: 18px 14px;
+      }
+
+      .checkout-panel h2 {
+        font-size: 19px;
+      }
+
+      .summary-box {
+        padding: 14px;
+      }
+
+      .mobile-quickbar {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        transform: none;
+        grid-template-columns: 104px 1fr;
+        gap: 8px;
+        padding: 9px 10px calc(9px + env(safe-area-inset-bottom));
+      }
+
+      .mobile-quickbar button {
+        min-height: 50px;
+        border-radius: 9px;
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .product-top,
+      .event-main {
+        grid-template-columns: 98px minmax(0, 1fr);
+      }
+
+      .product-thumb {
+        width: 98px;
+        height: 80px;
+      }
+
+      .product-controls {
+        grid-template-columns: 82px minmax(0, 1fr);
+        padding-left: 110px;
+      }
+    }
   </style>
 </head>
 <body>
