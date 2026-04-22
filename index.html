@@ -1165,6 +1165,388 @@
       font-weight: 800;
     }
 
+    /* Reference-style storefront: simple app header, date tabs, product rows */
+    body {
+      background: #ffffff;
+    }
+
+    .wrap {
+      width: min(666px, 100%);
+      min-height: 100vh;
+      background: #fff;
+    }
+
+    .app-header {
+      min-height: 82px;
+      border: 1px solid #e4e7e2;
+      border-top: 0;
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .brand-mark strong {
+      color: #111;
+      font-size: 24px;
+      letter-spacing: -0.06em;
+    }
+
+    .brand-mark span {
+      color: #111;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .icon-button {
+      color: #111;
+      font-size: 28px;
+    }
+
+    .date-rail-wrap {
+      position: relative;
+      border-bottom: 1px solid #e4e7e2;
+      background: #fff;
+    }
+
+    .date-rail {
+      justify-content: center;
+      padding: 8px 34px 12px;
+      border-bottom: 0;
+      background: #fff;
+    }
+
+    .date-arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      min-height: auto;
+      padding: 0;
+      transform: translateY(-50%);
+      color: #969c96;
+      background: transparent;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .date-arrow.left {
+      left: 4px;
+    }
+
+    .date-arrow.right {
+      right: 4px;
+    }
+
+    .date-pill {
+      min-width: 88px;
+      padding: 7px 10px;
+      border-color: #e0e5df;
+      border-radius: 9px;
+      color: #101510;
+      font-size: 12px;
+      line-height: 1.25;
+      box-shadow: none;
+    }
+
+    .date-pill.active {
+      border-color: #004225;
+      background: #004225;
+      box-shadow: none;
+    }
+
+    .date-pill strong {
+      font-size: 14px;
+    }
+
+    .hero {
+      display: none;
+    }
+
+    .grid {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .panel {
+      width: min(100% - 20px, 646px);
+      margin: 0 auto;
+    }
+
+    .panel:first-child {
+      padding-top: 28px;
+    }
+
+    .panel:first-child > h2,
+    .panel:first-child > .panel-desc,
+    .order-meta-grid,
+    .notice-box {
+      display: none;
+    }
+
+    .panel h3 {
+      margin: 0;
+      padding: 14px 10px 8px;
+      color: #151b16;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .event-strip,
+    .products {
+      border-top: 0;
+    }
+
+    .event-card,
+    .product-card {
+      padding: 22px 10px 16px;
+      border-bottom: 1px solid #e1e5df;
+      background: #fff;
+    }
+
+    .event-card {
+      background: #fff;
+    }
+
+    .event-kicker {
+      margin-bottom: 8px;
+      padding: 0;
+      background: transparent;
+      color: #004225;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .product-top,
+    .event-main {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .event-main {
+      margin-top: 0;
+    }
+
+    .product-main {
+      display: contents;
+    }
+
+    .product-thumb {
+      position: relative;
+      width: 132px;
+      height: 98px;
+      border: 1px solid #dfe5dd;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(0, 66, 37, 0.78), rgba(12, 112, 62, 0.72)),
+        radial-gradient(circle at 35% 35%, #fff9ce, transparent 36%);
+      color: #fff;
+      font-size: 46px;
+      box-shadow: none;
+    }
+
+    .product-thumb::before {
+      content: "풍무농산";
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      color: #004225;
+      background: rgba(255, 255, 255, 0.86);
+      font-size: 10px;
+      font-weight: 950;
+    }
+
+    .product-thumb::after {
+      content: "TODAY";
+      position: absolute;
+      right: 8px;
+      bottom: 7px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+    }
+
+    .product-copy {
+      min-width: 0;
+    }
+
+    .product-title,
+    .event-title {
+      margin: 0;
+      color: #050805;
+      font-size: 21px;
+      font-weight: 950;
+      line-height: 1.28;
+      letter-spacing: -0.05em;
+    }
+
+    .product-meta {
+      margin: 4px 0 0;
+      color: #050805;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .stock-badge {
+      grid-column: 2;
+      margin-top: -38px;
+      color: #050805;
+      font-size: 20px;
+      font-weight: 950;
+      line-height: 1.3;
+    }
+
+    .event-main .stock-badge {
+      margin-top: 0;
+    }
+
+    .event-price {
+      margin-top: 4px;
+      gap: 6px;
+    }
+
+    .event-original {
+      color: #727a72;
+      font-size: 16px;
+    }
+
+    .event-sale {
+      color: #050805;
+      font-size: 21px;
+    }
+
+    .event-discount {
+      border: 1px solid #004225;
+      color: #004225;
+      background: #fff;
+    }
+
+    .product-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .detail-button,
+    .stepper {
+      min-height: 66px;
+      border: 1px solid #b9c2b8;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .detail-button {
+      color: #003f26;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .stepper {
+      grid-template-columns: 60px 1fr 60px;
+    }
+
+    .stepper button {
+      min-height: 64px;
+      color: #000;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .qty-view {
+      color: #000;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .reset-mini {
+      display: none;
+    }
+
+    .checkout-panel {
+      margin-top: 26px;
+      padding: 22px 16px;
+      border: 0;
+      border-top: 1px solid #e4e7e2;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .checkout-panel h2 {
+      text-align: center;
+      color: #101510;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .summary-box {
+      border-radius: 10px;
+      box-shadow: none;
+    }
+
+    .actions {
+      display: none;
+    }
+
+    .history-panel.open {
+      display: block;
+      margin: 18px 0 0;
+      border-radius: 10px;
+      box-shadow: none;
+    }
+
+    .history-card {
+      border-color: #1d2c20;
+      border-radius: 8px;
+      color: #050805;
+      background: #fff;
+    }
+
+    .mobile-quickbar {
+      grid-template-columns: 120px 1fr;
+      width: min(666px, 100%);
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      background: #fff;
+    }
+
+    .mobile-quickbar button {
+      min-height: 61px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 950;
+    }
+
+    .mobile-quickbar .secondary {
+      border: 1px solid #004225;
+      color: #004225;
+      background: #fff;
+    }
+
+    .mobile-quickbar .primary {
+      background: #004225;
+    }
+
+    .side-menu {
+      width: 280px;
+      padding: 22px 30px;
+      border-radius: 0 0 22px 0;
+      box-shadow: none;
+    }
+
+    .side-menu strong,
+    .side-menu a,
+    .side-menu button {
+      color: #050805;
+      font-size: 17px;
+      font-weight: 500;
+    }
+
     @media (max-width: 640px) {
       .wrap {
         width: 100%;
@@ -1215,7 +1597,7 @@
       }
 
       .product-controls {
-        grid-template-columns: 1fr 1.1fr;
+        grid-template-columns: 1fr 1fr;
       }
 
       .summary-total {
@@ -1259,10 +1641,14 @@
       <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">▢</button>
     </header>
 
-    <div class="date-rail" aria-label="주문 가능 날짜">
-      <div class="date-pill active"><strong>오늘 주문</strong><span>바로 접수</span></div>
-      <div class="date-pill"><strong>입고 알림</strong><span>밴드 확인</span></div>
-      <div class="date-pill"><strong>수량 확인</strong><span>실시간</span></div>
+    <div class="date-rail-wrap">
+      <button type="button" class="date-arrow left" aria-label="이전 날짜">‹</button>
+      <div class="date-rail" aria-label="주문 가능 날짜">
+        <div class="date-pill active"><strong>오늘</strong><span>예약중</span></div>
+        <div class="date-pill"><strong>내일</strong><span>입고예정</span></div>
+        <div class="date-pill"><strong>모레</strong><span>준비중</span></div>
+      </div>
+      <button type="button" class="date-arrow right" aria-label="다음 날짜">›</button>
     </div>
 
     <section class="hero">
