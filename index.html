@@ -819,7 +819,7 @@
         </div>
         <div class="hero-stat">
           <span>PAYMENT</span>
-          <strong id="paymentHero">계좌이체 우선 접수</strong>
+          <strong id="paymentHero">현장결제</strong>
         </div>
       </div>
     </section>
@@ -866,74 +866,9 @@
             </div>
 
             <div class="full">
-              <label for="apartment">아파트 단지 선택</label>
-              <select id="apartment" name="apartment" required></select>
-            </div>
-
-            <div class="full" id="customApartmentWrap" style="display:none;">
-              <label for="customApartment">기타 단지명 입력</label>
-              <input id="customApartment" name="customApartment" type="text" placeholder="단지명을 적어주세요" />
-            </div>
-
-            <div>
-              <label for="building">동</label>
-              <input id="building" name="building" type="text" placeholder="예: 101동" required />
-            </div>
-            <div>
-              <label for="unit">호수</label>
-              <input id="unit" name="unit" type="text" placeholder="예: 1203호" required />
-            </div>
-
-            <div class="full">
-              <label for="gateCode">공동현관 비밀번호</label>
-              <input id="gateCode" name="gateCode" type="text" placeholder="예: #2580 또는 경비실 호출" />
-              <div class="hint">비밀번호가 없으면 "없음", "경비실 호출", "문 앞 호출"처럼 적어도 됩니다.</div>
-            </div>
-
-            <div class="full">
-              <label>수령 방식</label>
-              <div class="radio-grid">
-                <label class="radio-box">
-                  <input type="radio" name="deliveryType" value="문 앞 배송" checked />
-                  <span>문 앞 배송</span>
-                </label>
-                <label class="radio-box">
-                  <input type="radio" name="deliveryType" value="공동현관 앞 수령" />
-                  <span>공동현관 앞 수령</span>
-                </label>
-                <label class="radio-box">
-                  <input type="radio" name="deliveryType" value="직접 수령" />
-                  <span>직접 수령</span>
-                </label>
-              </div>
-            </div>
-            <div class="full">
-              <label>결제 방식</label>
-              <div class="radio-grid">
-                <label class="radio-box">
-                  <input type="radio" name="payMethod" value="계좌이체" checked />
-                  <span>계좌이체</span>
-                </label>
-                <label class="radio-box">
-                  <input type="radio" name="payMethod" value="현장결제" />
-                  <span>현장결제</span>
-                </label>
-                <label class="radio-box">
-                  <input type="radio" name="payMethod" value="추후 안내" />
-                  <span>추후 안내</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="full">
-              <label for="memo">배송 메모</label>
-              <textarea id="memo" name="memo" rows="4" placeholder="예: 부재 시 문 앞 놓아주세요 / 초인종 금지 / 저녁 7시 이후 선호"></textarea>
-            </div>
-
-            <div class="full">
               <label class="agreement">
                 <input id="agree" name="agree" type="checkbox" required />
-                <span>주문 접수 및 배송을 위한 이름, 연락처, 주소, 공동현관 정보 수집에 동의합니다.</span>
+                <span>주문 접수 및 현장 결제 안내를 위한 이름과 연락처 수집에 동의합니다.</span>
               </label>
             </div>
           </div>
@@ -1010,11 +945,6 @@
                 <div class="hint">한 줄에 안내사항 1개씩 적어주세요.</div>
               </div>
               <div class="full">
-                <label for="apartmentsInput">아파트 단지 목록</label>
-                <textarea id="apartmentsInput" rows="5"></textarea>
-                <div class="hint">한 줄에 단지 1개씩 적어주세요.</div>
-              </div>
-              <div class="full">
                 <label for="paymentGuideInput">입금 안내 문구</label>
                 <textarea id="paymentGuideInput" rows="3"></textarea>
               </div>
@@ -1055,7 +985,7 @@
   <script src="./shared.js"></script>
   <script>
     const defaultSettings = {
-      description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 단지배송에 필요한 아파트 선택과 공동현관 비밀번호도 함께 받습니다.",
+      description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 결제는 현장에서 진행됩니다.",
       orderDeadline: "오늘 오후 6시 마감",
       deliverySchedule: "오늘 저녁 7시~9시 순차배송",
       contact: "문의 010-0000-0000",
@@ -1069,15 +999,8 @@
         "단지배송 특성상 정확한 시간 지정은 어려울 수 있으니 여유 있게 부탁드립니다.",
         "공동현관 비밀번호 또는 호출 방법을 꼭 남겨주세요."
       ],
-      apartments: [
-        "풍무푸르지오",
-        "풍무센트럴푸르지오",
-        "풍무자이",
-        "풍무한화꿈에그린",
-        "풍무동양파라곤",
-        "기타 단지"
-      ],
-      paymentGuide: "주문 후 1시간 이내 입금 부탁드립니다. 입금자명은 주문자명과 동일하게 맞춰주세요. 계좌번호 예시: 농협 123-4567-8901-23 풍무농산. 실제 사용 전 계좌번호는 꼭 수정해주세요. 신선 과일 특성상 단순 변심 취소는 어려울 수 있습니다.",
+      apartments: [],
+      paymentGuide: "결제는 현장에서 진행됩니다. 주문 접수 후 현장 수령/결제 안내를 확인해주세요.",
       products: [
         { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
         { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
@@ -1096,9 +1019,6 @@
     let settings = storage.clone(defaultSettings);
 
     const productList = document.getElementById("productList");
-    const apartmentSelect = document.getElementById("apartment");
-    const customApartmentWrap = document.getElementById("customApartmentWrap");
-    const customApartment = document.getElementById("customApartment");
     const summaryList = document.getElementById("summaryList");
     const grandTotal = document.getElementById("grandTotal");
     const form = document.getElementById("orderForm");
@@ -1128,28 +1048,12 @@
     const noticeInput = document.getElementById("noticeInput");
     const liveLinkInput = document.getElementById("liveLinkInput");
     const bandLinkInput = document.getElementById("bandLinkInput");
-    const apartmentsInput = document.getElementById("apartmentsInput");
     const paymentGuideInput = document.getElementById("paymentGuideInput");
     const productsInput = document.getElementById("productsInput");
     const fallbackProductEmoji = "🍏";
 
     function createProductId(name, index) {
       return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
-    }
-
-    function renderApartmentOptions() {
-      apartmentSelect.innerHTML = "";
-      const firstOption = document.createElement("option");
-      firstOption.value = "";
-      firstOption.textContent = "단지를 선택해주세요";
-      apartmentSelect.appendChild(firstOption);
-
-      settings.apartments.forEach((name) => {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        apartmentSelect.appendChild(option);
-      });
     }
 
     function renderNoticeList() {
@@ -1232,7 +1136,6 @@
       deliveryCard.textContent = settings.deliverySchedule;
       paymentGuideText.textContent = settings.paymentGuide;
       renderNoticeList();
-      renderApartmentOptions();
       renderProducts();
       fillSettingsForm();
     }
@@ -1246,26 +1149,10 @@
       noticeInput.value = settings.notices.join("\n");
       liveLinkInput.value = settings.liveLink;
       bandLinkInput.value = settings.bandLink;
-      apartmentsInput.value = settings.apartments.join("\n");
       paymentGuideInput.value = settings.paymentGuide;
       productsInput.value = settings.products
         .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}`)
         .join("\n");
-    }
-
-    function getSelectedRadioValue(name) {
-      const selected = document.querySelector(`input[name="${name}"]:checked`);
-      return selected ? selected.value : "";
-    }
-
-    function setSelectedRadioValue(name, value) {
-      if (!value) {
-        return;
-      }
-      const target = document.querySelector(`input[name="${name}"][value="${value}"]`);
-      if (target) {
-        target.checked = true;
-      }
     }
 
     function readLocalJson(key, fallbackValue) {
@@ -1291,24 +1178,11 @@
         .filter((item) => item.qty > 0);
     }
 
-    function updateApartmentField() {
-      const isCustom = apartmentSelect.value === "기타 단지";
-      customApartmentWrap.style.display = isCustom ? "block" : "none";
-      customApartment.required = isCustom;
-    }
-
     function saveCustomerProfile() {
       const formData = new FormData(form);
       writeLocalJson(customerProfileKey, {
         customerName: String(formData.get("customerName") || ""),
-        phone: String(formData.get("phone") || ""),
-        apartment: String(formData.get("apartment") || ""),
-        customApartment: String(formData.get("customApartment") || ""),
-        building: String(formData.get("building") || ""),
-        unit: String(formData.get("unit") || ""),
-        gateCode: String(formData.get("gateCode") || ""),
-        deliveryType: getSelectedRadioValue("deliveryType"),
-        payMethod: getSelectedRadioValue("payMethod")
+        phone: String(formData.get("phone") || "")
       });
     }
 
@@ -1320,14 +1194,6 @@
 
       document.getElementById("customerName").value = profile.customerName || "";
       document.getElementById("phone").value = profile.phone || "";
-      apartmentSelect.value = profile.apartment || "";
-      customApartment.value = profile.customApartment || "";
-      document.getElementById("building").value = profile.building || "";
-      document.getElementById("unit").value = profile.unit || "";
-      document.getElementById("gateCode").value = profile.gateCode || "";
-      setSelectedRadioValue("deliveryType", profile.deliveryType);
-      setSelectedRadioValue("payMethod", profile.payMethod);
-      updateApartmentField();
     }
 
     function getLocalOrderHistory() {
@@ -1340,8 +1206,6 @@
         id: order.id || crypto.randomUUID(),
         created_at: order.created_at || new Date().toISOString(),
         customer_name: order.customer_name,
-        apartment_name: order.apartment_name,
-        address_detail: order.address_detail,
         items: order.items || [],
         total_amount: order.total_amount || 0,
         status: order.status || "new"
@@ -1371,7 +1235,6 @@
             <strong>${dateText} 주문</strong>
             <div class="history-meta">
               ${itemsText || "상품 정보 없음"}<br />
-              ${order.apartment_name || ""} ${order.address_detail || ""}<br />
               총 ${currency.format(order.total_amount || 0)}원
             </div>
           </div>
@@ -1453,9 +1316,6 @@
       }
 
       const formData = new FormData(form);
-      const apartmentName = formData.get("apartment") === "기타 단지"
-        ? formData.get("customApartment")
-        : formData.get("apartment");
       const total = selectedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const itemsText = selectedItems
         .map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.price * item.qty)}원)`)
@@ -1465,17 +1325,12 @@
         "[풍무농산 주문서]",
         `주문자명: ${formData.get("customerName")}`,
         `연락처: ${formData.get("phone")}`,
-        `아파트: ${apartmentName}`,
-        `주소: ${formData.get("building")} ${formData.get("unit")}`,
-        `공동현관 비밀번호: ${formData.get("gateCode") || "없음"}`,
-        `수령 방식: ${getSelectedRadioValue("deliveryType")}`,
-        `결제 방식: ${getSelectedRadioValue("payMethod")}`,
+        "결제 방식: 현장결제",
         "",
         "[주문 상품]",
         itemsText,
         "",
         `총 금액: ${currency.format(total)}원`,
-        `배송 메모: ${formData.get("memo") || "없음"}`,
         "",
         "[주문 안내]",
         `주문 마감: ${settings.orderDeadline}`,
@@ -1491,12 +1346,12 @@
         payload: {
           customer_name: String(formData.get("customerName") || "").trim(),
           phone: String(formData.get("phone") || "").trim(),
-          apartment_name: String(apartmentName || "").trim(),
-          address_detail: `${formData.get("building")} ${formData.get("unit")}`.trim(),
-          gate_code: String(formData.get("gateCode") || "").trim(),
-          delivery_type: getSelectedRadioValue("deliveryType"),
-          pay_method: getSelectedRadioValue("payMethod"),
-          memo: String(formData.get("memo") || "").trim(),
+          apartment_name: "",
+          address_detail: "",
+          gate_code: "",
+          delivery_type: "현장수령",
+          pay_method: "현장결제",
+          memo: "",
           items: selectedItems,
           total_amount: total,
           order_text: result,
@@ -1508,6 +1363,11 @@
     async function submitOrder() {
       const draft = getOrderDraft();
       if (!draft) {
+        return;
+      }
+
+      const ok = confirm("주문을 접수하시겠습니까?");
+      if (!ok) {
         return;
       }
 
@@ -1575,10 +1435,6 @@
       return lines;
     }
 
-    function parseApartments(text) {
-      return parseLines(text, "아파트 단지 목록이 비어 있습니다.");
-    }
-
     async function saveSettings() {
       try {
         settings = {
@@ -1590,7 +1446,7 @@
           liveLink: liveLinkInput.value.trim() || defaultSettings.liveLink,
           bandLink: bandLinkInput.value.trim() || defaultSettings.bandLink,
           notices: parseLines(noticeInput.value, "주문 안내 문구가 비어 있습니다."),
-          apartments: parseApartments(apartmentsInput.value),
+          apartments: [],
           paymentGuide: paymentGuideInput.value.trim() || defaultSettings.paymentGuide,
           products: parseProducts(productsInput.value)
         };
@@ -1626,7 +1482,6 @@
         ? "설정 닫기"
         : "설정 열기";
     });
-    apartmentSelect.addEventListener("change", updateApartmentField);
 
     async function init() {
       if (!manageMode) {
@@ -1636,7 +1491,6 @@
       applySettingsToView();
       loadCustomerProfile();
       renderOrderHistory();
-      updateApartmentField();
       submitStatus.textContent = "";
     }
 

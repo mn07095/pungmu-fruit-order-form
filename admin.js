@@ -1,6 +1,6 @@
 (function () {
   const defaultSettings = {
-    description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 단지배송에 필요한 아파트 선택과 공동현관 비밀번호도 함께 받습니다.",
+    description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있으며, 결제는 현장에서 진행됩니다.",
     orderDeadline: "오늘 오후 6시 마감",
     deliverySchedule: "오늘 저녁 7시~9시 순차배송",
     contact: "문의 010-0000-0000",
@@ -40,7 +40,8 @@
   const productAdminList = document.getElementById("productAdminList");
   const orderList = document.getElementById("orderList");
   const orderSearchInput = document.getElementById("orderSearchInput");
-  const orderStatusFilter = document.getElementById("orderStatusFilter");
+  const paidOrderList = document.getElementById("paidOrderList");
+  const paidSearchInput = document.getElementById("paidSearchInput");
   const inventoryStatus = document.getElementById("inventoryStatus");
   const settingsStatus = document.getElementById("settingsStatus");
   const authBox = document.getElementById("authBox");
@@ -151,80 +152,86 @@
   function renderSummary() {
     const total = orders.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
     const newCount = orders.filter((order) => order.status === "new").length;
-    const confirmedCount = orders.filter((order) => order.status === "confirmed").length;
+    const paidCount = orders.filter((order) => order.status === "paid").length;
 
     document.getElementById("totalOrders").textContent = String(orders.length);
     document.getElementById("newOrders").textContent = String(newCount);
-    document.getElementById("confirmedOrders").textContent = String(confirmedCount);
+    document.getElementById("paidOrders").textContent = String(paidCount);
     document.getElementById("totalAmount").textContent = `${currency.format(total)}원`;
   }
 
   function getStatusLabel(status) {
-    if (status === "confirmed") {
-      return { label: "접수 완료", className: "pill done" };
-    }
-    if (status === "done") {
-      return { label: "주문 완료", className: "pill done" };
+    if (status === "paid") {
+      return { label: "결제 완료", className: "pill done" };
     }
     return { label: "신규 주문", className: "pill pending" };
   }
 
-  function getFilteredOrders() {
-    const keyword = orderSearchInput.value.trim().toLowerCase();
-    const status = orderStatusFilter.value;
-
-    return orders.filter((order) => {
+  function filterOrders(orderSet, keyword) {
+    const normalizedKeyword = keyword.trim().toLowerCase();
+    return orderSet.filter((order) => {
       const itemsText = (order.items || []).map((item) => item.name).join(" ");
       const haystack = [
         order.customer_name,
         order.phone,
-        order.apartment_name,
-        order.address_detail,
         itemsText,
         order.memo
       ].join(" ").toLowerCase();
 
-      const matchesKeyword = !keyword || haystack.includes(keyword);
-      const matchesStatus = status === "all" || order.status === status;
-      return matchesKeyword && matchesStatus;
+      return !normalizedKeyword || haystack.includes(normalizedKeyword);
     });
   }
 
   function renderOrders() {
-    const filteredOrders = getFilteredOrders();
+    const activeOrders = orders.filter((order) => order.status !== "paid");
+    const filteredOrders = filterOrders(activeOrders, orderSearchInput.value);
     if (filteredOrders.length === 0) {
-      orderList.innerHTML = '<div class="muted">아직 접수된 주문이 없습니다.</div>';
-      return;
+      orderList.innerHTML = '<div class="muted">검색 결과 또는 접수된 주문이 없습니다.</div>';
+    } else {
+      orderList.innerHTML = filteredOrders.map((order) => renderOrderCard(order, "active")).join("");
     }
 
-    orderList.innerHTML = filteredOrders.map((order) => {
-      const status = getStatusLabel(order.status);
-      const itemsHtml = (order.items || [])
-        .map((item) => `${item.name} ${item.qty}개`)
-        .join(", ");
-      return `
-        <div class="order-card">
-          <div class="order-head">
-            <div>
-              <strong>${order.customer_name}</strong>
-              <div class="order-meta">
-                연락처: ${order.phone}<br />
-                아파트: ${order.apartment_name}<br />
-                주소: ${order.address_detail}<br />
-                상품: ${itemsHtml || "-"}<br />
-                금액: ${currency.format(order.total_amount || 0)}원
-              </div>
-            </div>
-            <div class="${status.className}">${status.label}</div>
-          </div>
-          <div class="order-actions">
-            <button type="button" class="secondary" data-status-id="${order.id}" data-status="confirmed">접수 완료</button>
-            <button type="button" class="primary" data-status-id="${order.id}" data-status="done">주문 완료</button>
-          </div>
-        </div>
-      `;
-    }).join("");
+    const paidOrders = orders.filter((order) => order.status === "paid");
+    const filteredPaidOrders = filterOrders(paidOrders, paidSearchInput.value);
+    if (filteredPaidOrders.length === 0) {
+      paidOrderList.innerHTML = '<div class="muted">결제완료 주문이 없습니다.</div>';
+    } else {
+      paidOrderList.innerHTML = filteredPaidOrders.map((order) => renderOrderCard(order, "paid")).join("");
+    }
 
+    bindOrderStatusButtons();
+  }
+
+  function renderOrderCard(order, type) {
+    const status = getStatusLabel(order.status);
+    const itemsHtml = (order.items || [])
+      .map((item) => `${item.name} ${item.qty}개`)
+      .join(", ");
+    const actionButton = type === "paid"
+      ? '<button type="button" class="ghost" data-status-id="' + order.id + '" data-status="new">결제 취소</button>'
+      : '<button type="button" class="primary" data-status-id="' + order.id + '" data-status="paid">결제완료</button>';
+
+    return `
+      <div class="order-card">
+        <div class="order-head">
+          <div>
+            <strong>${order.customer_name}</strong>
+            <div class="order-meta">
+              연락처: ${order.phone}<br />
+              상품: ${itemsHtml || "-"}<br />
+              금액: ${currency.format(order.total_amount || 0)}원
+            </div>
+          </div>
+          <div class="${status.className}">${status.label}</div>
+        </div>
+        <div class="order-actions">
+          ${actionButton}
+        </div>
+      </div>
+    `;
+  }
+
+  function bindOrderStatusButtons() {
     document.querySelectorAll("[data-status-id]").forEach((button) => {
       button.addEventListener("click", async () => {
         try {
@@ -389,7 +396,15 @@
   document.getElementById("saveSettingsBtn").addEventListener("click", savePageSettings);
   document.getElementById("refreshBtn").addEventListener("click", init);
   orderSearchInput.addEventListener("input", renderOrders);
-  orderStatusFilter.addEventListener("change", renderOrders);
+  paidSearchInput.addEventListener("input", renderOrders);
+  document.getElementById("clearOrderSearchBtn").addEventListener("click", () => {
+    orderSearchInput.value = "";
+    renderOrders();
+  });
+  document.getElementById("clearPaidSearchBtn").addEventListener("click", () => {
+    paidSearchInput.value = "";
+    renderOrders();
+  });
   document.getElementById("sendMagicLinkBtn").addEventListener("click", sendMagicLink);
   document.getElementById("checkSessionBtn").addEventListener("click", checkSession);
   logoutBtn.addEventListener("click", logout);
