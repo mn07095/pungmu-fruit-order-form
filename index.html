@@ -2153,6 +2153,217 @@
         padding-left: 110px;
       }
     }
+
+    /* Strong visual pass for mobile group-buying storefront */
+    @media (max-width: 640px) {
+      body {
+        background: #eef3ec;
+      }
+
+      .wrap {
+        background: #eef3ec;
+      }
+
+      .app-header {
+        border-bottom: 0;
+        background: #004225;
+      }
+
+      .brand-mark strong,
+      .brand-mark span,
+      .icon-button {
+        color: #fff;
+      }
+
+      .icon-button {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .date-rail-wrap {
+        top: 62px;
+        border-bottom: 0;
+        background: #004225;
+        box-shadow: 0 10px 22px rgba(0, 66, 37, 0.18);
+      }
+
+      .date-rail {
+        background: transparent;
+      }
+
+      .date-pill {
+        border-color: rgba(255, 255, 255, 0.18);
+        color: rgba(255, 255, 255, 0.78);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .date-pill.active {
+        border-color: #fff;
+        color: #004225;
+        background: #fff;
+      }
+
+      .storefront-intro {
+        margin: 10px 10px 8px;
+        padding: 16px;
+        border-radius: 18px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(246, 250, 244, 0.96)),
+          #fff;
+        box-shadow: 0 10px 26px rgba(17, 37, 21, 0.08);
+      }
+
+      .storefront-intro h2 {
+        font-size: 22px;
+      }
+
+      .storefront-tag {
+        border-color: #d8e3d5;
+        background: #fff;
+      }
+
+      .storefront-tag.strong {
+        background: #004225;
+      }
+
+      .panel {
+        padding: 0 10px;
+      }
+
+      .panel h3 {
+        margin-top: 14px;
+        padding: 0 4px 10px;
+        color: #1b261e;
+        font-size: 19px;
+      }
+
+      .event-card,
+      .product-card {
+        margin-bottom: 10px;
+        padding: 12px;
+        border: 1px solid #e1e7df;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(17, 37, 21, 0.07);
+      }
+
+      .event-card {
+        border-color: rgba(0, 66, 37, 0.24);
+        background:
+          linear-gradient(180deg, #fffef8, #ffffff);
+      }
+
+      .event-kicker {
+        display: inline-flex;
+        margin: 0 0 10px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        color: #004225;
+        background: #eaf6ec;
+        font-size: 11px;
+      }
+
+      .product-top,
+      .event-main {
+        grid-template-columns: 126px minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .product-thumb {
+        width: 126px;
+        height: 106px;
+        border: 0;
+        border-radius: 15px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+      }
+
+      .product-title,
+      .event-title {
+        color: #121812;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .product-meta {
+        color: #4c594e;
+        font-size: 13px;
+      }
+
+      .stock-badge,
+      .event-main .stock-badge {
+        margin-top: 8px;
+        color: #004225;
+        background: #e8f5eb;
+      }
+
+      .product-controls {
+        grid-template-columns: 96px minmax(0, 1fr);
+        padding-left: 138px;
+      }
+
+      .detail-button {
+        border: 1px solid #dbe5d9;
+        color: #2a342c;
+        background: #f9fbf8;
+      }
+
+      .stepper {
+        border: 1px solid #004225;
+        background: #fff;
+      }
+
+      .stepper button {
+        color: #004225;
+        background: #fff;
+      }
+
+      .qty-view {
+        color: #004225;
+        font-weight: 900;
+      }
+
+      .checkout-panel {
+        margin: 18px 10px 0;
+        padding: 16px;
+        border: 1px solid #e1e7df;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(17, 37, 21, 0.07);
+      }
+
+      .mobile-quickbar {
+        border-top: 0;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 -12px 30px rgba(17, 37, 21, 0.14);
+      }
+
+      .mobile-quickbar .primary {
+        background: linear-gradient(180deg, #00643b, #004225);
+        box-shadow: 0 10px 20px rgba(0, 66, 37, 0.22);
+      }
+
+      .mobile-quickbar .secondary {
+        background: #f7faf6;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .product-top,
+      .event-main {
+        grid-template-columns: 112px minmax(0, 1fr);
+      }
+
+      .product-thumb {
+        width: 112px;
+        height: 96px;
+      }
+
+      .product-controls {
+        grid-template-columns: 88px minmax(0, 1fr);
+        padding-left: 124px;
+      }
+    }
   </style>
 </head>
 <body>
