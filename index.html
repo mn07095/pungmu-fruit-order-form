@@ -2878,6 +2878,206 @@
         padding-top: 10px;
       }
     }
+
+    /* Polished brand storefront */
+    .brand-card {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      body,
+      .wrap {
+        background:
+          radial-gradient(circle at 20% 0, rgba(255, 138, 33, 0.1), transparent 26%),
+          linear-gradient(180deg, #fbfcf7 0%, #f4f7ef 42%, #ffffff 100%);
+      }
+
+      .app-header {
+        border-bottom: 0;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(14px);
+      }
+
+      .date-rail-wrap {
+        border-bottom: 0;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(14px);
+      }
+
+      .brand-showcase {
+        display: none;
+      }
+
+      .brand-card {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        gap: 14px;
+        align-items: center;
+        margin: 10px 12px 12px;
+        padding: 14px;
+        border: 1px solid rgba(96, 155, 25, 0.16);
+        border-radius: 24px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(250, 255, 244, 0.92)),
+          #fff;
+        box-shadow: 0 16px 36px rgba(33, 61, 24, 0.1);
+      }
+
+      .brand-card img {
+        width: 112px;
+        height: 94px;
+        object-fit: contain;
+      }
+
+      .brand-card-title {
+        margin: 0;
+        color: #19351f;
+        font-size: 28px;
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: -0.07em;
+      }
+
+      .brand-card-title span {
+        color: #ff8a21;
+      }
+
+      .brand-card-sub {
+        margin: 7px 0 0;
+        color: #5e6e5e;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-card-copy {
+        margin: 8px 0 0;
+        color: #29362c;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .storefront-intro {
+        margin: 0 12px 10px;
+        padding: 14px;
+        border: 1px solid rgba(0, 66, 37, 0.1);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 28px rgba(33, 61, 24, 0.07);
+      }
+
+      .storefront-intro h2 {
+        color: #142319;
+        font-size: 21px;
+      }
+
+      .storefront-tag {
+        border: 0;
+        color: #344237;
+        background: #f0f4ed;
+      }
+
+      .storefront-tag.strong {
+        color: #fff;
+        background: #004225;
+      }
+
+      .date-pill {
+        border: 0;
+        color: #4f5c51;
+        background: #eef3ec;
+      }
+
+      .date-pill.active {
+        color: #fff;
+        background: #004225;
+      }
+
+      .event-card,
+      .product-card {
+        margin-bottom: 12px;
+        padding: 12px;
+        border: 1px solid rgba(0, 66, 37, 0.09);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 14px 30px rgba(33, 61, 24, 0.08);
+      }
+
+      .event-card {
+        background:
+          linear-gradient(135deg, #fffaf0, #ffffff 58%);
+      }
+
+      .event-kicker {
+        display: inline-flex;
+        padding: 6px 9px;
+        border-radius: 999px;
+        color: #004225;
+        background: #ecf6e9;
+      }
+
+      .product-thumb {
+        border: 0;
+        border-radius: 16px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+      }
+
+      .product-title,
+      .event-title {
+        color: #142319;
+      }
+
+      .stock-badge,
+      .event-main .stock-badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        color: #0e5b35;
+        background: #edf7ee;
+        font-size: 12px;
+      }
+
+      .detail-button,
+      .stepper {
+        border: 1px solid #dbe5d9;
+        border-radius: 12px;
+      }
+
+      .stepper {
+        border-color: rgba(0, 66, 37, 0.32);
+      }
+
+      .mobile-quickbar {
+        border-top: 0;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 -12px 30px rgba(20, 35, 25, 0.12);
+      }
+
+      .mobile-quickbar .primary {
+        border-radius: 14px;
+        background: linear-gradient(180deg, #00643b, #004225);
+      }
+
+      .mobile-quickbar .secondary {
+        border-radius: 14px;
+        background: #fff;
+      }
+    }
+
+    @media (max-width: 370px) {
+      .brand-card {
+        grid-template-columns: 96px 1fr;
+      }
+
+      .brand-card img {
+        width: 96px;
+        height: 84px;
+      }
+
+      .brand-card-title {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2902,6 +3102,15 @@
 
     <section class="brand-showcase" aria-label="풍무농산 로고">
       <img src="./assets/pungmu-logo.svg" alt="풍무농산 청년가게" />
+    </section>
+
+    <section class="brand-card" aria-label="풍무농산 브랜드">
+      <img src="./assets/pungmu-logo.svg" alt="풍무농산 청년가게" />
+      <div>
+        <h1 class="brand-card-title">풍무<span>농산</span></h1>
+        <p class="brand-card-sub">청년가게 · 오늘 들어온 신선함</p>
+        <p class="brand-card-copy">입고된 과일과 채소를 남은 수량 기준으로 예약 주문합니다.</p>
+      </div>
     </section>
 
     <div class="date-rail-wrap">
