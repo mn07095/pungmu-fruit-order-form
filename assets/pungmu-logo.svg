@@ -1,31 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-labelledby="title desc">
   <title id="title">풍무농산 로고</title>
-  <desc id="desc">초록 잎과 제철 과일 바구니를 형상화한 풍무농산 로고</desc>
+  <desc id="desc">잎과 과일, 바구니 곡선을 간결하게 담은 풍무농산 워드마크</desc>
   <defs>
-    <linearGradient id="leaf" x1="56" y1="18" x2="108" y2="98" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#47b56a"/>
+    <linearGradient id="markGreen" x1="44" y1="18" x2="104" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#52b96b"/>
       <stop offset="1" stop-color="#004225"/>
     </linearGradient>
-    <linearGradient id="basket" x1="40" y1="72" x2="118" y2="132" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#cf8b39"/>
-      <stop offset="1" stop-color="#8b4f1f"/>
+    <linearGradient id="fruitRed" x1="56" y1="56" x2="98" y2="106" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff7868"/>
+      <stop offset="1" stop-color="#d9362f"/>
     </linearGradient>
   </defs>
-  <rect width="420" height="140" rx="32" fill="#fbfcf6"/>
-  <g transform="translate(26 18)">
-    <path d="M74 6c26 9 42 29 43 58-27 1-50-12-61-36C64 18 69 11 74 6Z" fill="url(#leaf)"/>
-    <path d="M68 14c15 15 25 31 31 49" fill="none" stroke="#e8f6df" stroke-width="5" stroke-linecap="round"/>
-    <path d="M34 47c-4-20 9-35 29-43 6 18 2 36-15 50-7-1-11-3-14-7Z" fill="#77bc43"/>
-    <path d="M57 72c0-18 14-33 32-33s32 15 32 33" fill="none" stroke="#004225" stroke-width="10" stroke-linecap="round"/>
-    <circle cx="52" cy="70" r="21" fill="#e84c3d"/>
-    <circle cx="87" cy="65" r="23" fill="#f2b441"/>
-    <circle cx="111" cy="78" r="19" fill="#7a3fb2"/>
-    <path d="M28 72h102l-14 43H42L28 72Z" fill="url(#basket)"/>
-    <path d="M38 84h82M44 100h70" stroke="#f6d28b" stroke-width="5" stroke-linecap="round" opacity=".8"/>
-    <path d="M45 116h68" stroke="#5e3519" stroke-width="5" stroke-linecap="round" opacity=".35"/>
+
+  <g transform="translate(24 18)">
+    <path d="M70 10c28 5 50 27 53 58-31 3-57-10-70-36 4-10 9-17 17-22Z" fill="url(#markGreen)"/>
+    <path d="M72 18c17 16 28 32 36 51" fill="none" stroke="#f4ffec" stroke-width="5" stroke-linecap="round"/>
+    <path d="M45 34c-16 12-23 29-17 49 22-5 36-20 39-43-7-4-14-6-22-6Z" fill="#86c84f"/>
+    <circle cx="73" cy="78" r="27" fill="url(#fruitRed)"/>
+    <circle cx="93" cy="73" r="22" fill="#f5b93e"/>
+    <path d="M30 90c20 22 78 23 99 0" fill="none" stroke="#8a572c" stroke-width="10" stroke-linecap="round"/>
+    <path d="M42 102c15 11 59 12 75 0" fill="none" stroke="#c99145" stroke-width="7" stroke-linecap="round"/>
   </g>
-  <g fill="#12321f">
-    <text x="170" y="65" font-family="Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif" font-size="38" font-weight="900" letter-spacing="-2">풍무농산</text>
-    <text x="172" y="96" font-family="Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif" font-size="15" font-weight="700" letter-spacing="1.8" fill="#51705b">FRESH PRODUCE MARKET</text>
+
+  <g transform="translate(170 36)">
+    <text x="0" y="45" font-family="Apple SD Gothic Neo, Malgun Gothic, Pretendard, sans-serif" font-size="42" font-weight="900" letter-spacing="-2.4" fill="#0b2417">풍무농산</text>
+    <path d="M2 61h198" stroke="#0b5c35" stroke-width="4" stroke-linecap="round"/>
+    <text x="2" y="88" font-family="Apple SD Gothic Neo, Malgun Gothic, Pretendard, sans-serif" font-size="16" font-weight="800" letter-spacing="1.2" fill="#5f765f">오늘 들어온 신선함</text>
   </g>
 </svg>
