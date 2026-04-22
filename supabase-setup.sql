@@ -20,8 +20,12 @@ create table if not exists public.orders (
   total_amount integer not null default 0,
   order_text text,
   status text not null default 'new',
+  paid_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+alter table public.orders
+add column if not exists paid_at timestamptz;
 
 alter table public.store_settings enable row level security;
 alter table public.orders enable row level security;
@@ -47,6 +51,13 @@ for update
 to authenticated
 using (true)
 with check (true);
+
+drop policy if exists "authenticated can delete old orders" on public.orders;
+create policy "authenticated can delete old orders"
+on public.orders
+for delete
+to authenticated
+using (created_at < now() - interval '3 days');
 
 drop policy if exists "public can read store settings" on public.store_settings;
 create policy "public can read store settings"

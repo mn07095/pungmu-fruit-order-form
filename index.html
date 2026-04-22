@@ -495,6 +495,35 @@
       background: linear-gradient(180deg, var(--panel-strong), #fff6ea);
     }
 
+    .order-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+
+    .order-meta-card {
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: #fff6ea;
+      border: 1px solid rgba(169, 73, 31, 0.14);
+    }
+
+    .order-meta-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .order-meta-card strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--accent-deep);
+      font-size: 15px;
+    }
+
     .summary-box {
       border: 1px solid var(--line);
       border-radius: var(--radius-md);
@@ -684,6 +713,7 @@
       }
 
       .form-grid,
+      .order-meta-grid,
       .product-controls,
       .radio-grid {
         grid-template-columns: 1fr;
@@ -796,6 +826,16 @@
         <p class="panel-desc">
           산지 입고와 재고 수량에 맞춰 운영하는 과일 공동구매 주문서입니다. 안내사항을 확인한 뒤 아래 상품에서 수량을 골라주세요.
         </p>
+        <div class="order-meta-grid">
+          <div class="order-meta-card">
+            <span>CLOSE</span>
+            <strong id="deadlineView">오늘 오후 6시 마감</strong>
+          </div>
+          <div class="order-meta-card">
+            <span>CONTACT</span>
+            <strong id="contactView">문의 010-0000-0000</strong>
+          </div>
+        </div>
         <div class="notice-box">
           <h3>주문 전 꼭 확인해주세요</h3>
           <ul class="notice-list" id="noticeList"></ul>
@@ -957,6 +997,8 @@
     const historyPanel = document.getElementById("historyPanel");
     const historyList = document.getElementById("historyList");
     const heroDescription = document.getElementById("heroDescription");
+    const deadlineView = document.getElementById("deadlineView");
+    const contactView = document.getElementById("contactView");
     const noticeList = document.getElementById("noticeList");
     const settingsPanel = document.getElementById("settingsPanel");
     const settingsToggleWrap = document.getElementById("settingsToggleWrap");
@@ -1172,6 +1214,8 @@
 
     function applySettingsToView() {
       heroDescription.innerHTML = settings.description.replace(/\n/g, "<br />");
+      deadlineView.textContent = settings.orderDeadline;
+      contactView.textContent = settings.contact;
       renderNoticeList();
       renderProducts();
       fillSettingsForm();
@@ -1242,7 +1286,9 @@
         total_amount: order.total_amount || 0,
         status: order.status || "new"
       });
-      writeLocalJson(customerHistoryKey, history.slice(0, 20));
+      const cutoff = Date.now() - (3 * 24 * 60 * 60 * 1000);
+      const keptHistory = history.filter((item) => new Date(item.created_at).getTime() >= cutoff);
+      writeLocalJson(customerHistoryKey, keptHistory.slice(0, 20));
       renderOrderHistory();
     }
 
@@ -1261,13 +1307,16 @@
           minute: "2-digit"
         });
         const itemsText = (order.items || []).map((item) => `${item.name} ${item.qty}개`).join(", ");
+        const paidText = order.paid_at
+          ? `<br />결제일 ${new Date(order.paid_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}`
+          : "";
 
         return `
           <div class="history-card">
             <strong>${dateText} 주문</strong>
             <div class="history-meta">
               ${itemsText || "상품 정보 없음"}<br />
-              총 ${currency.format(order.total_amount || 0)}원
+              총 ${currency.format(order.total_amount || 0)}원${paidText}
             </div>
           </div>
         `;

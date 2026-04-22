@@ -8,6 +8,7 @@
 
   const DEMO_SETTINGS_KEY = "pungmu-order-form-settings";
   const DEMO_ORDERS_KEY = "pungmu-order-form-orders";
+  const ORDER_RETENTION_DAYS = 3;
   let supabaseClient = null;
 
   function clone(value) {
@@ -56,6 +57,23 @@
 
   function writeLocalJson(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function getOrderCutoffDate() {
+    return new Date(Date.now() - (ORDER_RETENTION_DAYS * 24 * 60 * 60 * 1000));
+  }
+
+  function isKeptOrder(order) {
+    return new Date(order.created_at || Date.now()) >= getOrderCutoffDate();
+  }
+
+  function pruneLocalOrders() {
+    const currentOrders = readLocalJson(DEMO_ORDERS_KEY, []);
+    const keptOrders = currentOrders.filter(isKeptOrder);
+    if (keptOrders.length !== currentOrders.length) {
+      writeLocalJson(DEMO_ORDERS_KEY, keptOrders);
+    }
+    return keptOrders;
   }
 
   async function loadSettings(defaultSettings) {
@@ -150,10 +168,11 @@
 
   async function listOrders() {
     if (!isCloudMode()) {
-      return readLocalJson(DEMO_ORDERS_KEY, []);
+      return pruneLocalOrders();
     }
 
     const supabase = getSupabaseClient();
+    await pruneCloudOrders(supabase);
     const { data, error } = await supabase
       .from("orders")
       .select("*")
@@ -167,12 +186,24 @@
     return data || [];
   }
 
+  async function pruneCloudOrders(supabase) {
+    try {
+      await supabase
+        .from("orders")
+        .delete()
+        .lt("created_at", getOrderCutoffDate().toISOString());
+    } catch (error) {
+      console.warn("오래된 주문 정리에 실패했습니다.", error);
+    }
+  }
+
   async function updateOrderStatus(id, status) {
+    const paidAt = status === "paid" ? new Date().toISOString() : null;
     if (!isCloudMode()) {
-      const orders = readLocalJson(DEMO_ORDERS_KEY, []);
+      const orders = pruneLocalOrders();
       const updatedOrders = orders.map((order) => (
         order.id === id
-          ? { ...order, status }
+          ? { ...order, status, paid_at: paidAt }
           : order
       ));
       writeLocalJson(DEMO_ORDERS_KEY, updatedOrders);
@@ -182,12 +213,25 @@
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from("orders")
-      .update({ status })
+      .update({ status, paid_at: paidAt })
       .eq("id", id)
       .select()
       .single();
 
     if (error) {
+      if (String(error.message || "").includes("paid_at")) {
+        console.warn("paid_at 컬럼이 없어 상태만 저장합니다. supabase-setup.sql을 다시 실행하면 결제일도 저장됩니다.");
+        const fallback = await supabase
+          .from("orders")
+          .update({ status })
+          .eq("id", id)
+          .select()
+          .single();
+        if (fallback.error) {
+          throw fallback.error;
+        }
+        return fallback.data;
+      }
       throw error;
     }
 

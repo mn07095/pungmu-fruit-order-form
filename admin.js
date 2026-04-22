@@ -42,6 +42,8 @@
   const orderSearchInput = document.getElementById("orderSearchInput");
   const paidOrderList = document.getElementById("paidOrderList");
   const paidSearchInput = document.getElementById("paidSearchInput");
+  const previousOrderList = document.getElementById("previousOrderList");
+  const previousSearchInput = document.getElementById("previousSearchInput");
   const inventoryStatus = document.getElementById("inventoryStatus");
   const eventStatus = document.getElementById("eventStatus");
   const settingsStatus = document.getElementById("settingsStatus");
@@ -259,6 +261,29 @@
     document.getElementById("totalAmount").textContent = `${currency.format(total)}원`;
   }
 
+  function getOrderDate(order) {
+    return new Date(order.created_at || Date.now());
+  }
+
+  function isToday(date) {
+    const now = new Date();
+    return date.getFullYear() === now.getFullYear()
+      && date.getMonth() === now.getMonth()
+      && date.getDate() === now.getDate();
+  }
+
+  function formatDateTime(value) {
+    if (!value) {
+      return "";
+    }
+    return new Date(value).toLocaleString("ko-KR", {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
   function getStatusLabel(status) {
     if (status === "paid") {
       return { label: "결제 완료", className: "pill done" };
@@ -282,7 +307,10 @@
   }
 
   function renderOrders() {
-    const activeOrders = orders.filter((order) => order.status !== "paid");
+    const todayOrders = orders.filter((order) => isToday(getOrderDate(order)));
+    const previousOrders = orders.filter((order) => !isToday(getOrderDate(order)));
+
+    const activeOrders = todayOrders.filter((order) => order.status !== "paid");
     const filteredOrders = filterOrders(activeOrders, orderSearchInput.value);
     if (filteredOrders.length === 0) {
       orderList.innerHTML = '<div class="muted">검색 결과 또는 접수된 주문이 없습니다.</div>';
@@ -290,12 +318,19 @@
       orderList.innerHTML = filteredOrders.map((order) => renderOrderCard(order, "active")).join("");
     }
 
-    const paidOrders = orders.filter((order) => order.status === "paid");
+    const paidOrders = todayOrders.filter((order) => order.status === "paid");
     const filteredPaidOrders = filterOrders(paidOrders, paidSearchInput.value);
     if (filteredPaidOrders.length === 0) {
       paidOrderList.innerHTML = '<div class="muted">결제완료 주문이 없습니다.</div>';
     } else {
       paidOrderList.innerHTML = filteredPaidOrders.map((order) => renderOrderCard(order, "paid")).join("");
+    }
+
+    const filteredPreviousOrders = filterOrders(previousOrders, previousSearchInput.value);
+    if (filteredPreviousOrders.length === 0) {
+      previousOrderList.innerHTML = '<div class="muted">이전 주문이 없습니다.</div>';
+    } else {
+      previousOrderList.innerHTML = filteredPreviousOrders.map((order) => renderOrderCard(order, "previous")).join("");
     }
 
     bindOrderStatusButtons();
@@ -306,9 +341,12 @@
     const itemsHtml = (order.items || [])
       .map((item) => `${item.name} ${item.qty}개`)
       .join(", ");
-    const actionButton = type === "paid"
+    const actionButton = order.status === "paid"
       ? '<button type="button" class="ghost" data-status-id="' + order.id + '" data-status="new">결제 취소</button>'
       : '<button type="button" class="primary" data-status-id="' + order.id + '" data-status="paid">결제완료</button>';
+    const paidDateHtml = order.paid_at
+      ? `<br />결제일: ${formatDateTime(order.paid_at)}`
+      : "";
 
     return `
       <div class="order-card">
@@ -316,6 +354,7 @@
           <div>
             <strong>${order.customer_name}</strong>
             <div class="order-meta">
+              접수일: ${formatDateTime(order.created_at)}${paidDateHtml}<br />
               연락처: ${order.phone}<br />
               상품: ${itemsHtml || "-"}<br />
               금액: ${currency.format(order.total_amount || 0)}원
@@ -333,6 +372,13 @@
   function bindOrderStatusButtons() {
     document.querySelectorAll("[data-status-id]").forEach((button) => {
       button.addEventListener("click", async () => {
+        const isPaid = button.dataset.status === "paid";
+        const message = isPaid
+          ? "이 주문을 결제완료로 이동할까요?"
+          : "결제를 취소하고 주문 목록으로 되돌릴까요?";
+        if (!confirm(message)) {
+          return;
+        }
         try {
           await storage.updateOrderStatus(button.dataset.statusId, button.dataset.status);
           await refreshOrders();
@@ -532,12 +578,17 @@
   document.getElementById("refreshBtn").addEventListener("click", init);
   orderSearchInput.addEventListener("input", renderOrders);
   paidSearchInput.addEventListener("input", renderOrders);
+  previousSearchInput.addEventListener("input", renderOrders);
   document.getElementById("clearOrderSearchBtn").addEventListener("click", () => {
     orderSearchInput.value = "";
     renderOrders();
   });
   document.getElementById("clearPaidSearchBtn").addEventListener("click", () => {
     paidSearchInput.value = "";
+    renderOrders();
+  });
+  document.getElementById("clearPreviousSearchBtn").addEventListener("click", () => {
+    previousSearchInput.value = "";
     renderOrders();
   });
   document.getElementById("sendMagicLinkBtn").addEventListener("click", sendMagicLink);

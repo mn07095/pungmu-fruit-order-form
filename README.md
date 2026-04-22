@@ -78,6 +78,8 @@ window.ORDER_APP_CONFIG = {
 6. `mode: "supabase"`로 변경
 7. 관리자 페이지 `admin.html`에서 관리자 이메일로 매직링크 로그인
 
+이미 Supabase를 만들어둔 상태에서 결제완료 날짜/3일 자동 정리 기능을 추가했다면 `supabase-setup.sql`을 한 번 더 실행하세요. 기존 주문은 유지되고 `paid_at` 컬럼과 오래된 주문 삭제 권한만 보강됩니다.
+
 ## Supabase SQL 예시
 
 아래 SQL은 [`supabase-setup.sql`](./supabase-setup.sql) 와 동일합니다.
