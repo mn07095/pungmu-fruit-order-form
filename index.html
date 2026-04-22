@@ -596,6 +596,43 @@
       background: rgba(255, 252, 247, 0.95);
     }
 
+    .history-panel {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffdf8, #fff7ed);
+    }
+
+    .history-panel.open {
+      display: block;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .history-card {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+
+    .history-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .history-meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     pre {
       margin: 0;
       white-space: pre-wrap;
@@ -686,7 +723,8 @@
       .notice-box,
       .mini-card,
       .summary-box,
-      .order-result {
+      .order-result,
+      .history-panel {
         padding: 16px;
       }
 
@@ -922,8 +960,7 @@
 
         <div class="actions">
           <button type="button" class="primary" id="submitOrderBtn">주문 접수하기</button>
-          <button type="button" class="primary" id="makeOrderBtn">주문내용 만들기</button>
-          <button type="button" class="secondary" id="copyOrderBtn">주문내용 복사하기</button>
+          <button type="button" class="secondary" id="toggleHistoryBtn">내 주문내역 보기</button>
           <button type="button" class="ghost" id="resetBtn">수량 초기화</button>
         </div>
         <div class="status-note" id="submitStatus"></div>
@@ -995,21 +1032,21 @@
           </div>
         </div>
 
-        <div class="order-result" id="orderResult">
-          <h3>복사해서 보내는 주문 내용</h3>
-          <pre id="orderText">아직 주문내용이 생성되지 않았습니다.</pre>
+        <div class="history-panel" id="historyPanel">
+          <h3>내 주문내역</h3>
+          <div class="hint">이 휴대폰 브라우저에 저장된 주문내역입니다. 다른 기기나 브라우저에서는 보이지 않을 수 있습니다.</div>
+          <div class="history-list" id="historyList"></div>
         </div>
 
         <p class="footer-note">
-          지금 버전은 화면에서 품목/재고/링크/단지 목록을 바로 수정할 수 있는 재사용형 주문서입니다.
-          다음 단계에서는 구글폼 저장, 스프레드시트 접수, 네이버폼 스타일 접수형으로 더 확장할 수 있습니다.
+          주문자 정보는 같은 휴대폰 브라우저에 저장되어 다음 주문 때 자동으로 채워집니다.
         </p>
       </section>
     </div>
 
     <div class="mobile-quickbar">
-      <button type="button" class="primary" id="makeOrderBtnMobile">주문내용 만들기</button>
-      <button type="button" class="secondary" id="copyOrderBtnMobile">복사하기</button>
+      <button type="button" class="primary" id="submitOrderBtnMobile">주문 접수하기</button>
+      <button type="button" class="secondary" id="toggleHistoryBtnMobile">주문내역</button>
     </div>
   </div>
 
@@ -1054,6 +1091,8 @@
     const storage = window.OrderFormStorage;
     const currency = new Intl.NumberFormat("ko-KR");
     const manageMode = new URLSearchParams(window.location.search).has("manage");
+    const customerProfileKey = "pungmu-customer-profile";
+    const customerHistoryKey = "pungmu-customer-order-history";
     let settings = storage.clone(defaultSettings);
 
     const productList = document.getElementById("productList");
@@ -1062,9 +1101,10 @@
     const customApartment = document.getElementById("customApartment");
     const summaryList = document.getElementById("summaryList");
     const grandTotal = document.getElementById("grandTotal");
-    const orderText = document.getElementById("orderText");
     const form = document.getElementById("orderForm");
     const submitStatus = document.getElementById("submitStatus");
+    const historyPanel = document.getElementById("historyPanel");
+    const historyList = document.getElementById("historyList");
     const heroDescription = document.getElementById("heroDescription");
     const liveLink = document.getElementById("liveLink");
     const bandLink = document.getElementById("bandLink");
@@ -1226,6 +1266,29 @@
       return selected ? selected.value : "";
     }
 
+    function setSelectedRadioValue(name, value) {
+      if (!value) {
+        return;
+      }
+      const target = document.querySelector(`input[name="${name}"][value="${value}"]`);
+      if (target) {
+        target.checked = true;
+      }
+    }
+
+    function readLocalJson(key, fallbackValue) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallbackValue;
+      } catch (error) {
+        return fallbackValue;
+      }
+    }
+
+    function writeLocalJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
     function getSelectedItems() {
       return settings.products
         .map((product) => {
@@ -1240,6 +1303,96 @@
       const isCustom = apartmentSelect.value === "기타 단지";
       customApartmentWrap.style.display = isCustom ? "block" : "none";
       customApartment.required = isCustom;
+    }
+
+    function saveCustomerProfile() {
+      const formData = new FormData(form);
+      writeLocalJson(customerProfileKey, {
+        customerName: String(formData.get("customerName") || ""),
+        phone: String(formData.get("phone") || ""),
+        apartment: String(formData.get("apartment") || ""),
+        customApartment: String(formData.get("customApartment") || ""),
+        building: String(formData.get("building") || ""),
+        unit: String(formData.get("unit") || ""),
+        gateCode: String(formData.get("gateCode") || ""),
+        deliveryType: getSelectedRadioValue("deliveryType"),
+        payMethod: getSelectedRadioValue("payMethod")
+      });
+    }
+
+    function loadCustomerProfile() {
+      const profile = readLocalJson(customerProfileKey, null);
+      if (!profile) {
+        return;
+      }
+
+      document.getElementById("customerName").value = profile.customerName || "";
+      document.getElementById("phone").value = profile.phone || "";
+      apartmentSelect.value = profile.apartment || "";
+      customApartment.value = profile.customApartment || "";
+      document.getElementById("building").value = profile.building || "";
+      document.getElementById("unit").value = profile.unit || "";
+      document.getElementById("gateCode").value = profile.gateCode || "";
+      setSelectedRadioValue("deliveryType", profile.deliveryType);
+      setSelectedRadioValue("payMethod", profile.payMethod);
+      updateApartmentField();
+    }
+
+    function getLocalOrderHistory() {
+      return readLocalJson(customerHistoryKey, []);
+    }
+
+    function saveLocalOrderHistory(order) {
+      const history = getLocalOrderHistory();
+      history.unshift({
+        id: order.id || crypto.randomUUID(),
+        created_at: order.created_at || new Date().toISOString(),
+        customer_name: order.customer_name,
+        apartment_name: order.apartment_name,
+        address_detail: order.address_detail,
+        items: order.items || [],
+        total_amount: order.total_amount || 0,
+        status: order.status || "new"
+      });
+      writeLocalJson(customerHistoryKey, history.slice(0, 20));
+      renderOrderHistory();
+    }
+
+    function renderOrderHistory() {
+      const history = getLocalOrderHistory();
+      if (history.length === 0) {
+        historyList.innerHTML = '<div class="hint">아직 이 휴대폰에 저장된 주문내역이 없습니다.</div>';
+        return;
+      }
+
+      historyList.innerHTML = history.map((order) => {
+        const dateText = new Date(order.created_at).toLocaleString("ko-KR", {
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+        const itemsText = (order.items || []).map((item) => `${item.name} ${item.qty}개`).join(", ");
+
+        return `
+          <div class="history-card">
+            <strong>${dateText} 주문</strong>
+            <div class="history-meta">
+              ${itemsText || "상품 정보 없음"}<br />
+              ${order.apartment_name || ""} ${order.address_detail || ""}<br />
+              총 ${currency.format(order.total_amount || 0)}원
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleOrderHistory() {
+      historyPanel.classList.toggle("open");
+      renderOrderHistory();
+      if (historyPanel.classList.contains("open")) {
+        historyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
 
     function updateStockAndSummary() {
@@ -1360,14 +1513,6 @@
       };
     }
 
-    function buildOrderText() {
-      const draft = getOrderDraft();
-      if (!draft) {
-        return;
-      }
-      orderText.textContent = draft.text;
-    }
-
     async function submitOrder() {
       const draft = getOrderDraft();
       if (!draft) {
@@ -1377,27 +1522,16 @@
       submitStatus.textContent = "주문을 저장하는 중입니다...";
 
       try {
-        await storage.createOrder(draft.payload);
-        orderText.textContent = draft.text;
+        const savedOrder = await storage.createOrder(draft.payload);
+        saveCustomerProfile();
+        saveLocalOrderHistory(savedOrder || draft.payload);
         submitStatus.textContent = storage.isCloudMode()
-          ? "주문이 저장되었습니다. 관리자 페이지에서 바로 확인할 수 있습니다."
-          : "주문이 데모 모드에 저장되었습니다. 같은 브라우저의 관리자 페이지에서 확인할 수 있습니다.";
+          ? "주문이 접수되었습니다. 감사합니다."
+          : "주문이 접수되었습니다. 이 휴대폰의 주문내역에 저장됐습니다.";
       } catch (error) {
         console.error(error);
         submitStatus.textContent = `주문 저장 실패: ${error.message}`;
       }
-    }
-
-    function copyOrderText() {
-      const text = orderText.textContent;
-      if (!text || text === "아직 주문내용이 생성되지 않았습니다.") {
-        alert("먼저 주문내용 만들기를 눌러주세요.");
-        return;
-      }
-
-      navigator.clipboard.writeText(text)
-        .then(() => alert("주문내용을 복사했습니다."))
-        .catch(() => alert("복사에 실패했습니다. 직접 선택해서 복사해주세요."));
     }
 
     function resetQuantities() {
@@ -1408,7 +1542,6 @@
         }
       });
       updateStockAndSummary();
-      orderText.textContent = "아직 주문내용이 생성되지 않았습니다.";
       submitStatus.textContent = "";
     }
 
@@ -1480,15 +1613,13 @@
       await storage.saveSettings(settings);
       applySettingsToView();
       settingsStatus.textContent = "기본값으로 되돌렸습니다.";
-      orderText.textContent = "아직 주문내용이 생성되지 않았습니다.";
       submitStatus.textContent = "";
     }
 
     document.getElementById("submitOrderBtn").addEventListener("click", submitOrder);
-    document.getElementById("makeOrderBtn").addEventListener("click", buildOrderText);
-    document.getElementById("copyOrderBtn").addEventListener("click", copyOrderText);
-    document.getElementById("makeOrderBtnMobile").addEventListener("click", buildOrderText);
-    document.getElementById("copyOrderBtnMobile").addEventListener("click", copyOrderText);
+    document.getElementById("submitOrderBtnMobile").addEventListener("click", submitOrder);
+    document.getElementById("toggleHistoryBtn").addEventListener("click", toggleOrderHistory);
+    document.getElementById("toggleHistoryBtnMobile").addEventListener("click", toggleOrderHistory);
     document.getElementById("resetBtn").addEventListener("click", resetQuantities);
     document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
     document.getElementById("loadDefaultBtn").addEventListener("click", loadDefaults);
@@ -1506,10 +1637,10 @@
       }
       settings = await storage.loadSettings(defaultSettings);
       applySettingsToView();
+      loadCustomerProfile();
+      renderOrderHistory();
       updateApartmentField();
-      submitStatus.textContent = storage.isCloudMode()
-        ? "실운영 저장 모드가 연결되었습니다."
-        : "현재 데모 모드입니다. 실제 공용 주문 저장을 원하면 Supabase를 연결하세요.";
+      submitStatus.textContent = "";
     }
 
     init();
