@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>풍무농산 주문서</title>
-  <link rel="icon" href="./assets/pungmu-logo.svg" type="image/svg+xml" />
+  <link rel="icon" href="./assets/pungmu-logo.svg?v=farmer-2" type="image/svg+xml" />
   <style>
     :root {
       --bg: #fbf4ea;
@@ -2923,11 +2923,31 @@
         box-shadow: 0 16px 36px rgba(33, 61, 24, 0.1);
       }
 
-      .brand-card img {
-        width: 112px;
-        height: 94px;
-        object-fit: contain;
-      }
+    .brand-card img {
+      width: 112px;
+      height: 94px;
+      object-fit: contain;
+    }
+
+    .product-card.is-hidden,
+    .event-card.is-hidden,
+    .section-title.is-hidden,
+    .products.is-hidden,
+    .event-strip.is-hidden {
+      display: none !important;
+    }
+
+    .storefront-tag,
+    .date-pill {
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .storefront-tag:disabled,
+    .date-pill:disabled {
+      cursor: default;
+      opacity: 0.62;
+    }
 
       .brand-card-title {
         margin: 0;
@@ -3093,7 +3113,7 @@
     <header class="app-header">
       <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">메뉴</button>
       <div class="brand-mark">
-        <img class="brand-logo" src="./assets/pungmu-logo.svg" alt="풍무농산" />
+        <img class="brand-logo" src="./assets/pungmu-logo.svg?v=farmer-2" alt="풍무농산" />
         <strong>풍무농산</strong>
         <span>오늘의 산지 장보기</span>
       </div>
@@ -3101,11 +3121,11 @@
     </header>
 
     <section class="brand-showcase" aria-label="풍무농산 로고">
-      <img src="./assets/pungmu-logo.svg" alt="풍무농산 청년가게" />
+      <img src="./assets/pungmu-logo.svg?v=farmer-2" alt="풍무농산 청년가게" />
     </section>
 
     <section class="brand-card" aria-label="풍무농산 브랜드">
-      <img src="./assets/pungmu-logo.svg" alt="풍무농산 청년가게" />
+      <img src="./assets/pungmu-logo.svg?v=farmer-2" alt="풍무농산 청년가게" />
       <div>
         <h1 class="brand-card-title">풍무<span>농산</span></h1>
         <p class="brand-card-sub">청년가게 · 오늘 들어온 신선함</p>
@@ -3115,9 +3135,9 @@
 
     <div class="date-rail-wrap">
       <div class="date-rail" aria-label="주문 가능 날짜">
-        <div class="date-pill active"><strong>오늘</strong><span>예약중</span></div>
-        <div class="date-pill"><strong>내일</strong><span>입고예정</span></div>
-        <div class="date-pill"><strong>모레</strong><span>준비중</span></div>
+        <button type="button" class="date-pill active" data-day-tab="today"><strong>오늘</strong><span>예약중</span></button>
+        <button type="button" class="date-pill" data-day-tab="tomorrow"><strong>내일</strong><span>입고예정</span></button>
+        <button type="button" class="date-pill" data-day-tab="later"><strong>모레</strong><span>준비중</span></button>
       </div>
     </div>
 
@@ -3125,11 +3145,11 @@
       <h2>오늘의 공동구매</h2>
       <p>풍무농산 입고 상품을 남은 수량 기준으로 예약합니다. 수량 선택 후 하단 주문하기를 눌러주세요.</p>
       <div class="storefront-tags">
-        <span class="storefront-tag strong">전체 상품</span>
-        <span class="storefront-tag">이벤트 특가</span>
-        <span class="storefront-tag">과일</span>
-        <span class="storefront-tag">채소</span>
-        <span class="storefront-tag">현장결제</span>
+        <button type="button" class="storefront-tag strong" data-category-filter="all">전체 상품</button>
+        <button type="button" class="storefront-tag" data-category-filter="event">이벤트 특가</button>
+        <button type="button" class="storefront-tag" data-category-filter="fruit">과일</button>
+        <button type="button" class="storefront-tag" data-category-filter="vegetable">채소</button>
+        <button type="button" class="storefront-tag" data-day-tab="today">현장결제</button>
       </div>
     </section>
 
@@ -3164,9 +3184,9 @@
           <ul class="notice-list" id="noticeList"></ul>
         </div>
         <div class="event-strip" id="eventList"></div>
-        <h3 style="margin-bottom:12px;">과일</h3>
+        <h3 class="section-title" data-section-title="fruit" style="margin-bottom:12px;">과일</h3>
         <div class="products" id="productList"></div>
-        <h3 style="margin:22px 0 12px;">채소</h3>
+        <h3 class="section-title" data-section-title="vegetable" style="margin:22px 0 12px;">채소</h3>
         <div class="products" id="vegetableList"></div>
       </section>
 
@@ -3353,6 +3373,7 @@
     const noticeInput = document.getElementById("noticeInput");
     const productsInput = document.getElementById("productsInput");
     const fallbackProductEmoji = "🍏";
+    let activeCategoryFilter = "all";
 
     function createProductId(name, index) {
       return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
@@ -3498,7 +3519,7 @@
         const stockQuantity = Math.max(Number(event.stock || 0), 0);
         const limitText = "1인 최대 1개";
         return `
-          <article class="event-card${open ? "" : " event-closed"}">
+          <article class="event-card${open ? "" : " event-closed"}" data-category="event">
             <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
             <div class="event-main">
               <div class="product-thumb" data-emoji="${event.emoji || "🔥"}">
@@ -3561,13 +3582,14 @@
       }, Math.max(nextOpenDate.getTime() - now.getTime() + 1000, 1000));
     }
 
-    function createProductCard(product) {
+    function createProductCard(product, category = "fruit") {
       const maxQuantity = getMaxQuantity(product);
       const soldOut = maxQuantity <= 0;
       const emoji = getProductEmoji(product);
       const effectivePrice = getEffectivePrice(product);
       const card = document.createElement("article");
       card.className = `product-card${soldOut ? " sold-out" : ""}`;
+      card.dataset.category = category;
       card.innerHTML = `
         <div class="product-top">
           <div class="product-main">
@@ -3611,10 +3633,10 @@
       vegetableList.innerHTML = "";
       renderEventList();
       settings.products.forEach((product) => {
-        productList.appendChild(createProductCard(product));
+        productList.appendChild(createProductCard(product, "fruit"));
       });
       settings.vegetables.forEach((product) => {
-        vegetableList.appendChild(createProductCard(product));
+        vegetableList.appendChild(createProductCard(product, "vegetable"));
       });
 
       document.querySelectorAll("[data-product-id]").forEach((input) => {
@@ -3654,7 +3676,41 @@
       });
 
       updateStockAndSummary();
+      applyCategoryFilter(activeCategoryFilter);
       scheduleNextEventRefresh();
+    }
+
+    function applyCategoryFilter(category) {
+      activeCategoryFilter = category;
+      document.querySelectorAll("[data-category-filter]").forEach((button) => {
+        button.classList.toggle("strong", button.dataset.categoryFilter === category);
+      });
+
+      document.querySelectorAll("[data-category]").forEach((card) => {
+        card.classList.toggle("is-hidden", category !== "all" && card.dataset.category !== category);
+      });
+
+      const showEvents = category === "all" || category === "event";
+      const showFruit = category === "all" || category === "fruit";
+      const showVegetables = category === "all" || category === "vegetable";
+      eventList.classList.toggle("is-hidden", !showEvents);
+      productList.classList.toggle("is-hidden", !showFruit);
+      vegetableList.classList.toggle("is-hidden", !showVegetables);
+      document.querySelector('[data-section-title="fruit"]')?.classList.toggle("is-hidden", !showFruit);
+      document.querySelector('[data-section-title="vegetable"]')?.classList.toggle("is-hidden", !showVegetables);
+    }
+
+    function handleDayTab(day) {
+      document.querySelectorAll("[data-day-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.dayTab === day);
+      });
+      if (day === "today") {
+        submitStatus.textContent = "";
+        return;
+      }
+      submitStatus.textContent = day === "tomorrow"
+        ? "내일 입고 상품은 관리자 등록 후 주문 가능합니다."
+        : "모레 상품은 아직 준비 중입니다.";
     }
 
     function applySettingsToView() {
@@ -4121,6 +4177,12 @@
     });
     document.getElementById("menuOpenBtn").addEventListener("click", () => toggleMenu(true));
     menuOverlay.addEventListener("click", () => toggleMenu(false));
+    document.querySelectorAll("[data-category-filter]").forEach((button) => {
+      button.addEventListener("click", () => applyCategoryFilter(button.dataset.categoryFilter));
+    });
+    document.querySelectorAll("[data-day-tab]").forEach((button) => {
+      button.addEventListener("click", () => handleDayTab(button.dataset.dayTab));
+    });
     document.getElementById("resetBtn").addEventListener("click", resetQuantities);
     document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
     document.getElementById("loadDefaultBtn").addEventListener("click", loadDefaults);
