@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>풍무농산 관리자</title>
-  <link rel="icon" href="./assets/pungmu-logo.svg?v=farmer-2" type="image/svg+xml" />
+  <link rel="icon" href="./assets/pungmu-logo.svg?v=farmer-3" type="image/svg+xml" />
   <style>
     :root {
       --bg: #faf4ea;
@@ -259,6 +259,57 @@
     .hidden {
       display: none !important;
     }
+    .hero {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255, 138, 33, 0.18), transparent 28%),
+        linear-gradient(135deg, #fffdf7 0%, #f4faec 100%);
+      color: #17261b;
+    }
+
+    .hero p {
+      color: #526151;
+      font-weight: 700;
+    }
+
+    .admin-brand {
+      width: fit-content;
+      padding: 9px 12px;
+      border: 1px solid rgba(0, 66, 37, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 12px 28px rgba(33, 61, 24, 0.08);
+    }
+
+    .admin-brand img {
+      width: 210px;
+      border-radius: 12px;
+    }
+
+    .admin-brand span {
+      color: #004225;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .primary,
+    .nav-tab {
+      color: #fff;
+      background: linear-gradient(180deg, #087347, #004225);
+      box-shadow: 0 10px 24px rgba(0, 66, 37, 0.22);
+    }
+
+    .secondary {
+      color: #004225;
+      background: #ecf6e9;
+    }
+
+    .panel,
+    .auth-box,
+    .summary-card,
+    .item-card {
+      border-color: rgba(0, 66, 37, 0.1);
+    }
+
     @media (max-width: 760px) {
       .summary-grid,
       .settings-grid,
@@ -445,8 +496,53 @@
       }
 
       .admin-brand img {
-        width: 148px;
+        width: min(260px, 78vw);
       }
+    }
+
+    /* Brand pass: keep the admin pages aligned with the customer storefront. */
+    .hero {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255, 138, 33, 0.18), transparent 28%),
+        linear-gradient(135deg, #fffdf7 0%, #f4faec 100%);
+      color: #17261b;
+    }
+
+    .hero p {
+      color: #526151;
+      font-weight: 700;
+    }
+
+    .admin-brand {
+      width: fit-content;
+      padding: 9px 12px;
+      border: 1px solid rgba(0, 66, 37, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 12px 28px rgba(33, 61, 24, 0.08);
+    }
+
+    .admin-brand img {
+      width: 210px;
+      border-radius: 12px;
+    }
+
+    .admin-brand span {
+      color: #004225;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .primary,
+    .nav-tab {
+      color: #fff;
+      background: linear-gradient(180deg, #087347, #004225);
+      box-shadow: 0 10px 24px rgba(0, 66, 37, 0.22);
+    }
+
+    .secondary {
+      color: #004225;
+      background: #ecf6e9;
     }
   </style>
 </head>
@@ -454,7 +550,7 @@
   <div class="wrap">
     <section class="hero">
       <div class="admin-brand">
-        <img src="./assets/pungmu-logo.svg?v=farmer-2" alt="풍무농산" />
+        <img src="./assets/pungmu-logo.svg?v=farmer-3" alt="풍무농산" />
         <span>관리자</span>
       </div>
       <h1>상품관리</h1>
