@@ -64,12 +64,9 @@
 <body class="font-sans">
   <div id="menuOverlay" class="fixed inset-0 z-40 hidden bg-black/35"></div>
   <nav id="sideMenu" class="fixed inset-y-0 left-0 z-50 w-[280px] -translate-x-full bg-white p-6 shadow-2xl transition-transform duration-200" aria-label="풍무농산 메뉴">
-    <div class="flex items-center gap-3">
-      <img src="./assets/pungmu-logo.svg?v=modern-1" alt="" class="h-12 w-12 rounded-2xl object-contain" />
-      <div>
-        <strong class="block text-xl font-black tracking-[-0.06em]">풍무농산</strong>
-        <span class="text-sm font-bold text-zinc-500">청년가게</span>
-      </div>
+    <div>
+      <strong class="block text-2xl font-black tracking-[-0.08em]">풍무농산</strong>
+      <span class="text-sm font-bold text-zinc-500">청년가게</span>
     </div>
     <div class="mt-8 grid gap-2 text-[15px] font-extrabold">
       <a class="rounded-2xl bg-zinc-50 px-4 py-3" href="https://band.us/" target="_blank" rel="noreferrer">입고 공지 보러가기</a>
@@ -140,7 +137,6 @@
             <h2 class="text-[24px] font-black tracking-[-0.07em]">주문 정보</h2>
             <p class="mt-1 text-sm font-bold text-zinc-500">이름과 연락처만 입력하면 접수됩니다.</p>
           </div>
-          <img src="./assets/pungmu-logo.svg?v=modern-1" alt="" class="h-12 w-12 rounded-2xl bg-white object-contain p-1" />
         </div>
 
         <form id="orderForm" class="mt-5 grid gap-3">
@@ -581,12 +577,10 @@
       });
     }
 
-    function toggleOrderHistory() {
-      historyPanel.classList.toggle("hidden");
+    function openOrderHistory() {
+      historyPanel.classList.remove("hidden");
       renderOrderHistory();
-      if (!historyPanel.classList.contains("hidden")) {
-        historyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      historyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function getBusinessDateKey(date = new Date()) {
@@ -687,11 +681,11 @@
     }
 
     document.getElementById("submitOrderBtnMobile").addEventListener("click", submitOrder);
-    document.getElementById("toggleHistoryBtnMobile").addEventListener("click", toggleOrderHistory);
-    document.getElementById("headerHistoryBtn").addEventListener("click", toggleOrderHistory);
+    document.getElementById("toggleHistoryBtnMobile").addEventListener("click", openOrderHistory);
+    document.getElementById("headerHistoryBtn").addEventListener("click", openOrderHistory);
     document.getElementById("menuHistoryBtn").addEventListener("click", () => {
       toggleMenu(false);
-      toggleOrderHistory();
+      openOrderHistory();
     });
     document.getElementById("menuOpenBtn").addEventListener("click", () => toggleMenu(true));
     menuOverlay.addEventListener("click", () => toggleMenu(false));
