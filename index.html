@@ -4,3357 +4,191 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>풍무농산 주문서</title>
-  <link rel="icon" href="./assets/pungmu-logo.svg?v=farmer-3" type="image/svg+xml" />
-  <style>
-    :root {
-      --bg: #fbf4ea;
-      --panel: rgba(255, 252, 245, 0.94);
-      --panel-strong: #fffaf3;
-      --ink: #2f261d;
-      --muted: #766658;
-      --line: rgba(103, 76, 53, 0.15);
-      --accent: #d46a2e;
-      --accent-deep: #a9491f;
-      --accent-soft: #fde2c7;
-      --warn: #bb3e03;
-      --leaf: #6d8b3d;
-      --leaf-soft: #eef4da;
-      --berry: #c8454f;
-      --shadow: 0 20px 40px rgba(94, 58, 28, 0.12);
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(255, 211, 163, 0.75), transparent 36%),
-        radial-gradient(circle at top right, rgba(255, 235, 175, 0.82), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(225, 241, 199, 0.55), transparent 25%),
-        linear-gradient(180deg, #fffaf3 0%, var(--bg) 100%);
-      min-height: 100vh;
-    }
-
-    .wrap {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 56px;
-    }
-
-    .hero {
-      padding: 28px;
-      border-radius: 32px;
-      background:
-        linear-gradient(135deg, rgba(127, 62, 24, 0.96), rgba(213, 106, 46, 0.88)),
-        #a9491f;
-      color: #fffaf1;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -80px -80px auto;
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      background: rgba(255, 242, 226, 0.12);
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 248, 239, 0.14);
-      font-size: 13px;
-      letter-spacing: 0.04em;
-    }
-
-    h1 {
-      margin: 16px 0 10px;
-      font-size: clamp(34px, 4vw, 52px);
-      line-height: 1.02;
-    }
-
-    .hero p {
-      width: min(700px, 100%);
-      margin: 0;
-      color: rgba(255, 246, 237, 0.88);
-      line-height: 1.7;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-      margin-top: 24px;
-      align-items: start;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .panel h2,
-    .panel h3 {
-      margin: 0 0 8px;
-    }
-
-    .panel h2 {
-      font-size: 24px;
-    }
-
-    .panel h3 {
-      font-size: 18px;
-    }
-
-    .panel-desc {
-      margin: 0 0 20px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .products {
-      display: grid;
-      gap: 16px;
-    }
-
-    .notice-box {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      background:
-        linear-gradient(180deg, #fffdf8, #fff7ef),
-        linear-gradient(90deg, rgba(109, 139, 61, 0.06), rgba(212, 106, 46, 0.06));
-    }
-
-    .notice-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin: 18px 0;
-    }
-
-    .info-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      background: linear-gradient(180deg, var(--panel-strong), #fff5e8);
-    }
-
-    .info-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 18px;
-    }
-
-    .product-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255, 247, 236, 0.98));
-      padding: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .product-card.sold-out {
-      opacity: 0.65;
-      background: linear-gradient(180deg, rgba(247,245,242,0.9), rgba(242,237,232,0.98));
-    }
-
-    .product-card::before {
-      content: "Fresh";
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: var(--leaf-soft);
-      color: var(--leaf);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      z-index: 1;
-    }
-
-    .product-card.sold-out::before {
-      content: "Closed";
-      background: #eee6df;
-      color: #7f6756;
-    }
-
-    .product-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      padding-right: 72px;
-    }
-
-    .product-main {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      min-width: 0;
-    }
-
-    .product-thumb {
-      width: 52px;
-      height: 52px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 16px;
-      background: linear-gradient(180deg, #fff4e8, #ffe9d4);
-      box-shadow: inset 0 0 0 1px rgba(169, 73, 31, 0.08);
-      font-size: 28px;
-    }
-
-    .product-copy {
-      min-width: 0;
-    }
-
-    .product-title {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .product-meta {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .promo-badge {
-      display: inline-flex;
-      margin-top: 10px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: #fff0dc;
-      color: var(--accent-deep);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .event-strip {
-      display: grid;
-      gap: 12px;
-      margin: 0 0 18px;
-    }
-
-    .event-strip:empty {
-      display: none;
-    }
-
-    .event-card {
-      border: 1px solid rgba(206, 92, 36, 0.22);
-      border-radius: 22px;
-      padding: 16px;
-      background:
-        radial-gradient(circle at 12% 12%, rgba(255, 238, 183, 0.9), transparent 30%),
-        linear-gradient(135deg, #fff7e8, #fff0dd 58%, #ffe5ce);
-      box-shadow: 0 16px 36px rgba(166, 80, 30, 0.14);
-    }
-
-    .event-card.event-closed {
-      filter: saturate(0.85);
-      opacity: 0.84;
-    }
-
-    .event-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      padding: 6px 10px;
-      background: rgba(169, 73, 31, 0.1);
-      color: var(--accent-deep);
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .event-main {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 12px;
-      align-items: flex-end;
-    }
-
-    .event-title {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .event-price {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .event-original {
-      color: #9d7b63;
-      text-decoration: line-through;
-      font-weight: 700;
-    }
-
-    .event-sale {
-      color: var(--warn);
-      font-size: 24px;
-      font-weight: 950;
-    }
-
-    .event-discount {
-      border-radius: 999px;
-      padding: 5px 8px;
-      background: #fff;
-      color: var(--warn);
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .stock-badge {
-      flex-shrink: 0;
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      background: var(--accent-soft);
-      color: var(--accent-deep);
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .stock-badge.low {
-      background: #fee5d6;
-      color: var(--warn);
-    }
-
-    .stock-badge.sold-out {
-      background: #efe5dd;
-      color: #6e5442;
-    }
-
-    .product-controls {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 14px;
-      align-items: end;
-      margin-top: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    input,
-    select,
-    textarea,
-    button {
-      font: inherit;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(93, 70, 51, 0.18);
-      background: #fffdf8;
-      color: var(--ink);
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: rgba(184, 92, 56, 0.5);
-      box-shadow: 0 0 0 4px rgba(184, 92, 56, 0.12);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 96px;
-    }
-
-    .qty-wrap {
-      min-width: 132px;
-    }
-
-    .summary-price {
-      text-align: right;
-      font-weight: 700;
-      color: var(--accent-deep);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .form-grid .full {
-      grid-column: 1 / -1;
-    }
-
-    .hint {
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .radio-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .radio-box {
-      position: relative;
-    }
-
-    .radio-box input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .radio-box span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(93, 70, 51, 0.18);
-      background: #fffdf8;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .radio-box input:checked + span {
-      background: #fbeadf;
-      border-color: rgba(184, 92, 56, 0.35);
-      color: var(--accent-deep);
-      font-weight: 700;
-    }
-
-    .agreement {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #f7f0e7;
-    }
-
-    .agreement input {
-      width: 18px;
-      min-height: auto;
-      margin-top: 3px;
-    }
-
-    .mini-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      background: linear-gradient(180deg, var(--panel-strong), #fff6ea);
-    }
-
-    .order-meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 0 0 16px;
-    }
-
-    .order-meta-card {
-      border-radius: 18px;
-      padding: 13px 14px;
-      background: #fff6ea;
-      border: 1px solid rgba(169, 73, 31, 0.14);
-    }
-
-    .order-meta-card span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-
-    .order-meta-card strong {
-      display: block;
-      margin-top: 4px;
-      color: var(--accent-deep);
-      font-size: 15px;
-    }
-
-    .summary-box {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      background: linear-gradient(180deg, var(--panel-strong), #fff7ed);
-      margin-top: 20px;
-    }
-
-    .summary-list {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .summary-total {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding-top: 14px;
-      border-top: 1px dashed rgba(93, 70, 51, 0.22);
-      font-weight: 800;
-      font-size: 18px;
-    }
-
-    .actions {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .mobile-quickbar {
-      display: none;
-    }
-
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
-      font-weight: 700;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .primary {
-      color: #fff;
-      background: linear-gradient(180deg, var(--accent), var(--accent-deep));
-    }
-
-    .secondary {
-      color: var(--accent-deep);
-      background: #fbe9dc;
-    }
-
-    .ghost {
-      color: var(--muted);
-      background: #f6efe5;
-    }
-
-    .settings-toggle {
-      margin-top: 18px;
-    }
-
-    .settings-panel {
-      margin-top: 14px;
-      display: none;
-      gap: 16px;
-    }
-
-    .settings-panel.open {
-      display: grid;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .settings-grid .full {
-      grid-column: 1 / -1;
-    }
-
-    .settings-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .status-note {
-      font-size: 13px;
-      color: var(--muted);
-      min-height: 20px;
-    }
-
-    .order-result {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--line);
-      background: rgba(255, 252, 247, 0.95);
-    }
-
-    .history-panel {
-      display: none;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, #fffdf8, #fff7ed);
-    }
-
-    .history-panel.open {
-      display: block;
-    }
-
-    .history-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .history-card {
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fffdf8;
-    }
-
-    .history-card strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .history-meta {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: keep-all;
-      line-height: 1.7;
-      color: var(--ink);
-      font-family: "D2Coding", "Consolas", monospace;
-      font-size: 14px;
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 920px) {
-      .grid,
-      .settings-grid,
-      .info-grid {
-        grid-template-columns: 1fr;
+  <link rel="icon" href="./assets/pungmu-logo.svg?v=modern-1" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Noto Sans KR", "sans-serif"] },
+          colors: {
+            farm: {
+              green: "#004225",
+              leaf: "#5c971f",
+              cream: "#fffaf0",
+              line: "#e4e8df",
+              ink: "#080a08"
+            },
+            carrot: "#ff8a21"
+          },
+          boxShadow: {
+            bottomBar: "0 -12px 28px rgba(0,0,0,.10)",
+            soft: "0 14px 34px rgba(0,66,37,.08)"
+          }
+        }
       }
-    }
-
-    .app-header,
-    .date-rail,
-    .menu-overlay,
-    .side-menu,
-    .quick-links {
-      display: none;
-    }
-
-    .qty-select {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      border: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .stepper {
-      display: grid;
-      grid-template-columns: 48px 1fr 48px;
-      align-items: center;
-      min-width: 0;
-      overflow: hidden;
-      border: 1px solid rgba(0, 66, 37, 0.18);
-      border-radius: 16px;
-      background: #fff;
-    }
-
-    .stepper button {
-      min-height: 52px;
-      padding: 0;
-      border-radius: 0;
-      color: var(--brand, #004225);
-      background: transparent;
-      font-size: 22px;
-      line-height: 1;
-    }
-
-    .stepper button:disabled {
-      color: #b8c3b7;
-      cursor: not-allowed;
-    }
-
-    .qty-view {
-      text-align: center;
-      color: var(--brand, #004225);
-      font-weight: 900;
-    }
-
-    /* 풍무농산 mobile storefront refresh */
-    :root {
-      --bg: #f6f4ec;
-      --panel: #ffffff;
-      --panel-strong: #fffef9;
-      --ink: #172019;
-      --muted: #647064;
-      --line: rgba(23, 54, 33, 0.13);
-      --accent: #00643b;
-      --accent-deep: #003f26;
-      --accent-soft: #e7f3e9;
-      --warn: #d0442e;
-      --leaf: #0b6b3a;
-      --leaf-soft: #edf7ee;
-      --berry: #c8454f;
-      --brand: #004225;
-      --brand-bright: #12a060;
-      --cream: #fbf7eb;
-      --shadow: 0 16px 34px rgba(0, 42, 24, 0.09);
-    }
-
-    body {
-      background:
-        radial-gradient(circle at 15% -10%, rgba(183, 222, 149, 0.35), transparent 32%),
-        linear-gradient(180deg, #fbfaf5 0%, #f1f4ed 100%);
-    }
-
-    .wrap {
-      width: min(720px, 100%);
-      padding: 0 0 112px;
-    }
-
-    .app-header {
-      position: sticky;
-      top: 0;
-      z-index: 25;
-      display: grid;
-      grid-template-columns: 48px 1fr 48px;
-      align-items: center;
-      min-height: 76px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(14px);
-    }
-
-    .icon-button {
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      margin: 0 auto;
-      border-radius: 14px;
-      color: var(--brand);
-      background: transparent;
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .brand-mark {
-      text-align: center;
-      line-height: 1.2;
-    }
-
-    .brand-mark strong {
-      display: block;
-      color: var(--brand);
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: -0.04em;
-    }
-
-    .brand-mark span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .date-rail {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 10px 16px 14px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.8);
-      scrollbar-width: none;
-    }
-
-    .date-pill {
-      flex: 0 0 auto;
-      min-width: 86px;
-      padding: 9px 12px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      color: var(--muted);
-      background: #fff;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .date-pill.active {
-      border-color: var(--brand);
-      color: #fff;
-      background: var(--brand);
-      box-shadow: 0 10px 20px rgba(0, 66, 37, 0.18);
-    }
-
-    .date-pill strong {
-      display: block;
-      margin-bottom: 3px;
-      font-size: 13px;
-    }
-
-    .hero {
-      margin: 16px 16px 10px;
-      padding: 20px;
-      border: 1px solid rgba(0, 66, 37, 0.12);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.22), transparent 26%),
-        linear-gradient(135deg, #003f26, #0f6d3d 58%, #6c8d39);
-      box-shadow: var(--shadow);
-    }
-
-    .eyebrow {
-      background: rgba(255, 255, 255, 0.14);
-      color: #e8fff0;
-    }
-
-    h1 {
-      margin-top: 10px;
-      font-size: 34px;
-    }
-
-    .quick-links {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .quick-links a {
-      padding: 11px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 14px;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.12);
-      text-decoration: none;
-      text-align: center;
-      font-weight: 900;
-    }
-
-    .grid {
-      display: block;
-      margin-top: 0;
-    }
-
-    .panel {
-      margin: 12px 16px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
-      backdrop-filter: none;
-    }
-
-    .panel h2 {
-      font-size: 20px;
-      letter-spacing: -0.03em;
-    }
-
-    .panel-desc {
-      font-size: 14px;
-    }
-
-    .order-meta-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin: 12px 0;
-    }
-
-    .order-meta-card,
-    .notice-box,
-    .summary-box,
-    .order-result,
-    .history-panel,
-    .mini-card {
-      border-color: var(--line);
-      background: #fff;
-      box-shadow: 0 10px 24px rgba(0, 42, 24, 0.05);
-    }
-
-    .event-strip,
-    .products {
-      gap: 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .event-card,
-    .product-card {
-      border-width: 0 0 1px;
-      border-color: var(--line);
-      border-radius: 0;
-      padding: 18px 0;
-      background: transparent;
-      box-shadow: none;
-    }
-
-    .event-card {
-      background: linear-gradient(90deg, rgba(255, 247, 218, 0.86), rgba(255, 255, 255, 0));
-    }
-
-    .product-card::before {
-      display: none;
-    }
-
-    .product-top,
-    .event-main {
-      align-items: flex-start;
-      padding-right: 0;
-    }
-
-    .product-title,
-    .event-title {
-      font-size: 19px;
-      line-height: 1.32;
-      letter-spacing: -0.03em;
-    }
-
-    .product-thumb {
-      width: 92px;
-      height: 72px;
-      border: 1px solid rgba(0, 66, 37, 0.12);
-      border-radius: 12px;
-      background:
-        radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.9), transparent 24%),
-        linear-gradient(135deg, #eef6df, #f8efd7);
-      font-size: 38px;
-    }
-
-    .product-meta {
-      margin-top: 5px;
-      color: #1f2b22;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .stock-badge {
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      color: var(--brand);
-      font-size: 15px;
-      font-weight: 950;
-    }
-
-    .stock-badge.low {
-      background: transparent;
-      color: var(--warn);
-    }
-
-    .stock-badge.sold-out {
-      background: transparent;
-      color: #8a9188;
-    }
-
-    .product-controls {
-      grid-template-columns: minmax(110px, 1fr) minmax(190px, 1fr) auto;
-      align-items: center;
-      margin-top: 14px;
-      gap: 10px;
-    }
-
-    .product-controls label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-    }
-
-    .detail-button {
-      min-height: 52px;
-      color: var(--brand);
-      background: #fff;
-      border: 1px solid rgba(0, 66, 37, 0.18);
-    }
-
-    .reset-mini {
-      min-height: 42px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      background: #f8faf6;
-      font-size: 13px;
-    }
-
-    .summary-price {
-      display: none;
-    }
-
-    .checkout-panel {
-      margin-top: 22px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: #fff;
-      box-shadow: var(--shadow);
-    }
-
-    input,
-    select,
-    textarea {
-      border-color: rgba(0, 66, 37, 0.16);
-      background: #fff;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(0, 100, 59, 0.45);
-      box-shadow: 0 0 0 4px rgba(0, 100, 59, 0.1);
-    }
-
-    .primary {
-      background: linear-gradient(180deg, #00643b, #003f26);
-    }
-
-    .secondary {
-      color: var(--brand);
-      background: #fff;
-      border: 1px solid rgba(0, 66, 37, 0.22);
-    }
-
-    .ghost {
-      color: var(--muted);
-      background: #eef3ed;
-    }
-
-    .mobile-quickbar {
-      position: fixed;
-      left: 50%;
-      right: auto;
-      bottom: 0;
-      z-index: 30;
-      display: grid;
-      grid-template-columns: 112px 1fr;
-      gap: 10px;
-      width: min(720px, 100%);
-      transform: translateX(-50%);
-      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-      border-top: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(14px);
-    }
-
-    .mobile-quickbar button {
-      min-height: 56px;
-      border-radius: 15px;
-      font-size: 17px;
-      font-weight: 950;
-    }
-
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 40;
-      background: rgba(0, 0, 0, 0.36);
-    }
-
-    .menu-overlay.open {
-      display: block;
-    }
-
-    .side-menu {
-      position: fixed;
-      inset: 0 auto 0 0;
-      z-index: 41;
-      display: block;
-      width: min(300px, 82vw);
-      padding: 24px;
-      background: #fff;
-      border-radius: 0 28px 28px 0;
-      box-shadow: 24px 0 60px rgba(0, 42, 24, 0.18);
-      transform: translateX(-105%);
-      transition: transform 0.22s ease;
-    }
-
-    .side-menu.open {
-      transform: translateX(0);
-    }
-
-    .side-menu strong {
-      display: block;
-      margin-bottom: 18px;
-      color: var(--brand);
-      font-size: 20px;
-    }
-
-    .side-menu a,
-    .side-menu button {
-      display: block;
-      width: 100%;
-      margin: 0;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-      border-radius: 0;
-      color: var(--ink);
-      background: transparent;
-      text-align: left;
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    /* Reference-style storefront: simple app header, date tabs, product rows */
-    body {
-      background: #ffffff;
-    }
-
-    .wrap {
-      width: min(666px, 100%);
-      min-height: 100vh;
-      background: #fff;
-    }
-
-    .app-header {
-      min-height: 82px;
-      border: 1px solid #e4e7e2;
-      border-top: 0;
-      background: #fff;
-      box-shadow: none;
-    }
-
-    .brand-mark strong {
-      color: #111;
-      font-size: 24px;
-      letter-spacing: -0.06em;
-    }
-
-    .brand-mark span {
-      color: #111;
-      font-size: 17px;
-      font-weight: 900;
-    }
-
-    .icon-button {
-      color: #111;
-      font-size: 28px;
-    }
-
-    .date-rail-wrap {
-      position: relative;
-      border-bottom: 1px solid #e4e7e2;
-      background: #fff;
-    }
-
-    .date-rail {
-      justify-content: center;
-      padding: 8px 34px 12px;
-      border-bottom: 0;
-      background: #fff;
-    }
-
-    .date-arrow {
-      position: absolute;
-      top: 50%;
-      z-index: 2;
-      width: 28px;
-      height: 28px;
-      min-height: auto;
-      padding: 0;
-      transform: translateY(-50%);
-      color: #969c96;
-      background: transparent;
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .date-arrow.left {
-      left: 4px;
-    }
-
-    .date-arrow.right {
-      right: 4px;
-    }
-
-    .date-pill {
-      min-width: 88px;
-      padding: 7px 10px;
-      border-color: #e0e5df;
-      border-radius: 9px;
-      color: #101510;
-      font-size: 12px;
-      line-height: 1.25;
-      box-shadow: none;
-    }
-
-    .date-pill.active {
-      border-color: #004225;
-      background: #004225;
-      box-shadow: none;
-    }
-
-    .date-pill strong {
-      font-size: 14px;
-    }
-
-    .hero {
-      display: none;
-    }
-
-    .grid {
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .panel {
-      width: min(100% - 20px, 646px);
-      margin: 0 auto;
-    }
-
-    .panel:first-child {
-      padding-top: 28px;
-    }
-
-    .panel:first-child > h2,
-    .panel:first-child > .panel-desc,
-    .order-meta-grid,
-    .notice-box {
-      display: none;
-    }
-
-    .panel h3 {
-      margin: 0;
-      padding: 14px 10px 8px;
-      color: #151b16;
-      font-size: 20px;
-      font-weight: 950;
-      letter-spacing: -0.04em;
-    }
-
-    .event-strip,
-    .products {
-      border-top: 0;
-    }
-
-    .event-card,
-    .product-card {
-      padding: 22px 10px 16px;
-      border-bottom: 1px solid #e1e5df;
-      background: #fff;
-    }
-
-    .event-card {
-      background: #fff;
-    }
-
-    .event-kicker {
-      margin-bottom: 8px;
-      padding: 0;
-      background: transparent;
-      color: #004225;
-      font-size: 14px;
-      font-weight: 950;
-    }
-
-    .product-top,
-    .event-main {
-      display: grid;
-      grid-template-columns: 132px 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    .event-main {
-      margin-top: 0;
-    }
-
-    .product-main {
-      display: contents;
-    }
-
-    .product-thumb {
-      position: relative;
-      display: grid;
-      place-items: center;
-      width: 132px;
-      height: 98px;
-      overflow: hidden;
-      border: 1px solid #e2e5df;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #eef5e7, #fff7e7);
-      color: #004225;
-      font-size: 34px;
-      box-shadow: none;
-    }
-
-    .product-thumb::before {
+    };
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: #080a08; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+    .product-image::before {
       content: attr(data-emoji);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #004225;
+      font-size: 34px;
+      background: linear-gradient(135deg, #f0f6ea, #fff3df);
     }
-
-    .product-thumb img {
+    .product-image img {
       position: absolute;
       inset: 0;
       z-index: 1;
-      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.18s ease;
     }
-
-    .product-card:active .product-thumb img,
-    .event-card:active .product-thumb img {
-      transform: scale(1.03);
-    }
-
-    .product-thumb.image-failed {
-      display: grid;
-      place-items: center;
-      color: #004225;
-      background: #eef4ed;
-      font-size: 34px;
-    }
-
-    .product-thumb.image-failed::before {
-      content: attr(data-emoji);
-    }
-
-    .product-copy {
-      min-width: 0;
-    }
-
-    .product-title,
-    .event-title {
-      margin: 0;
-      color: #050805;
-      font-size: 21px;
-      font-weight: 950;
-      line-height: 1.28;
-      letter-spacing: -0.05em;
-    }
-
-    .product-meta {
-      margin: 4px 0 0;
-      color: #050805;
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 1.35;
-    }
-
-    .stock-badge {
-      grid-column: 2;
-      margin-top: -38px;
-      color: #050805;
-      font-size: 20px;
-      font-weight: 950;
-      line-height: 1.3;
-    }
-
-    .event-main .stock-badge {
-      margin-top: 0;
-    }
-
-    .event-main .product-thumb {
-      grid-row: 1 / span 2;
-    }
-
-    .event-price {
-      margin-top: 4px;
-      gap: 6px;
-    }
-
-    .event-original {
-      color: #727a72;
-      font-size: 16px;
-    }
-
-    .event-sale {
-      color: #050805;
-      font-size: 21px;
-    }
-
-    .event-discount {
-      border: 1px solid #004225;
-      color: #004225;
-      background: #fff;
-    }
-
-    .product-controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .detail-button,
-    .stepper {
-      min-height: 66px;
-      border: 1px solid #b9c2b8;
-      border-radius: 10px;
-      background: #fff;
-    }
-
-    .detail-button {
-      color: #003f26;
-      font-size: 20px;
-      font-weight: 500;
-    }
-
-    .stepper {
-      grid-template-columns: 60px 1fr 60px;
-    }
-
-    .stepper button {
-      min-height: 64px;
-      color: #000;
-      font-size: 30px;
-      font-weight: 700;
-    }
-
-    .qty-view {
-      color: #000;
-      font-size: 21px;
-      font-weight: 700;
-    }
-
-    .reset-mini {
-      display: none;
-    }
-
-    .checkout-panel {
-      margin-top: 26px;
-      padding: 22px 16px;
-      border: 0;
-      border-top: 1px solid #e4e7e2;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    .checkout-panel h2 {
-      text-align: center;
-      color: #101510;
-      font-size: 22px;
-      font-weight: 950;
-    }
-
-    .summary-box {
-      border-radius: 10px;
-      box-shadow: none;
-    }
-
-    .actions {
-      display: none;
-    }
-
-    .history-panel.open {
-      display: block;
-      margin: 18px 0 0;
-      border-radius: 10px;
-      box-shadow: none;
-    }
-
-    .history-card {
-      border-color: #1d2c20;
-      border-radius: 8px;
-      color: #050805;
-      background: #fff;
-    }
-
-    .mobile-quickbar {
-      grid-template-columns: 120px 1fr;
-      width: min(666px, 100%);
-      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
-      background: #fff;
-    }
-
-    .mobile-quickbar button {
-      min-height: 61px;
-      border-radius: 10px;
-      font-size: 20px;
-      font-weight: 950;
-    }
-
-    .mobile-quickbar .secondary {
-      border: 1px solid #004225;
-      color: #004225;
-      background: #fff;
-    }
-
-    .mobile-quickbar .primary {
-      background: #004225;
-    }
-
-    .side-menu {
-      width: 280px;
-      padding: 22px 30px;
-      border-radius: 0 0 22px 0;
-      box-shadow: none;
-    }
-
-    .side-menu strong,
-    .side-menu a,
-    .side-menu button {
-      color: #050805;
-      font-size: 17px;
-      font-weight: 500;
-    }
-
-    /* Cleaner commerce polish */
-    .app-header {
-      position: sticky;
-      top: 0;
-      z-index: 25;
-      width: min(666px, 100%);
-      margin: 0 auto;
-      border-left: 1px solid #ecefea;
-      border-right: 1px solid #ecefea;
-    }
-
-    .date-rail-wrap {
-      width: min(666px, 100%);
-      margin: 0 auto;
-      border-left: 1px solid #ecefea;
-      border-right: 1px solid #ecefea;
-    }
-
-    .panel h3 {
-      padding-left: 0;
-      color: #222922;
-      font-size: 18px;
-    }
-
-    .event-card,
-    .product-card {
-      padding: 18px 0;
-    }
-
-    .product-title,
-    .event-title {
-      font-size: 18px;
-      letter-spacing: -0.04em;
-    }
-
-    .product-meta {
-      color: #343a34;
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .stock-badge {
-      margin-top: -28px;
-      color: #111;
-      font-size: 17px;
-      letter-spacing: -0.04em;
-    }
-
-    .detail-button,
-    .stepper {
-      min-height: 56px;
-      border-color: #d6ddd4;
-      border-radius: 8px;
-      box-shadow: none;
-    }
-
-    .detail-button {
-      color: #1f2c22;
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .detail-button:active,
-    .stepper button:active,
-    .mobile-quickbar button:active {
-      transform: translateY(1px);
-      opacity: 0.82;
-    }
-
-    .stepper {
-      grid-template-columns: 52px 1fr 52px;
-      overflow: hidden;
-    }
-
-    .stepper button {
-      min-height: 54px;
-      font-size: 24px;
-      border-radius: 0;
-    }
-
-    .stepper button:first-child {
-      border-right: 1px solid #edf0ec;
-    }
-
-    .stepper button:last-child {
-      border-left: 1px solid #edf0ec;
-    }
-
-    .stepper button:disabled {
-      background: #f6f7f5;
-      color: #b8beb8;
-    }
-
-    .qty-view {
-      font-size: 18px;
-    }
-
-    .mobile-quickbar button {
-      min-height: 56px;
-      font-size: 18px;
-    }
-
-    /* Final mobile commerce pass: clear labels, fewer mystery controls */
-    .icon-button {
-      width: auto;
-      min-width: 56px;
-      height: 40px;
-      min-height: 40px;
-      padding: 0 8px;
-      color: #242924;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .app-header {
-      grid-template-columns: 70px 1fr 70px;
-      min-height: 68px;
-    }
-
-    .brand-mark strong {
-      font-size: 22px;
-    }
-
-    .brand-mark span {
-      color: #4f5b50;
-      font-size: 13px;
-    }
-
-    .date-rail-wrap {
-      position: sticky;
-      top: 68px;
-      z-index: 20;
-      box-shadow: 0 4px 10px rgba(17, 24, 17, 0.03);
-    }
-
-    .date-arrow {
-      display: none;
-    }
-
-    .date-rail {
-      justify-content: flex-start;
-      padding: 9px 10px 11px;
-    }
-
-    .date-pill {
-      min-width: auto;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-    }
-
-    .date-pill strong {
-      display: inline;
-      margin-right: 4px;
-      font-size: 13px;
-    }
-
-    .panel {
-      width: min(100% - 28px, 638px);
-    }
-
-    .panel:first-child {
-      padding-top: 18px;
-    }
-
-    .product-top,
-    .event-main {
-      grid-template-columns: 118px minmax(0, 1fr);
-      gap: 14px;
-    }
-
-    .product-thumb {
-      width: 118px;
-      height: 92px;
-      border-radius: 10px;
-    }
-
-    .product-title,
-    .event-title {
-      display: -webkit-box;
-      overflow: hidden;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      font-size: 17px;
-      line-height: 1.32;
-    }
-
-    .product-meta {
-      display: -webkit-box;
-      overflow: hidden;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      margin-top: 5px;
-      color: #4d554d;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .stock-badge,
-    .event-main .stock-badge {
-      display: inline-flex;
-      grid-column: 2;
-      width: fit-content;
-      margin-top: 8px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      color: #0f5b36;
-      background: #eef7f0;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .stock-badge.low {
-      color: #b2472f;
-      background: #fff1eb;
-    }
-
-    .stock-badge.sold-out {
-      color: #737a73;
-      background: #f1f2ef;
-    }
-
-    .product-controls {
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 8px;
-      margin-top: 12px;
-      padding-left: 132px;
-    }
-
-    .detail-button,
-    .stepper {
-      min-height: 46px;
-      border-radius: 8px;
-    }
-
-    .detail-button {
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .stepper {
-      grid-template-columns: 44px 1fr 44px;
-    }
-
-    .stepper button {
-      min-height: 44px;
-      font-size: 20px;
-    }
-
-    .qty-view {
-      font-size: 15px;
-    }
-
-    .mobile-quickbar {
-      grid-template-columns: 108px 1fr;
-      box-shadow: 0 -8px 24px rgba(17, 24, 17, 0.08);
-    }
-
-    .mobile-quickbar button {
-      min-height: 52px;
-      font-size: 16px;
-    }
-
-    .storefront-intro {
-      padding: 14px 14px 4px;
-      background: #fff;
-    }
-
-    .storefront-intro h2 {
-      margin: 0;
-      color: #111711;
-      font-size: 20px;
-      font-weight: 950;
-      letter-spacing: -0.05em;
-    }
-
-    .storefront-intro p {
-      margin: 5px 0 0;
-      color: #5f6b61;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .storefront-tags {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      margin-top: 10px;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
-
-    .storefront-tags::-webkit-scrollbar {
-      display: none;
-    }
-
-    .storefront-tag {
-      flex: 0 0 auto;
-      padding: 7px 10px;
-      border: 1px solid #dde5dc;
-      border-radius: 999px;
-      color: #1f2c22;
-      background: #fbfcfa;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .storefront-tag.strong {
-      border-color: #004225;
-      color: #fff;
-      background: #004225;
-    }
-
-    @media (max-width: 390px) {
-      .product-top,
-      .event-main {
-        grid-template-columns: 104px minmax(0, 1fr);
-        gap: 12px;
-      }
-
-      .product-thumb {
-        width: 104px;
-        height: 86px;
-      }
-
-      .product-controls {
-        padding-left: 116px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .wrap {
-        width: 100%;
-        padding-top: 0;
-        padding-bottom: 104px;
-      }
-
-      .form-grid,
-      .order-meta-grid,
-      .radio-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .event-main {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      h1 {
-        font-size: 30px;
-        line-height: 1.1;
-      }
-
-      .hero p,
-      .panel-desc,
-      .product-meta,
-      .hint,
-      .notice-list,
-      pre {
-        font-size: 14px;
-      }
-
-      button,
-      input,
-      select,
-      textarea,
-      .radio-box span {
-        min-height: 52px;
-      }
-
-      .product-card,
-      .notice-box,
-      .mini-card,
-      .summary-box,
-      .order-result,
-      .history-panel {
-        padding: 16px;
-      }
-
-      .product-controls {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .summary-total {
-        font-size: 17px;
-      }
-
-      .actions {
-        padding-bottom: 84px;
-      }
-
-      .settings-actions {
-        padding-bottom: 8px;
-      }
-
-      .settings-toggle {
-        margin-top: 12px;
-      }
-
-      .reset-mini {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 640px) {
-      body {
-        background: #fff;
-      }
-
-      .wrap {
-        width: 100%;
-        max-width: none;
-        padding-bottom: calc(82px + env(safe-area-inset-bottom));
-      }
-
-      .app-header {
-        grid-template-columns: 58px 1fr 58px;
-        min-height: 62px;
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .icon-button {
-        min-width: 48px;
-        height: 38px;
-        min-height: 38px;
-        font-size: 13px;
-      }
-
-      .brand-mark strong {
-        font-size: 20px;
-      }
-
-      .brand-mark span {
-        font-size: 12px;
-      }
-
-      .date-rail-wrap {
-        top: 62px;
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .date-rail {
-        gap: 6px;
-        overflow-x: auto;
-        padding: 8px 12px 10px;
-        scrollbar-width: none;
-      }
-
-      .date-rail::-webkit-scrollbar {
-        display: none;
-      }
-
-      .date-pill {
-        flex: 0 0 auto;
-        padding: 7px 10px;
-      }
-
-      .storefront-intro {
-        padding-top: 12px;
-      }
-
-      .panel {
-        width: 100%;
-        margin: 0;
-        padding: 0 14px;
-      }
-
-      .panel:first-child {
-        padding-top: 14px;
-      }
-
-      .panel h3 {
-        padding: 12px 0 8px;
-        font-size: 17px;
-      }
-
-      .event-card,
-      .product-card {
-        padding: 14px 0;
-      }
-
-      .product-top,
-      .event-main {
-        display: grid;
-        grid-template-columns: 112px minmax(0, 1fr);
-        gap: 12px;
-        align-items: start;
-      }
-
-      .event-main {
-        flex-direction: initial;
-      }
-
-      .product-main {
-        display: contents;
-      }
-
-      .product-thumb {
-        width: 112px;
-        height: 88px;
-        border-radius: 9px;
-      }
-
-      .product-title,
-      .event-title {
-        font-size: 16px;
-        line-height: 1.32;
-      }
-
-      .product-meta {
-        font-size: 12px;
-        line-height: 1.42;
-      }
-
-      .stock-badge,
-      .event-main .stock-badge {
-        grid-column: 2;
-        margin-top: 7px;
-        padding: 4px 7px;
-        font-size: 11px;
-      }
-
-      .product-controls {
-        grid-template-columns: 92px minmax(0, 1fr);
-        gap: 8px;
-        margin-top: 10px;
-        padding-left: 124px;
-      }
-
-      .detail-button,
-      .stepper {
-        min-height: 42px;
-        border-radius: 8px;
-      }
-
-      .detail-button {
-        font-size: 13px;
-      }
-
-      .stepper {
-        grid-template-columns: 40px 1fr 40px;
-      }
-
-      .stepper button {
-        min-height: 40px;
-        font-size: 19px;
-      }
-
-      .qty-view {
-        font-size: 14px;
-      }
-
-      .checkout-panel {
-        margin-top: 18px;
-        padding: 18px 14px;
-      }
-
-      .checkout-panel h2 {
-        font-size: 19px;
-      }
-
-      .summary-box {
-        padding: 14px;
-      }
-
-      .mobile-quickbar {
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        transform: none;
-        grid-template-columns: 104px 1fr;
-        gap: 8px;
-        padding: 9px 10px calc(9px + env(safe-area-inset-bottom));
-      }
-
-      .mobile-quickbar button {
-        min-height: 50px;
-        border-radius: 9px;
-        font-size: 15px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .product-top,
-      .event-main {
-        grid-template-columns: 98px minmax(0, 1fr);
-      }
-
-      .product-thumb {
-        width: 98px;
-        height: 80px;
-      }
-
-      .product-controls {
-        grid-template-columns: 82px minmax(0, 1fr);
-        padding-left: 110px;
-      }
-    }
-
-    /* Strong visual pass for mobile group-buying storefront */
-    @media (max-width: 640px) {
-      body {
-        background: #eef3ec;
-      }
-
-      .wrap {
-        background: #eef3ec;
-      }
-
-      .app-header {
-        border-bottom: 0;
-        background: #004225;
-      }
-
-      .brand-mark strong,
-      .brand-mark span,
-      .icon-button {
-        color: #fff;
-      }
-
-      .icon-button {
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.08);
-      }
-
-      .date-rail-wrap {
-        top: 62px;
-        border-bottom: 0;
-        background: #004225;
-        box-shadow: 0 10px 22px rgba(0, 66, 37, 0.18);
-      }
-
-      .date-rail {
-        background: transparent;
-      }
-
-      .date-pill {
-        border-color: rgba(255, 255, 255, 0.18);
-        color: rgba(255, 255, 255, 0.78);
-        background: rgba(255, 255, 255, 0.08);
-      }
-
-      .date-pill.active {
-        border-color: #fff;
-        color: #004225;
-        background: #fff;
-      }
-
-      .storefront-intro {
-        margin: 10px 10px 8px;
-        padding: 16px;
-        border-radius: 18px;
-        background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(246, 250, 244, 0.96)),
-          #fff;
-        box-shadow: 0 10px 26px rgba(17, 37, 21, 0.08);
-      }
-
-      .storefront-intro h2 {
-        font-size: 22px;
-      }
-
-      .storefront-tag {
-        border-color: #d8e3d5;
-        background: #fff;
-      }
-
-      .storefront-tag.strong {
-        background: #004225;
-      }
-
-      .panel {
-        padding: 0 10px;
-      }
-
-      .panel h3 {
-        margin-top: 14px;
-        padding: 0 4px 10px;
-        color: #1b261e;
-        font-size: 19px;
-      }
-
-      .event-card,
-      .product-card {
-        margin-bottom: 10px;
-        padding: 12px;
-        border: 1px solid #e1e7df;
-        border-radius: 18px;
-        background: #fff;
-        box-shadow: 0 10px 24px rgba(17, 37, 21, 0.07);
-      }
-
-      .event-card {
-        border-color: rgba(0, 66, 37, 0.24);
-        background:
-          linear-gradient(180deg, #fffef8, #ffffff);
-      }
-
-      .event-kicker {
-        display: inline-flex;
-        margin: 0 0 10px;
-        padding: 6px 9px;
-        border-radius: 999px;
-        color: #004225;
-        background: #eaf6ec;
-        font-size: 11px;
-      }
-
-      .product-top,
-      .event-main {
-        grid-template-columns: 126px minmax(0, 1fr);
-        gap: 12px;
-      }
-
-      .product-thumb {
-        width: 126px;
-        height: 106px;
-        border: 0;
-        border-radius: 15px;
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-      }
-
-      .product-title,
-      .event-title {
-        color: #121812;
-        font-size: 17px;
-        font-weight: 900;
-      }
-
-      .product-meta {
-        color: #4c594e;
-        font-size: 13px;
-      }
-
-      .stock-badge,
-      .event-main .stock-badge {
-        margin-top: 8px;
-        color: #004225;
-        background: #e8f5eb;
-      }
-
-      .product-controls {
-        grid-template-columns: 96px minmax(0, 1fr);
-        padding-left: 138px;
-      }
-
-      .detail-button {
-        border: 1px solid #dbe5d9;
-        color: #2a342c;
-        background: #f9fbf8;
-      }
-
-      .stepper {
-        border: 1px solid #004225;
-        background: #fff;
-      }
-
-      .stepper button {
-        color: #004225;
-        background: #fff;
-      }
-
-      .qty-view {
-        color: #004225;
-        font-weight: 900;
-      }
-
-      .checkout-panel {
-        margin: 18px 10px 0;
-        padding: 16px;
-        border: 1px solid #e1e7df;
-        border-radius: 18px;
-        background: #fff;
-        box-shadow: 0 10px 24px rgba(17, 37, 21, 0.07);
-      }
-
-      .mobile-quickbar {
-        border-top: 0;
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 0 -12px 30px rgba(17, 37, 21, 0.14);
-      }
-
-      .mobile-quickbar .primary {
-        background: linear-gradient(180deg, #00643b, #004225);
-        box-shadow: 0 10px 20px rgba(0, 66, 37, 0.22);
-      }
-
-      .mobile-quickbar .secondary {
-        background: #f7faf6;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .product-top,
-      .event-main {
-        grid-template-columns: 112px minmax(0, 1fr);
-      }
-
-      .product-thumb {
-        width: 112px;
-        height: 96px;
-      }
-
-      .product-controls {
-        grid-template-columns: 88px minmax(0, 1fr);
-        padding-left: 124px;
-      }
-    }
-
-    .brand-logo {
-      display: block;
-      width: 166px;
-      height: auto;
-      margin: 0 auto;
-      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
-    }
-
-    .brand-logo-light {
-      display: none;
-    }
-
-    @media (max-width: 640px) {
-      .brand-mark strong {
-        display: none;
-      }
-
-      .brand-mark span {
-        display: none;
-      }
-
-      .brand-logo {
-        width: 142px;
-        filter: none;
-      }
-
-      .app-header {
-        grid-template-columns: 58px 1fr 58px;
-      }
-    }
-
-    /* Final cleanup: prevent logo/header overlap and normalize mobile CSS */
-    .brand-logo {
-      object-fit: contain;
-    }
-
-    @media (max-width: 640px) {
-      .app-header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        display: grid;
-        grid-template-columns: 56px minmax(0, 1fr) 56px;
-        align-items: center;
-        height: 64px;
-        min-height: 64px;
-        padding: 0 8px;
-        overflow: hidden;
-        background: #004225;
-      }
-
-      .brand-mark {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 0;
-        height: 64px;
-        overflow: hidden;
-      }
-
-      .brand-logo {
-        width: min(128px, 100%);
-        max-height: 38px;
-        padding: 3px 7px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.96);
-      }
-
-      .icon-button {
-        width: 46px;
-        min-width: 46px;
-        height: 36px;
-        min-height: 36px;
-        padding: 0;
-        border-color: rgba(255, 255, 255, 0.22);
-        color: #fff;
-        font-size: 12px;
-      }
-
-      .date-rail-wrap {
-        top: 64px;
-      }
-
-      .storefront-intro {
-        margin: 10px 10px 8px;
-      }
-
-      .panel {
-        padding: 0 10px;
-      }
-
-      .event-card,
-      .product-card {
-        padding: 12px;
-        border-radius: 16px;
-      }
-
-      .product-top,
-      .event-main {
-        grid-template-columns: 116px minmax(0, 1fr);
-        gap: 12px;
-      }
-
-      .product-thumb {
-        width: 116px;
-        height: 96px;
-        border-radius: 13px;
-      }
-
-      .product-controls {
-        grid-template-columns: 88px minmax(0, 1fr);
-        padding-left: 128px;
-      }
-
-      .detail-button,
-      .stepper {
-        min-height: 42px;
-      }
-    }
-
-    @media (max-width: 370px) {
-      .brand-logo {
-        width: 116px;
-      }
-
-      .product-top,
-      .event-main {
-        grid-template-columns: 104px minmax(0, 1fr);
-      }
-
-      .product-thumb {
-        width: 104px;
-        height: 88px;
-      }
-
-      .product-controls {
-        grid-template-columns: 80px minmax(0, 1fr);
-        padding-left: 116px;
-      }
-    }
-
-    /* Reference-inspired final mobile layout: white app shell, clean product rows */
-    @media (max-width: 640px) {
-      body,
-      .wrap {
-        background: #fff;
-      }
-
-      .app-header {
-        grid-template-columns: 52px minmax(0, 1fr) 52px;
-        height: 66px;
-        min-height: 66px;
-        padding: 0;
-        border-bottom: 1px solid #e5e7e2;
-        background: #fff;
-        box-shadow: none;
-      }
-
-      .icon-button {
-        width: 52px;
-        min-width: 52px;
-        height: 66px;
-        min-height: 66px;
-        border: 0;
-        border-radius: 0;
-        color: #101510;
-        background: transparent;
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .brand-mark {
-        height: 66px;
-        color: #101510;
-      }
-
-      .brand-logo {
-        display: none;
-      }
-
-      .brand-mark strong {
-        display: block;
-        color: #101510;
-        font-size: 22px;
-        font-weight: 950;
-        letter-spacing: -0.06em;
-      }
-
-      .brand-mark span {
-        display: none;
-      }
-
-      .date-rail-wrap {
-        position: sticky;
-        top: 66px;
-        z-index: 20;
-        border-bottom: 1px solid #e8ebe5;
-        background: #fff;
-        box-shadow: none;
-      }
-
-      .date-rail {
-        justify-content: center;
-        gap: 4px;
-        padding: 8px 8px 10px;
-        background: #fff;
-      }
-
-      .date-pill {
-        min-width: 86px;
-        padding: 7px 9px;
-        border: 1px solid #e1e5df;
-        border-radius: 8px;
-        color: #161b16;
-        background: #fff;
-        text-align: center;
-      }
-
-      .date-pill.active {
-        border-color: #004225;
-        color: #fff;
-        background: #004225;
-      }
-
-      .date-pill strong {
-        display: block;
-        margin: 0 0 2px;
-        font-size: 13px;
-      }
-
-      .date-pill span {
-        display: block;
-        font-size: 11px;
-      }
-
-      .storefront-intro {
-        margin: 0;
-        padding: 16px 14px 10px;
-        border-radius: 0;
-        background: #fff;
-        box-shadow: none;
-      }
-
-      .storefront-intro h2 {
-        font-size: 22px;
-      }
-
-      .storefront-tags {
-        gap: 6px;
-      }
-
-      .storefront-tag {
-        border-color: #e1e5df;
-        background: #fff;
-      }
-
-      .storefront-tag.strong {
-        border-color: #004225;
-        background: #004225;
-      }
-
-      .panel {
-        padding: 0 14px;
-      }
-
-      .panel h3 {
-        margin: 12px 0 0;
-        padding: 10px 0 8px;
-        font-size: 18px;
-      }
-
-      .event-card,
-      .product-card {
-        margin: 0;
-        padding: 18px 0 16px;
-        border: 0;
-        border-bottom: 1px solid #e2e5df;
-        border-radius: 0;
-        background: #fff;
-        box-shadow: none;
-      }
-
-      .event-kicker {
-        margin-bottom: 8px;
-        padding: 0;
-        color: #004225;
-        background: transparent;
-        font-size: 12px;
-      }
-
-      .product-top,
-      .event-main {
-        grid-template-columns: 120px minmax(0, 1fr);
-        gap: 14px;
-      }
-
-      .product-thumb {
-        width: 120px;
-        height: 92px;
-        border: 1px solid #e3e6e0;
-        border-radius: 7px;
-        box-shadow: none;
-      }
-
-      .product-title,
-      .event-title {
-        color: #080c08;
-        font-size: 17px;
-        font-weight: 950;
-        line-height: 1.28;
-      }
-
-      .product-meta {
-        color: #171d17;
-        font-size: 13px;
-        line-height: 1.42;
-      }
-
-      .stock-badge,
-      .event-main .stock-badge {
-        margin-top: 7px;
-        padding: 0;
-        border-radius: 0;
-        color: #080c08;
-        background: transparent;
-        font-size: 15px;
-        font-weight: 950;
-      }
-
-      .stock-badge.low {
-        color: #b2472f;
-        background: transparent;
-      }
-
-      .stock-badge.sold-out {
-        color: #777d77;
-        background: transparent;
-      }
-
-      .product-controls {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 10px;
-        margin-top: 14px;
-        padding-left: 0;
-      }
-
-      .detail-button,
-      .stepper {
-        min-height: 56px;
-        border: 1px solid #b8c0b7;
-        border-radius: 8px;
-        background: #fff;
-      }
-
-      .detail-button {
-        color: #102015;
-        font-size: 16px;
-        font-weight: 800;
-      }
-
-      .stepper {
-        grid-template-columns: 48px 1fr 48px;
-      }
-
-      .stepper button {
-        min-height: 54px;
-        color: #080c08;
-        font-size: 24px;
-      }
-
-      .qty-view {
-        color: #080c08;
-        font-size: 17px;
-      }
-
-      .checkout-panel {
-        margin: 18px 0 0;
-        padding: 18px 14px;
-        border: 0;
-        border-top: 1px solid #e2e5df;
-        border-radius: 0;
-        background: #fff;
-        box-shadow: none;
-      }
-
-      .mobile-quickbar {
-        border-top: 1px solid #e2e5df;
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: none;
-      }
-
-      .mobile-quickbar .primary {
-        background: #004225;
-        box-shadow: none;
-      }
-
-      .mobile-quickbar .secondary {
-        border-color: #004225;
-        color: #004225;
-        background: #fff;
-      }
-    }
-
-    @media (max-width: 370px) {
-      .product-top,
-      .event-main {
-        grid-template-columns: 108px minmax(0, 1fr);
-      }
-
-      .product-thumb {
-        width: 108px;
-        height: 86px;
-      }
-
-      .detail-button,
-      .stepper {
-        min-height: 50px;
-      }
-
-      .stepper {
-        grid-template-columns: 42px 1fr 42px;
-      }
-    }
-
-    /* Logo cleanup: SVG already contains the wordmark, so hide duplicate text */
-    .brand-mark strong,
-    .brand-mark span {
-      display: none !important;
-    }
-
-    .brand-logo {
-      display: block !important;
-      width: 154px;
-      max-width: 100%;
-      max-height: 42px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.96);
-      filter: none;
-    }
-
-    @media (max-width: 640px) {
-      .brand-logo {
-        width: 138px;
-        max-height: 38px;
-      }
-    }
-
-    @media (max-width: 370px) {
-      .brand-logo {
-        width: 126px;
-      }
-    }
-
-    .brand-showcase {
-      display: none;
-    }
-
-    @media (max-width: 640px) {
-      .brand-mark strong {
-        display: block !important;
-        color: #101510;
-        font-size: 21px;
-        font-weight: 950;
-      }
-
-      .brand-mark span,
-      .brand-mark .brand-logo {
-        display: none !important;
-      }
-
-      .app-header {
-        background: #fff;
-      }
-
-      .icon-button {
-        color: #101510;
-        border: 0;
-        background: transparent;
-      }
-
-      .brand-showcase {
-        display: flex;
-        justify-content: center;
-        padding: 16px 14px 8px;
-        background: #fff;
-      }
-
-      .brand-showcase img {
-        display: block;
-        width: min(240px, 70vw);
-        height: auto;
-      }
-
-      .date-rail-wrap {
-        top: 66px;
-      }
-
-      .storefront-intro {
-        padding-top: 10px;
-      }
-    }
-
-    /* Final mobile storefront polish */
-    .brand-card,
-    .date-status {
-      display: none;
-    }
-
-    .product-card.is-hidden,
-    .event-card.is-hidden,
-    .section-title.is-hidden,
-    .products.is-hidden,
-    .event-strip.is-hidden {
-      display: none !important;
-    }
-
-    .storefront-tag,
-    .date-pill {
-      cursor: pointer;
-      font: inherit;
-    }
-
-    @media (max-width: 640px) {
-      body,
-      .wrap {
-        background:
-          radial-gradient(circle at 10% -4%, rgba(255, 143, 28, 0.18), transparent 28%),
-          radial-gradient(circle at 88% 12%, rgba(99, 155, 35, 0.16), transparent 24%),
-          linear-gradient(180deg, #fffdf5 0%, #f3f7eb 48%, #fffaf0 100%);
-        font-family: "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
-      }
-
-      .app-header {
-        border-bottom: 1px solid rgba(20, 61, 34, 0.08);
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(16px);
-      }
-
-      .brand-mark strong,
-      .brand-mark span {
-        display: none;
-      }
-
-      .brand-logo {
-        width: 54px;
-        height: 42px;
-      }
-
-      .brand-showcase {
-        display: none;
-      }
-
-      .brand-card {
-        display: block;
-        margin: 10px 12px 12px;
-        padding: 14px 14px 16px;
-        text-align: center;
-        border: 1px solid rgba(91, 145, 28, 0.16);
-        border-radius: 28px;
-        background:
-          linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(247, 255, 239, 0.94) 64%, rgba(255, 243, 219, 0.98)),
-          #fff;
-        box-shadow: 0 20px 42px rgba(39, 72, 26, 0.13);
-      }
-
-      .brand-card-logo {
-        display: flex;
-        justify-content: center;
-        padding: 4px 0 2px;
-      }
-
-      .brand-card-logo img {
-        display: block;
-        width: min(320px, 86vw);
-        height: auto;
-        max-height: 248px;
-        object-fit: contain;
-      }
-
-      .brand-card-title {
-        margin: 4px 0 0;
-        color: #14361f;
-        font-size: 32px;
-        font-weight: 950;
-        line-height: 1;
-        letter-spacing: -0.08em;
-      }
-
-      .brand-card-title span {
-        color: #ff8a21;
-      }
-
-      .brand-card-sub {
-        margin: 8px 0 0;
-        color: #5f4a2c;
-        font-size: 13px;
-        font-weight: 900;
-      }
-
-      .brand-card-copy {
-        margin: 7px auto 0;
-        max-width: 280px;
-        color: #3d483d;
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 1.45;
-      }
-
-      .date-rail-wrap {
-        top: 62px;
-        padding: 8px 0 10px;
-        border-bottom: 1px solid rgba(20, 61, 34, 0.08);
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(16px);
-      }
-
-      .date-rail {
-        gap: 8px;
-        padding: 0 12px;
-      }
-
-      .date-pill {
-        min-width: 94px;
-        border: 1px solid rgba(0, 66, 37, 0.1);
-        color: #4c594e;
-        background: #f1f6ee;
-        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.03);
-      }
-
-      .date-pill.active {
-        color: #fff;
-        background: linear-gradient(180deg, #087347, #004225);
-        box-shadow: 0 10px 22px rgba(0, 66, 37, 0.22);
-      }
-
-      .date-status {
-        display: block;
-        margin: 8px 12px 0;
-        padding: 9px 12px;
-        border-radius: 14px;
-        color: #215031;
-        background: #eef8e9;
-        font-size: 12px;
-        font-weight: 800;
-      }
-
-      .storefront-intro {
-        margin: 0 12px 12px;
-        padding: 16px;
-        border: 1px solid rgba(0, 66, 37, 0.1);
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 0 14px 30px rgba(33, 61, 24, 0.08);
-      }
-
-      .storefront-intro h2 {
-        color: #142319;
-        font-size: 23px;
-        letter-spacing: -0.04em;
-      }
-
-      .storefront-intro p {
-        color: #4d5b4e;
-        font-weight: 700;
-      }
-
-      .storefront-tags {
-        gap: 8px;
-        margin-left: -2px;
-        padding: 2px 4px 2px 0;
-      }
-
-      .storefront-tag {
-        border: 1px solid rgba(0, 66, 37, 0.09);
-        color: #344237;
-        background: #f0f4ed;
-        box-shadow: none;
-      }
-
-      .storefront-tag.strong {
-        color: #fff;
-        background: linear-gradient(180deg, #087347, #004225);
-      }
-
-      .storefront-tag.info {
-        color: #8b4a13;
-        background: #fff1dc;
-      }
-
-      .event-card,
-      .product-card {
-        margin-bottom: 13px;
-        padding: 13px;
-        border: 1px solid rgba(0, 66, 37, 0.09);
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 15px 32px rgba(33, 61, 24, 0.08);
-      }
-
-      .event-card {
-        background:
-          linear-gradient(135deg, rgba(255, 243, 218, 0.96), #ffffff 62%);
-      }
-
-      .product-title,
-      .event-title {
-        color: #101c14;
-        font-weight: 950;
-        letter-spacing: -0.035em;
-      }
-
-      .product-desc,
-      .event-desc,
-      .product-price,
-      .event-meta {
-        color: #4c584d;
-        font-weight: 700;
-      }
-
-      .stock-badge,
-      .event-main .stock-badge {
-        padding: 5px 9px;
-        border-radius: 999px;
-        color: #0e5b35;
-        background: #edf7ee;
-        font-size: 12px;
-        font-weight: 900;
-      }
-
-      .detail-button,
-      .stepper {
-        border: 1px solid #dbe5d9;
-        border-radius: 14px;
-        background: #fff;
-      }
-
-      .stepper {
-        border-color: rgba(0, 66, 37, 0.28);
-      }
-
-      .stepper button {
-        color: #004225;
-        font-weight: 950;
-      }
-
-      .mobile-quickbar {
-        border-top: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 -14px 34px rgba(20, 35, 25, 0.12);
-      }
-
-      .mobile-quickbar .primary {
-        border-radius: 16px;
-        background: linear-gradient(180deg, #087347, #004225);
-      }
-
-      .mobile-quickbar .secondary {
-        border: 1px solid rgba(0, 66, 37, 0.2);
-        border-radius: 16px;
-        background: #fff;
-      }
-    }
-
-    @media (max-width: 370px) {
-      .brand-card-logo img {
-        width: min(286px, 84vw);
-        max-height: 220px;
-      }
-
-      .brand-card-title {
-        font-size: 28px;
-      }
-    }
+    .qty-input { display: none; }
+    .drawer-open { transform: translateX(0); }
+    .history-open { display: block; }
   </style>
 </head>
-<body>
-  <div class="menu-overlay" id="menuOverlay"></div>
-  <nav class="side-menu" id="sideMenu" aria-label="풍무농산 메뉴">
-    <strong>풍무농산</strong>
-    <a href="https://band.us/" target="_blank" rel="noreferrer">입고 공지 보러가기</a>
-    <a href="https://band.us/" target="_blank" rel="noreferrer">네이버 밴드 바로가기</a>
-    <button type="button" id="menuHistoryBtn">내 주문내역</button>
-    <a href="tel:010-0000-0000">문의 전화하기</a>
-  </nav>
-  <div class="wrap">
-    <header class="app-header">
-      <button type="button" class="icon-button" id="menuOpenBtn" aria-label="메뉴 열기">메뉴</button>
-      <div class="brand-mark">
-        <img class="brand-logo" src="./assets/pungmu-logo.svg?v=farmer-3" alt="풍무농산" />
-        <strong>풍무농산</strong>
-        <span>오늘의 산지 장보기</span>
+<body class="font-sans">
+  <div id="menuOverlay" class="fixed inset-0 z-40 hidden bg-black/35"></div>
+  <nav id="sideMenu" class="fixed inset-y-0 left-0 z-50 w-[280px] -translate-x-full bg-white p-6 shadow-2xl transition-transform duration-200" aria-label="풍무농산 메뉴">
+    <div class="flex items-center gap-3">
+      <img src="./assets/pungmu-logo.svg?v=modern-1" alt="" class="h-12 w-12 rounded-2xl object-contain" />
+      <div>
+        <strong class="block text-xl font-black tracking-[-0.06em]">풍무농산</strong>
+        <span class="text-sm font-bold text-zinc-500">청년가게</span>
       </div>
-      <button type="button" class="icon-button" id="headerHistoryBtn" aria-label="주문내역 보기">내역</button>
+    </div>
+    <div class="mt-8 grid gap-2 text-[15px] font-extrabold">
+      <a class="rounded-2xl bg-zinc-50 px-4 py-3" href="https://band.us/" target="_blank" rel="noreferrer">입고 공지 보러가기</a>
+      <a class="rounded-2xl bg-zinc-50 px-4 py-3" href="https://band.us/" target="_blank" rel="noreferrer">네이버 밴드 바로가기</a>
+      <button class="rounded-2xl bg-zinc-50 px-4 py-3 text-left" type="button" id="menuHistoryBtn">내 주문내역</button>
+      <a class="rounded-2xl bg-zinc-50 px-4 py-3" href="tel:010-0000-0000">문의 전화하기</a>
+    </div>
+  </nav>
+
+  <div class="mx-auto min-h-screen max-w-[520px] bg-white pb-28">
+    <header class="sticky top-0 z-30 grid min-h-20 grid-cols-[54px_1fr_54px] items-center border-b border-farm-line bg-white/95 px-2 backdrop-blur">
+      <button type="button" id="menuOpenBtn" class="grid h-12 place-items-center text-3xl leading-none" aria-label="메뉴 열기">☰</button>
+      <div class="text-center leading-none">
+        <div class="text-[24px] font-black tracking-[-0.08em]">풍무농산</div>
+        <div class="mt-1 text-[16px] font-black tracking-[-0.08em]">- 청년가게 -</div>
+      </div>
+      <button type="button" id="headerHistoryBtn" class="text-[14px] font-black tracking-[-0.04em]">내역</button>
     </header>
 
-    <section class="brand-showcase" aria-label="풍무농산 로고">
-      <img src="./assets/pungmu-logo.svg?v=farmer-3" alt="풍무농산 청년가게" />
+    <section class="sticky top-20 z-20 border-b border-farm-line bg-white/95 pb-3 backdrop-blur">
+      <div class="no-scrollbar flex justify-center gap-1 overflow-x-auto px-9 pt-1" aria-label="주문 가능 날짜">
+        <button type="button" class="date-pill rounded-lg border border-farm-green bg-farm-green px-4 py-2 text-white" data-day-tab="today">
+          <strong class="block text-[15px] font-black tracking-[-0.05em]">오늘</strong>
+          <span class="mt-1 block text-[13px] font-extrabold">예약중</span>
+        </button>
+        <button type="button" class="date-pill rounded-lg border border-farm-line bg-white px-4 py-2" data-day-tab="tomorrow">
+          <strong class="block text-[15px] font-black tracking-[-0.05em]">내일</strong>
+          <span class="mt-1 block text-[13px] font-extrabold">입고예정</span>
+        </button>
+        <button type="button" class="date-pill rounded-lg border border-farm-line bg-white px-4 py-2" data-day-tab="later">
+          <strong class="block text-[15px] font-black tracking-[-0.05em]">모레</strong>
+          <span class="mt-1 block text-[13px] font-extrabold">준비중</span>
+        </button>
+      </div>
+      <p id="dateStatus" class="mx-4 mt-2 rounded-2xl bg-[#eef7e9] px-4 py-2 text-center text-[13px] font-extrabold text-farm-green">
+        오늘 주문 가능한 상품입니다.
+      </p>
     </section>
 
-    <section class="brand-card" aria-label="풍무농산 브랜드">
-      <div class="brand-card-logo">
-        <img src="./assets/pungmu-logo.svg?v=farmer-3" alt="풍무농산 청년가게" />
-      </div>
-      <div class="brand-card-text">
-        <h1 class="brand-card-title">풍무<span>농산</span></h1>
-        <p class="brand-card-sub">청년가게 · 오늘 들어온 신선함</p>
-        <p class="brand-card-copy">입고된 과일과 채소를 남은 수량 기준으로 예약 주문합니다.</p>
-      </div>
-    </section>
-
-    <div class="date-rail-wrap">
-      <div class="date-rail" aria-label="주문 가능 날짜">
-        <button type="button" class="date-pill active" data-day-tab="today"><strong>오늘</strong><span>예약중</span></button>
-        <button type="button" class="date-pill" data-day-tab="tomorrow"><strong>내일</strong><span>입고예정</span></button>
-        <button type="button" class="date-pill" data-day-tab="later"><strong>모레</strong><span>준비중</span></button>
-      </div>
-      <p class="date-status" id="dateStatus">오늘 주문 가능한 상품입니다. 수량을 고르고 하단 주문하기를 눌러주세요.</p>
-    </div>
-
-    <section class="storefront-intro" aria-label="오늘 공동구매 안내">
-      <h2>오늘의 공동구매</h2>
-      <p>풍무농산 입고 상품을 남은 수량 기준으로 예약합니다. 수량 선택 후 하단 주문하기를 눌러주세요.</p>
-      <div class="storefront-tags">
-        <button type="button" class="storefront-tag strong" data-category-filter="all">전체 상품</button>
-        <button type="button" class="storefront-tag" data-category-filter="event">이벤트 특가</button>
-        <button type="button" class="storefront-tag" data-category-filter="fruit">과일</button>
-        <button type="button" class="storefront-tag" data-category-filter="vegetable">채소</button>
-        <span class="storefront-tag info">현장결제</span>
+    <section class="border-b border-farm-line bg-white px-4 py-3">
+      <div class="no-scrollbar flex gap-2 overflow-x-auto">
+        <button type="button" class="category-chip whitespace-nowrap rounded-full bg-farm-green px-4 py-2 text-sm font-black text-white" data-category-filter="all">전체 상품</button>
+        <button type="button" class="category-chip whitespace-nowrap rounded-full border border-farm-line px-4 py-2 text-sm font-black" data-category-filter="event">이벤트 특가</button>
+        <button type="button" class="category-chip whitespace-nowrap rounded-full border border-farm-line px-4 py-2 text-sm font-black" data-category-filter="fruit">과일</button>
+        <button type="button" class="category-chip whitespace-nowrap rounded-full border border-farm-line px-4 py-2 text-sm font-black" data-category-filter="vegetable">채소</button>
+        <span class="whitespace-nowrap rounded-full bg-orange-50 px-4 py-2 text-sm font-black text-orange-700">현장결제</span>
       </div>
     </section>
 
-    <section class="hero">
-      <span class="eyebrow">풍무농산 과일 · 신선식품 공동구매</span>
-      <h1>오늘 장보기</h1>
-      <p id="heroDescription">제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있습니다.</p>
-      <div class="quick-links">
-        <a href="https://band.us/" target="_blank" rel="noreferrer">입고 공지</a>
-        <a href="https://band.us/" target="_blank" rel="noreferrer">밴드 보기</a>
-      </div>
-    </section>
-
-    <div class="grid">
-      <section class="panel">
-        <h2>오늘 들어온 상품</h2>
-        <p class="panel-desc">
-          남은 수량을 확인하고 필요한 만큼 담아주세요. 이벤트 상품은 1인 최대 1개만 주문됩니다.
-        </p>
-        <div class="order-meta-grid">
-          <div class="order-meta-card">
-            <span>CLOSE</span>
-            <strong id="deadlineView">오늘 오후 6시 마감</strong>
-          </div>
-          <div class="order-meta-card">
-            <span>CONTACT</span>
-            <strong id="contactView">문의 010-0000-0000</strong>
-          </div>
-        </div>
-        <div class="notice-box">
-          <h3>주문 전 꼭 확인해주세요</h3>
-          <ul class="notice-list" id="noticeList"></ul>
-        </div>
-        <div class="event-strip" id="eventList"></div>
-        <h3 class="section-title" data-section-title="fruit" style="margin-bottom:12px;">과일</h3>
-        <div class="products" id="productList"></div>
-        <h3 class="section-title" data-section-title="vegetable" style="margin:22px 0 12px;">채소</h3>
-        <div class="products" id="vegetableList"></div>
+    <main>
+      <section id="eventSection" class="pt-2">
+        <div id="eventList"></div>
       </section>
 
-      <section class="panel checkout-panel">
-        <h2>주문 정보 입력</h2>
-        <p class="panel-desc">주문자 정보만 입력하면 바로 주문 접수됩니다.</p>
+      <section id="fruitSection">
+        <h2 class="px-5 pb-1 pt-5 text-[22px] font-black tracking-[-0.07em]">과일</h2>
+        <div id="productList"></div>
+      </section>
 
-        <form id="orderForm">
-          <div class="form-grid">
-            <div>
-              <label for="customerName">주문자명</label>
-              <input id="customerName" name="customerName" type="text" placeholder="예: 홍길동" required />
-            </div>
-            <div>
-              <label for="phone">연락처</label>
-              <input id="phone" name="phone" type="tel" placeholder="예: 010-1234-5678" required />
-            </div>
-            <div class="full">
-              <label class="agreement">
-                <input id="rememberProfile" name="rememberProfile" type="checkbox" />
-                <span>이름과 연락처 기억하기</span>
-              </label>
-            </div>
+      <section id="vegetableSection">
+        <h2 class="px-5 pb-1 pt-5 text-[22px] font-black tracking-[-0.07em]">채소</h2>
+        <div id="vegetableList"></div>
+      </section>
 
-            <div class="full">
-              <label class="agreement">
-                <input id="agree" name="agree" type="checkbox" required />
-                <span>주문 접수 및 현장 결제 안내를 위한 이름과 연락처 수집에 동의합니다.</span>
-              </label>
-            </div>
+      <section id="checkoutPanel" class="mx-3 mt-6 rounded-[28px] bg-zinc-50 p-5">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-[24px] font-black tracking-[-0.07em]">주문 정보</h2>
+            <p class="mt-1 text-sm font-bold text-zinc-500">이름과 연락처만 입력하면 접수됩니다.</p>
           </div>
+          <img src="./assets/pungmu-logo.svg?v=modern-1" alt="" class="h-12 w-12 rounded-2xl bg-white object-contain p-1" />
+        </div>
+
+        <form id="orderForm" class="mt-5 grid gap-3">
+          <label class="grid gap-1 text-sm font-black">
+            주문자명
+            <input id="customerName" name="customerName" required type="text" placeholder="예: 홍길동" class="h-13 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-base font-bold outline-none focus:border-farm-green" />
+          </label>
+          <label class="grid gap-1 text-sm font-black">
+            연락처
+            <input id="phone" name="phone" required type="tel" placeholder="예: 010-1234-5678" class="h-13 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-base font-bold outline-none focus:border-farm-green" />
+          </label>
+          <label class="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold">
+            <input id="rememberProfile" name="rememberProfile" type="checkbox" class="h-5 w-5 accent-farm-green" />
+            이름과 연락처 기억하기
+          </label>
+          <label class="flex items-start gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-zinc-600">
+            <input id="agree" name="agree" required type="checkbox" class="mt-1 h-5 w-5 shrink-0 accent-farm-green" />
+            주문 접수 및 현장 결제 안내를 위한 이름과 연락처 수집에 동의합니다.
+          </label>
         </form>
 
-        <div class="summary-box">
-          <h3>주문 요약</h3>
-          <div class="summary-list" id="summaryList">
-            <div class="summary-item">
-              <span>선택한 상품이 없습니다.</span>
-              <strong>0원</strong>
-            </div>
+        <div class="mt-5 rounded-3xl bg-white p-4">
+          <h3 class="text-lg font-black tracking-[-0.05em]">주문 요약</h3>
+          <div id="summaryList" class="mt-3 grid gap-2 text-sm font-bold text-zinc-600">
+            <div class="flex justify-between gap-3"><span>선택한 상품이 없습니다.</span><strong>0원</strong></div>
           </div>
-          <div class="summary-total">
+          <div class="mt-4 flex justify-between border-t border-zinc-100 pt-4 text-lg font-black">
             <span>총 결제예정금액</span>
             <span id="grandTotal">0원</span>
           </div>
         </div>
 
-        <div class="actions">
-          <button type="button" class="primary" id="submitOrderBtn">주문 접수하기</button>
-          <button type="button" class="secondary" id="toggleHistoryBtn">내 주문내역 보기</button>
-          <button type="button" class="ghost" id="resetBtn">수량 초기화</button>
-        </div>
-        <div class="status-note" id="submitStatus"></div>
-
-        <div class="settings-toggle" id="settingsToggleWrap">
-          <button type="button" class="ghost" id="toggleSettingsBtn">설정 열기</button>
-        </div>
-
-        <div class="settings-panel" id="settingsPanel">
-          <div class="mini-card">
-            <h3>운영 설정</h3>
-            <p class="panel-desc">
-              여기서 바꾼 내용은 이 브라우저에 저장됩니다. 품목은 한 줄에 하나씩 `상품명|설명|가격|재고` 형식으로 넣어주세요.
-            </p>
-            <div class="settings-grid">
-              <div class="full">
-                <label for="storeTitleInput">상단 소개 문구</label>
-                <textarea id="storeTitleInput" rows="3"></textarea>
-              </div>
-              <div>
-                <label for="deadlineInput">주문 마감 문구</label>
-                <input id="deadlineInput" type="text" />
-              </div>
-              <div>
-                <label for="contactInput">문의 연락처</label>
-                <input id="contactInput" type="text" />
-              </div>
-              <div class="full">
-                <label for="noticeInput">주문 안내 문구</label>
-                <textarea id="noticeInput" rows="6"></textarea>
-                <div class="hint">한 줄에 안내사항 1개씩 적어주세요.</div>
-              </div>
-              <div class="full">
-                <label for="productsInput">상품 목록</label>
-                <textarea id="productsInput" rows="8"></textarea>
-                <div class="hint">예시: 사과 1봉|아삭한 가정용 사과 / 1봉 기준|12900|18</div>
-              </div>
-            </div>
-            <div class="settings-actions">
-              <button type="button" class="primary" id="saveSettingsBtn">설정 저장</button>
-              <button type="button" class="secondary" id="loadDefaultBtn">기본값 불러오기</button>
-            </div>
-            <div class="status-note" id="settingsStatus"></div>
-          </div>
-        </div>
-
-        <div class="history-panel" id="historyPanel">
-          <h3>내 주문내역</h3>
-          <div class="hint">이 휴대폰 브라우저에 7일간 저장됩니다. 관리자 주문 데이터는 운영 기준으로 3일간 보관됩니다.</div>
-          <div class="history-list" id="historyList"></div>
-        </div>
-
-        <p class="footer-note">
-          주문자 정보는 같은 휴대폰 브라우저에 저장되어 다음 주문 때 자동으로 채워집니다.
-        </p>
+        <div id="submitStatus" class="mt-4 text-center text-sm font-black text-farm-green"></div>
       </section>
-    </div>
 
-    <div class="mobile-quickbar">
-      <button type="button" class="secondary" id="toggleHistoryBtnMobile">주문내역</button>
-      <button type="button" class="primary" id="submitOrderBtnMobile">주문하기</button>
-    </div>
+      <section id="historyPanel" class="mx-3 mt-5 hidden rounded-[28px] border border-farm-line bg-white p-5 shadow-soft">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[22px] font-black tracking-[-0.07em]">내 주문내역</h2>
+          <span class="text-xs font-bold text-zinc-400">7일 보관</span>
+        </div>
+        <div id="historyList" class="mt-4 grid gap-3"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="fixed inset-x-0 bottom-0 z-30 mx-auto grid max-w-[520px] grid-cols-[120px_1fr] gap-2 bg-white/95 p-2 shadow-bottomBar backdrop-blur">
+    <button type="button" id="toggleHistoryBtnMobile" class="h-[62px] rounded-xl border border-farm-green bg-white text-[18px] font-black text-farm-green">주문내역</button>
+    <button type="button" id="submitOrderBtnMobile" class="h-[62px] rounded-xl bg-farm-green text-[19px] font-black text-white">주문하기</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -3362,45 +196,32 @@
   <script src="./shared.js"></script>
   <script>
     const defaultSettings = {
-      description: "풍무농산 과일 공동구매 주문서입니다.\n제철 과일과 신선 먹거리를 품목별 남은 수량 확인 후 바로 주문할 수 있습니다.",
+      description: "풍무농산 과일 공동구매 주문서입니다.",
       orderDeadline: "오늘 오후 6시 마감",
-      deliverySchedule: "",
       contact: "문의 010-0000-0000",
-      paymentTitle: "",
-      liveLink: "",
-      bandLink: "",
-      notices: [
-        "과일은 당일 입고 수량 기준으로 주문을 받으며, 입금 확인 순으로 최종 확정됩니다.",
-        "품목별 재고 소진 시 조기 마감 또는 품절 처리될 수 있습니다.",
-        "중량과 당도는 농산물 특성상 약간의 차이가 있을 수 있습니다.",
-        "현장결제 기준으로 주문이 접수됩니다."
-      ],
-      apartments: [],
-      paymentGuide: "",
+      notices: ["주문은 입고 수량 기준으로 선착순 접수됩니다.", "현장결제 기준으로 접수됩니다."],
       events: [
-        { id: "event-strawberry", emoji: "🍓", name: "제철 딸기 오픈 특가", desc: "12시 오픈 한정 특가 상품", label: "12:00 오픈 특가", openTime: "12:00", originalPrice: 12000, salePrice: 8900, stock: 20, enabled: true }
+        { id: "event-strawberry", emoji: "🍓", name: "12:00 오픈 딸기 특가", desc: "1인 최대 1개 / 수량한정", label: "오픈 특가", openTime: "12:00", originalPrice: 12000, salePrice: 8900, stock: 20, enabled: true }
       ],
       products: [
-        { id: "strawberry", emoji: "🍓", name: "설향 딸기 1박스", desc: "당도 좋은 특상품 / 750g 내외 / 당일입고", price: 15900, stock: 12 },
-        { id: "shine-muscat", emoji: "🍇", name: "샤인머스캣 1수", desc: "달콤한 프리미엄 과일 / 선물용 가능", price: 18900, stock: 7 },
-        { id: "orange", emoji: "🍊", name: "오렌지 10과", desc: "과즙 가득 / 가족간식 추천", price: 13900, stock: 9 },
-        { id: "apple", emoji: "🍎", name: "사과 1봉", desc: "가정용 알뜰 구성 / 아삭한 식감", price: 12900, stock: 10 },
-        { id: "pear", emoji: "🍐", name: "배 3입", desc: "시원하고 달큰한 제철 배", price: 11900, stock: 8 }
+        { id: "shine", emoji: "🍇", name: "프리미엄 샤인머스캣", desc: "고당도 선별 / 1박스", price: 15900, stock: 12 },
+        { id: "apple", emoji: "🍎", name: "아삭한 세척사과", desc: "가정용 / 5입", price: 9900, stock: 18 },
+        { id: "pear", emoji: "🍐", name: "달큰한 배", desc: "선물용 / 3입", price: 13900, stock: 10 }
       ],
       vegetables: [
-        { id: "tomato", emoji: "🍅", name: "대추방울토마토 1팩", desc: "신선포장 / 간식용 인기 품목", price: 7900, stock: 20 },
-        { id: "cucumber", emoji: "🥒", name: "오이 3입", desc: "아삭한 당일 입고 채소", price: 3900, stock: 15 },
+        { id: "tomato", emoji: "🍅", name: "대추방울토마토", desc: "신선포장 / 1팩", price: 7900, stock: 20 },
+        { id: "cucumber", emoji: "🥒", name: "오이 3입", desc: "아삭한 당일 입고", price: 3900, stock: 15 },
         { id: "lettuce", emoji: "🥬", name: "상추 1봉", desc: "쌈채소 / 신선 포장", price: 2900, stock: 18 }
       ]
     };
 
     const storage = window.OrderFormStorage;
     const currency = new Intl.NumberFormat("ko-KR");
-    const manageMode = new URLSearchParams(window.location.search).has("manage");
     const customerProfileKey = "pungmu-customer-profile";
     const customerRememberKey = "pungmu-customer-remember-profile";
     const customerHistoryKey = "pungmu-customer-order-history";
-    let settings = storage.clone(defaultSettings);
+    let settings = structuredClone(defaultSettings);
+    let activeCategoryFilter = "all";
     let eventRefreshTimer = null;
 
     const productList = document.getElementById("productList");
@@ -3413,116 +234,9 @@
     const historyPanel = document.getElementById("historyPanel");
     const historyList = document.getElementById("historyList");
     const dateStatus = document.getElementById("dateStatus");
-    const heroDescription = document.getElementById("heroDescription");
-    const deadlineView = document.getElementById("deadlineView");
-    const contactView = document.getElementById("contactView");
-    const noticeList = document.getElementById("noticeList");
-    const settingsPanel = document.getElementById("settingsPanel");
-    const settingsToggleWrap = document.getElementById("settingsToggleWrap");
-    const settingsStatus = document.getElementById("settingsStatus");
     const sideMenu = document.getElementById("sideMenu");
     const menuOverlay = document.getElementById("menuOverlay");
     const submitOrderBtnMobile = document.getElementById("submitOrderBtnMobile");
-
-    const storeTitleInput = document.getElementById("storeTitleInput");
-    const deadlineInput = document.getElementById("deadlineInput");
-    const contactInput = document.getElementById("contactInput");
-    const noticeInput = document.getElementById("noticeInput");
-    const productsInput = document.getElementById("productsInput");
-    const fallbackProductEmoji = "🍏";
-    let activeCategoryFilter = "all";
-
-    function createProductId(name, index) {
-      return `${name.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "-").replace(/^-+|-+$/g, "") || "item"}-${index + 1}`;
-    }
-
-    function normalizeSettings(nextSettings) {
-      const vegetableIds = new Set(["tomato", "cucumber", "lettuce", "carrot", "corn", "potato", "sweet-potato", "onion", "garlic", "broccoli", "pepper", "eggplant"]);
-      const sourceProducts = nextSettings.products || defaultSettings.products;
-      const migratedVegetables = sourceProducts.filter((product) => vegetableIds.has(product.id)).map(({ event, ...product }) => product);
-      const legacyEvents = (nextSettings.products || [])
-        .filter((product) => product.event && product.event.enabled)
-        .map((product) => ({
-          id: `event-${product.id}`,
-          emoji: product.emoji || "🍏",
-          name: product.name,
-          desc: product.desc || "",
-          label: product.event.label || "오늘의 특가",
-          openTime: product.event.openTime || "12:00",
-          originalPrice: Number(product.event.originalPrice || product.price || 0),
-          salePrice: Number(product.event.salePrice || product.price || 0),
-          stock: Number(product.event.limit || product.stock || 0),
-          enabled: true
-        }));
-      return {
-        ...defaultSettings,
-        ...nextSettings,
-        events: (nextSettings.events || legacyEvents.length) ? (nextSettings.events || legacyEvents) : defaultSettings.events,
-        products: sourceProducts.filter((product) => !vegetableIds.has(product.id)).map(({ event, ...product }) => product),
-        vegetables: nextSettings.vegetables || (migratedVegetables.length ? migratedVegetables : defaultSettings.vegetables)
-      };
-    }
-
-    function renderNoticeList() {
-      noticeList.innerHTML = settings.notices
-        .map((item) => `<li>${item}</li>`)
-        .join("");
-    }
-
-    function getEnabledEvents() {
-      return (settings.events || []).filter((event) => event.enabled);
-    }
-
-    function getTodayOpenDate(openTime) {
-      const [hour = "0", minute = "0"] = String(openTime || "00:00").split(":");
-      const openDate = new Date();
-      openDate.setHours(Number(hour), Number(minute), 0, 0);
-      return openDate;
-    }
-
-    function isEventOpen(event) {
-      if (!event || !event.enabled) {
-        return false;
-      }
-      return new Date() >= getTodayOpenDate(event.openTime);
-    }
-
-    function getDiscountRate(originalPrice, salePrice) {
-      const original = Number(originalPrice || 0);
-      const sale = Number(salePrice || 0);
-      if (original <= 0 || sale <= 0 || sale >= original) {
-        return 0;
-      }
-      return Math.round(((original - sale) / original) * 100);
-    }
-
-    function getEffectivePrice(item) {
-      if (item.type === "event" && Number(item.salePrice || 0) > 0) {
-        return Number(item.salePrice);
-      }
-      return Number(item.price || 0);
-    }
-
-    function getMaxQuantity(item) {
-      if (item.type === "event" && !isEventOpen(item)) {
-        return 0;
-      }
-      const stock = Math.max(Number(item.stock || 0), 0);
-      return item.type === "event" ? Math.min(stock, 1) : Math.min(stock, 20);
-    }
-
-    function getQuantityOptions(maxQuantity) {
-      const max = Math.max(Math.min(maxQuantity, 20), 0);
-      let options = '<option value="">선택</option>';
-      for (let i = 1; i <= max; i += 1) {
-        options += `<option value="${i}">${i}개</option>`;
-      }
-      return options;
-    }
-
-    function getProductEmoji(product) {
-      return product.emoji || fallbackProductEmoji;
-    }
 
     const productImageMap = {
       "🍓": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&crop=entropy&w=520&q=82",
@@ -3533,11 +247,31 @@
       "🍅": "https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&crop=entropy&w=520&q=82",
       "🥒": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&crop=entropy&w=520&q=82",
       "🥬": "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&crop=entropy&w=520&q=82",
-      "🥕": "https://images.unsplash.com/photo-1447175008436-054170c2e979?auto=format&fit=crop&crop=entropy&w=520&q=82",
-      "🥔": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&crop=entropy&w=520&q=82",
-      "🧅": "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&crop=entropy&w=520&q=82",
       "default": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&crop=entropy&w=520&q=82"
     };
+
+    function readLocalJson(key, fallbackValue) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallbackValue;
+      } catch {
+        return fallbackValue;
+      }
+    }
+
+    function writeLocalJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function normalizeSettings(value) {
+      return {
+        ...structuredClone(defaultSettings),
+        ...(value || {}),
+        events: Array.isArray(value?.events) ? value.events : defaultSettings.events,
+        products: Array.isArray(value?.products) ? value.products : defaultSettings.products,
+        vegetables: Array.isArray(value?.vegetables) ? value.vegetables : defaultSettings.vegetables
+      };
+    }
 
     function getProductImage(product) {
       const name = `${product.name || ""} ${product.desc || ""}`;
@@ -3554,264 +288,214 @@
       return productImageMap.default;
     }
 
+    function getTodayOpenDate(openTime) {
+      const [hour = "0", minute = "0"] = String(openTime || "00:00").split(":");
+      const date = new Date();
+      date.setHours(Number(hour), Number(minute), 0, 0);
+      return date;
+    }
+
+    function isEventOpen(event) {
+      return new Date() >= getTodayOpenDate(event.openTime);
+    }
+
+    function getDiscountRate(originalPrice, salePrice) {
+      const original = Number(originalPrice || 0);
+      const sale = Number(salePrice || 0);
+      if (!original || !sale || sale >= original) return 0;
+      return Math.round(((original - sale) / original) * 100);
+    }
+
+    function getEffectivePrice(item) {
+      return Number(item.salePrice || item.price || 0);
+    }
+
+    function getEnabledEvents() {
+      return (settings.events || []).filter((event) => event.enabled !== false);
+    }
+
     function getAllOrderItems() {
-      const events = getEnabledEvents().map((event) => ({
-        ...event,
-        type: "event",
-        price: Number(event.salePrice || 0)
-      }));
       return [
-        ...events,
-        ...(settings.products || []),
-        ...(settings.vegetables || [])
+        ...getEnabledEvents().map((event) => ({ ...event, type: "event", price: Number(event.salePrice || 0) })),
+        ...(settings.products || []).map((item) => ({ ...item, type: "fruit" })),
+        ...(settings.vegetables || []).map((item) => ({ ...item, type: "vegetable" }))
       ];
     }
 
-    function renderEventList() {
-      const events = getEnabledEvents();
-      eventList.innerHTML = events.map((event) => {
-        const open = isEventOpen(event);
-        const discount = getDiscountRate(event.originalPrice, event.salePrice);
-        const maxQuantity = getMaxQuantity({ ...event, type: "event" });
-        const stockQuantity = Math.max(Number(event.stock || 0), 0);
-        const limitText = "1인 최대 1개";
-        return `
-          <article class="event-card${open ? "" : " event-closed"}" data-category="event">
-            <span class="event-kicker">${open ? event.label || "오늘의 특가" : `${event.openTime} 오픈 예정`} · ${limitText}</span>
-            <div class="event-main">
-              <div class="product-thumb" data-emoji="${event.emoji || "🔥"}">
-                <img src="${getProductImage(event)}" alt="${event.name} 사진" loading="eager" decoding="async" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
-              </div>
-              <div>
-                <h3 class="event-title">${event.name}</h3>
-                <p class="product-meta">${event.desc || "이벤트 한정 상품"}</p>
-                <div class="event-price">
-                  <span class="event-original">${currency.format(event.originalPrice)}원</span>
-                  <span class="event-sale">${currency.format(event.salePrice)}원</span>
-                  ${discount ? `<span class="event-discount">${discount}% 할인</span>` : ""}
-                </div>
-              </div>
-              <div class="stock-badge${maxQuantity <= 0 ? " sold-out" : ""}" id="stock-${event.id}">
-                ${open ? (stockQuantity <= 0 ? "품절" : `남은 수량 ${stockQuantity}개`) : "대기중"}
-              </div>
-            </div>
-            <div class="product-controls">
-              <button type="button" class="detail-button" data-detail-product="${event.id}">상세보기</button>
-              <div>
-                <label for="qty-${event.id}">이벤트 수량 선택</label>
-                <select
-                  class="qty-select"
-                  id="qty-${event.id}"
-                  data-product-id="${event.id}"
-                  ${maxQuantity <= 0 ? "disabled" : ""}
-                >${getQuantityOptions(maxQuantity)}</select>
-                <div class="stepper" aria-label="${event.name} 수량 선택">
-                  <button type="button" data-step-product="${event.id}" data-step="-1" ${maxQuantity <= 0 ? "disabled" : ""}>-</button>
-                  <span class="qty-view" id="qty-view-${event.id}">0개</span>
-                  <button type="button" data-step-product="${event.id}" data-step="1" ${maxQuantity <= 0 ? "disabled" : ""}>+</button>
-                </div>
-                <div class="summary-price" id="price-${event.id}">0원</div>
-              </div>
-              <button type="button" class="reset-mini" data-reset-product="${event.id}">초기화</button>
-            </div>
-          </article>
-        `;
-      }).join("");
+    function getMaxQuantity(item) {
+      const stock = Math.max(Number(item.stock || 0), 0);
+      if (item.type === "event") {
+        return isEventOpen(item) ? Math.min(stock, 1) : 0;
+      }
+      return stock;
     }
 
-    function scheduleNextEventRefresh() {
-      if (eventRefreshTimer) {
-        window.clearTimeout(eventRefreshTimer);
-      }
-      const now = new Date();
-      const nextOpenDate = getEnabledEvents()
-        .filter((event) => !isEventOpen(event))
-        .map((event) => getTodayOpenDate(event.openTime))
-        .filter((openDate) => openDate > now)
-        .sort((a, b) => a - b)[0];
+    function createCard(item, category) {
+      const max = getMaxQuantity(item);
+      const soldOut = max <= 0;
+      const discount = item.type === "event" ? getDiscountRate(item.originalPrice, item.salePrice) : 0;
+      const stockText = soldOut
+        ? (item.type === "event" && !isEventOpen(item) ? `${item.openTime} 오픈 예정` : "품절")
+        : `${Math.max(Number(item.stock || 0), 0)}개 남았어요!`;
+      const priceMarkup = item.type === "event"
+        ? `<div class="mt-1 flex flex-wrap items-center gap-2">
+            <span class="text-sm font-bold text-zinc-400 line-through">${currency.format(item.originalPrice || 0)}원</span>
+            <span class="text-[21px] font-black">${currency.format(item.salePrice || 0)}원</span>
+            ${discount ? `<span class="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-black text-orange-700">${discount}%</span>` : ""}
+          </div>`
+        : `<p class="mt-1 text-[20px] font-medium tracking-[-0.05em]">가격 · ${currency.format(item.price || 0)}원</p>`;
 
-      if (!nextOpenDate) {
-        return;
-      }
-
-      eventRefreshTimer = window.setTimeout(() => {
-        renderProducts();
-      }, Math.max(nextOpenDate.getTime() - now.getTime() + 1000, 1000));
-    }
-
-    function createProductCard(product, category = "fruit") {
-      const maxQuantity = getMaxQuantity(product);
-      const soldOut = maxQuantity <= 0;
-      const emoji = getProductEmoji(product);
-      const effectivePrice = getEffectivePrice(product);
-      const card = document.createElement("article");
-      card.className = `product-card${soldOut ? " sold-out" : ""}`;
-      card.dataset.category = category;
-      card.innerHTML = `
-        <div class="product-top">
-          <div class="product-main">
-            <div class="product-thumb" data-emoji="${emoji}">
-              <img src="${getProductImage(product)}" alt="${product.name} 사진" loading="lazy" decoding="async" onerror="this.closest('.product-thumb').classList.add('image-failed'); this.remove();" />
-            </div>
-            <div class="product-copy">
-              <h3 class="product-title">${product.name}</h3>
-              <p class="product-meta">${product.desc}<br />판매가 ${currency.format(effectivePrice)}원</p>
-            </div>
+      const article = document.createElement("article");
+      article.className = "border-b border-farm-line bg-white px-3 py-6";
+      article.dataset.category = category;
+      article.innerHTML = `
+        ${item.type === "event" ? `<div class="mb-2 ml-[150px] text-[13px] font-black text-farm-green">${item.label || "오늘의 특가"} · 1인 최대 1개</div>` : ""}
+        <div class="grid grid-cols-[132px_1fr] gap-[18px]">
+          <div class="product-image relative h-[132px] w-[132px] overflow-hidden rounded-lg border border-farm-line bg-zinc-100" data-emoji="${item.emoji || "🥬"}">
+            <img src="${getProductImage(item)}" alt="${item.name} 사진" loading="lazy" decoding="async" onerror="this.remove();" />
           </div>
-          <div class="stock-badge${soldOut ? " sold-out" : ""}" id="stock-${product.id}">
-            ${soldOut ? "품절" : `남은 수량 ${maxQuantity}개`}
+          <div class="min-w-0">
+            <h3 class="text-[22px] font-black leading-[1.28] tracking-[-0.065em]">${item.name}</h3>
+            ${priceMarkup}
+            <p class="mt-1 text-[16px] font-bold tracking-[-0.04em] text-zinc-700">${item.desc || "당일 입고 상품"}</p>
+            <div id="stock-${item.id}" class="mt-1 text-[21px] font-black tracking-[-0.05em] ${soldOut ? "text-zinc-400" : "text-farm-ink"}">${stockText}</div>
+            <p class="mt-1 text-[17px] font-black tracking-[-0.05em]">12:00 ~ 20:00 수령 가능</p>
           </div>
         </div>
-        <div class="product-controls">
-          <button type="button" class="detail-button" data-detail-product="${product.id}">상세보기</button>
-          <div>
-            <label for="qty-${product.id}">수량 선택</label>
-            <select
-              class="qty-select"
-              id="qty-${product.id}"
-              data-product-id="${product.id}"
-              ${soldOut ? "disabled" : ""}
-            >${getQuantityOptions(maxQuantity)}</select>
-            <div class="stepper" aria-label="${product.name} 수량 선택">
-              <button type="button" data-step-product="${product.id}" data-step="-1" ${soldOut ? "disabled" : ""}>-</button>
-              <span class="qty-view" id="qty-view-${product.id}">0개</span>
-              <button type="button" data-step-product="${product.id}" data-step="1" ${soldOut ? "disabled" : ""}>+</button>
-            </div>
-            <div class="summary-price" id="price-${product.id}">0원</div>
+        <div class="mt-5 grid grid-cols-2 gap-2">
+          <button type="button" class="h-[66px] rounded-xl border border-zinc-300 bg-white text-[20px] font-medium" data-detail-product="${item.id}">상세보기</button>
+          <div class="grid h-[66px] grid-cols-3 overflow-hidden rounded-xl border border-zinc-300">
+            <button type="button" class="text-[28px] font-bold disabled:text-zinc-300" data-step-product="${item.id}" data-step="-1" ${soldOut ? "disabled" : ""}>-</button>
+            <span id="qty-view-${item.id}" class="grid place-items-center text-[21px] font-medium">0개</span>
+            <button type="button" class="text-[28px] font-bold disabled:text-zinc-300" data-step-product="${item.id}" data-step="1" ${soldOut ? "disabled" : ""}>+</button>
           </div>
-          <button type="button" class="reset-mini" data-reset-product="${product.id}">초기화</button>
+          <input class="qty-input" id="qty-${item.id}" data-product-id="${item.id}" value="" />
         </div>
       `;
-      return card;
+      return article;
     }
 
     function renderProducts() {
+      eventList.innerHTML = "";
       productList.innerHTML = "";
       vegetableList.innerHTML = "";
-      renderEventList();
-      settings.products.forEach((product) => {
-        productList.appendChild(createProductCard(product, "fruit"));
-      });
-      settings.vegetables.forEach((product) => {
-        vegetableList.appendChild(createProductCard(product, "vegetable"));
-      });
-
-      document.querySelectorAll("[data-product-id]").forEach((input) => {
-        input.addEventListener("change", updateStockAndSummary);
-      });
-      document.querySelectorAll("[data-reset-product]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const input = document.getElementById(`qty-${button.dataset.resetProduct}`);
-          if (input) {
-            input.value = "";
-          }
-          updateStockAndSummary();
-        });
-      });
-      document.querySelectorAll("[data-step-product]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const input = document.getElementById(`qty-${button.dataset.stepProduct}`);
-          if (!input || input.disabled) {
-            return;
-          }
-          const product = getAllOrderItems().find((item) => item.id === button.dataset.stepProduct);
-          const maxQuantity = product ? getMaxQuantity(product) : 0;
-          const current = Number(input.value || 0);
-          const next = Math.min(Math.max(current + Number(button.dataset.step || 0), 0), maxQuantity);
-          input.value = next || "";
-          updateStockAndSummary();
-        });
-      });
-      document.querySelectorAll("[data-detail-product]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const product = getAllOrderItems().find((item) => item.id === button.dataset.detailProduct);
-          if (!product) {
-            return;
-          }
-          alert(`${product.name}\n\n${product.desc || "상세 설명이 없습니다."}\n가격: ${currency.format(getEffectivePrice(product))}원`);
-        });
-      });
-
+      getEnabledEvents().forEach((item) => eventList.appendChild(createCard({ ...item, type: "event" }, "event")));
+      (settings.products || []).forEach((item) => productList.appendChild(createCard({ ...item, type: "fruit" }, "fruit")));
+      (settings.vegetables || []).forEach((item) => vegetableList.appendChild(createCard({ ...item, type: "vegetable" }, "vegetable")));
+      bindProductButtons();
       updateStockAndSummary();
       applyCategoryFilter(activeCategoryFilter);
       scheduleNextEventRefresh();
     }
 
+    function bindProductButtons() {
+      document.querySelectorAll("[data-step-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = getAllOrderItems().find((candidate) => candidate.id === button.dataset.stepProduct);
+          const input = document.getElementById(`qty-${button.dataset.stepProduct}`);
+          if (!item || !input) return;
+          const max = getMaxQuantity(item);
+          const next = Math.min(Math.max(Number(input.value || 0) + Number(button.dataset.step || 0), 0), max);
+          input.value = next || "";
+          updateStockAndSummary();
+        });
+      });
+
+      document.querySelectorAll("[data-detail-product]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = getAllOrderItems().find((candidate) => candidate.id === button.dataset.detailProduct);
+          if (!item) return;
+          alert(`${item.name}\n\n${item.desc || "상세 설명이 없습니다."}\n가격 ${currency.format(getEffectivePrice(item))}원`);
+        });
+      });
+    }
+
+    function scheduleNextEventRefresh() {
+      if (eventRefreshTimer) window.clearTimeout(eventRefreshTimer);
+      const now = new Date();
+      const nextOpen = getEnabledEvents()
+        .filter((event) => !isEventOpen(event))
+        .map((event) => getTodayOpenDate(event.openTime))
+        .filter((date) => date > now)
+        .sort((a, b) => a - b)[0];
+      if (!nextOpen) return;
+      eventRefreshTimer = window.setTimeout(renderProducts, Math.max(nextOpen.getTime() - now.getTime() + 1000, 1000));
+    }
+
     function applyCategoryFilter(category) {
       activeCategoryFilter = category;
-      document.querySelectorAll("[data-category-filter]").forEach((button) => {
-        button.classList.toggle("strong", button.dataset.categoryFilter === category);
+      document.querySelectorAll(".category-chip").forEach((button) => {
+        const active = button.dataset.categoryFilter === category;
+        button.classList.toggle("bg-farm-green", active);
+        button.classList.toggle("text-white", active);
+        button.classList.toggle("border", !active);
       });
-
       document.querySelectorAll("[data-category]").forEach((card) => {
-        card.classList.toggle("is-hidden", category !== "all" && card.dataset.category !== category);
+        card.classList.toggle("hidden", category !== "all" && card.dataset.category !== category);
       });
-
-      const showEvents = category === "all" || category === "event";
-      const showFruit = category === "all" || category === "fruit";
-      const showVegetables = category === "all" || category === "vegetable";
-      eventList.classList.toggle("is-hidden", !showEvents);
-      productList.classList.toggle("is-hidden", !showFruit);
-      vegetableList.classList.toggle("is-hidden", !showVegetables);
-      document.querySelector('[data-section-title="fruit"]')?.classList.toggle("is-hidden", !showFruit);
-      document.querySelector('[data-section-title="vegetable"]')?.classList.toggle("is-hidden", !showVegetables);
+      document.getElementById("eventSection").classList.toggle("hidden", !(category === "all" || category === "event"));
+      document.getElementById("fruitSection").classList.toggle("hidden", !(category === "all" || category === "fruit"));
+      document.getElementById("vegetableSection").classList.toggle("hidden", !(category === "all" || category === "vegetable"));
     }
 
     function handleDayTab(day) {
-      document.querySelectorAll("[data-day-tab]").forEach((button) => {
-        button.classList.toggle("active", button.dataset.dayTab === day);
+      document.querySelectorAll(".date-pill").forEach((button) => {
+        const active = button.dataset.dayTab === day;
+        button.classList.toggle("bg-farm-green", active);
+        button.classList.toggle("text-white", active);
+        button.classList.toggle("border-farm-green", active);
       });
-      if (day === "today") {
-        dateStatus.textContent = "오늘 주문 가능한 상품입니다. 수량을 고르고 하단 주문하기를 눌러주세요.";
-        submitStatus.textContent = "";
-        return;
-      }
-      dateStatus.textContent = day === "tomorrow"
-        ? "내일 입고 상품은 관리자 등록 후 열어둘 수 있습니다. 지금은 오늘 상품만 주문됩니다."
-        : "모레 상품은 준비 중입니다. 오늘 입고 상품을 먼저 확인해주세요.";
-      submitStatus.textContent = "";
-    }
-
-    function applySettingsToView() {
-      heroDescription.innerHTML = settings.description.replace(/\n/g, "<br />");
-      deadlineView.textContent = settings.orderDeadline;
-      contactView.textContent = settings.contact;
-      renderNoticeList();
-      renderProducts();
-      fillSettingsForm();
-    }
-
-    function fillSettingsForm() {
-      storeTitleInput.value = settings.description;
-      deadlineInput.value = settings.orderDeadline;
-      contactInput.value = settings.contact;
-      noticeInput.value = settings.notices.join("\n");
-      productsInput.value = settings.products
-        .map((item) => `${item.emoji || fallbackProductEmoji}|${item.name}|${item.desc}|${item.price}|${item.stock}`)
-        .join("\n");
-    }
-
-    function readLocalJson(key, fallbackValue) {
-      try {
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : fallbackValue;
-      } catch (error) {
-        return fallbackValue;
-      }
-    }
-
-    function writeLocalJson(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+      dateStatus.textContent = day === "today"
+        ? "오늘 주문 가능한 상품입니다."
+        : day === "tomorrow"
+          ? "내일 입고 상품은 관리자 등록 후 열어둘 수 있습니다."
+          : "모레 상품은 아직 준비 중입니다.";
     }
 
     function getSelectedItems() {
       return getAllOrderItems()
         .map((item) => {
           const input = document.getElementById(`qty-${item.id}`);
-          const qty = input ? Number(input.value || 0) : 0;
-          return { ...item, unitPrice: getEffectivePrice(item), qty };
+          return { ...item, unitPrice: getEffectivePrice(item), qty: input ? Number(input.value || 0) : 0 };
         })
         .filter((item) => item.qty > 0);
+    }
+
+    function updateStockAndSummary() {
+      const selectedItems = getSelectedItems();
+      getAllOrderItems().forEach((item) => {
+        const input = document.getElementById(`qty-${item.id}`);
+        const qtyView = document.getElementById(`qty-view-${item.id}`);
+        const stockBadge = document.getElementById(`stock-${item.id}`);
+        if (!input || !qtyView || !stockBadge) return;
+        const max = getMaxQuantity(item);
+        const safeQty = Math.min(Math.max(Number(input.value || 0), 0), max);
+        input.value = safeQty || "";
+        qtyView.textContent = `${safeQty}개`;
+        if (max <= 0) {
+          stockBadge.textContent = item.type === "event" && !isEventOpen(item) ? `${item.openTime} 오픈 예정` : "품절";
+          return;
+        }
+        const remaining = Math.max(Number(item.stock || 0), 0) - safeQty;
+        stockBadge.textContent = `${remaining}개 남았어요!`;
+        stockBadge.classList.toggle("text-orange-600", remaining <= 5);
+      });
+
+      if (selectedItems.length === 0) {
+        summaryList.innerHTML = '<div class="flex justify-between gap-3"><span>선택한 상품이 없습니다.</span><strong>0원</strong></div>';
+        grandTotal.textContent = "0원";
+        submitOrderBtnMobile.textContent = "주문하기";
+        return;
+      }
+
+      let total = 0;
+      summaryList.innerHTML = selectedItems.map((item) => {
+        const itemTotal = item.unitPrice * item.qty;
+        total += itemTotal;
+        return `<div class="flex justify-between gap-3"><span>${item.name} × ${item.qty}</span><strong>${currency.format(itemTotal)}원</strong></div>`;
+      }).join("");
+      grandTotal.textContent = `${currency.format(total)}원`;
+      submitOrderBtnMobile.textContent = `주문하기 · ${currency.format(total)}원`;
     }
 
     function saveCustomerProfile() {
@@ -3831,20 +515,16 @@
     function loadCustomerProfile() {
       const remember = readLocalJson(customerRememberKey, false);
       document.getElementById("rememberProfile").checked = Boolean(remember);
-      if (!remember) {
-        return;
-      }
+      if (!remember) return;
       const profile = readLocalJson(customerProfileKey, null);
-      if (!profile) {
-        return;
-      }
-
+      if (!profile) return;
       document.getElementById("customerName").value = profile.customerName || "";
       document.getElementById("phone").value = profile.phone || "";
     }
 
     function getLocalOrderHistory() {
-      return readLocalJson(customerHistoryKey, []);
+      const cutoff = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      return readLocalJson(customerHistoryKey, []).filter((item) => new Date(item.created_at).getTime() >= cutoff);
     }
 
     function saveLocalOrderHistory(order) {
@@ -3855,59 +535,44 @@
         event_key: order.event_key || null,
         created_at: order.created_at || new Date().toISOString(),
         customer_name: order.customer_name,
+        phone: order.phone,
         items: order.items || [],
         total_amount: order.total_amount || 0,
+        paid_at: order.paid_at || null,
         status: order.status || "new"
       });
-      const cutoff = Date.now() - (7 * 24 * 60 * 60 * 1000);
-      const keptHistory = history.filter((item) => new Date(item.created_at).getTime() >= cutoff);
-      writeLocalJson(customerHistoryKey, keptHistory.slice(0, 20));
+      writeLocalJson(customerHistoryKey, history.slice(0, 20));
       renderOrderHistory();
     }
 
     function renderOrderHistory() {
       const history = getLocalOrderHistory();
       if (history.length === 0) {
-        historyList.innerHTML = '<div class="hint">아직 이 휴대폰에 저장된 주문내역이 없습니다.</div>';
+        historyList.innerHTML = '<div class="rounded-2xl bg-zinc-50 p-4 text-sm font-bold text-zinc-500">아직 이 휴대폰에 저장된 주문내역이 없습니다.</div>';
         return;
       }
-
       historyList.innerHTML = history.map((order) => {
-        const dateText = new Date(order.created_at).toLocaleString("ko-KR", {
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit"
-        });
+        const dateText = new Date(order.created_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
         const itemsText = (order.items || []).map((item) => `${item.name} ${item.qty}개`).join(", ");
-        const paidText = order.paid_at
-          ? `<br />결제일 ${new Date(order.paid_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}`
-          : "";
+        const statusText = order.status === "paid" ? "결제완료" : order.status === "canceled" ? "취소됨" : "접수됨";
         const cancelButton = order.status === "paid" || order.status === "canceled"
           ? ""
-          : `<button type="button" class="ghost" data-cancel-order="${order.id}" data-cancel-token="${order.cancel_token || ""}">주문 취소</button>`;
-        const statusText = order.status === "paid" ? "결제완료" : order.status === "canceled" ? "취소됨" : "접수됨";
-
+          : `<button type="button" class="mt-3 rounded-xl bg-zinc-100 px-3 py-2 text-sm font-black" data-cancel-order="${order.id}" data-cancel-token="${order.cancel_token || ""}">주문 취소</button>`;
         return `
-          <div class="history-card">
-            <strong>${dateText} 주문 · ${statusText}</strong>
-            <div class="history-meta">
-              ${itemsText || "상품 정보 없음"}<br />
-              총 ${currency.format(order.total_amount || 0)}원${paidText}
-            </div>
-            <div class="actions" style="padding-bottom:0;margin-top:10px;">${cancelButton}</div>
+          <div class="rounded-3xl border border-zinc-100 bg-zinc-50 p-4">
+            <strong class="block text-base font-black">${dateText} · ${statusText}</strong>
+            <div class="mt-2 text-sm font-bold leading-6 text-zinc-600">${itemsText || "상품 정보 없음"}<br />총 ${currency.format(order.total_amount || 0)}원</div>
+            ${cancelButton}
           </div>
         `;
       }).join("");
-
       document.querySelectorAll("[data-cancel-order]").forEach((button) => {
         button.addEventListener("click", async () => {
-          if (!confirm("이 주문을 취소할까요? 결제완료 주문은 취소할 수 없습니다.")) {
-            return;
-          }
+          if (!confirm("이 주문을 취소할까요? 결제완료 주문은 취소할 수 없습니다.")) return;
           try {
             await storage.cancelOrder(button.dataset.cancelOrder, button.dataset.cancelToken);
-            markLocalOrderCanceled(button.dataset.cancelOrder);
+            const updated = getLocalOrderHistory().map((order) => String(order.id) === String(button.dataset.cancelOrder) ? { ...order, status: "canceled" } : order);
+            writeLocalJson(customerHistoryKey, updated);
             renderOrderHistory();
           } catch (error) {
             alert(`주문 취소 실패: ${error.message}`);
@@ -3916,98 +581,42 @@
       });
     }
 
-    function markLocalOrderCanceled(orderId) {
-      const history = getLocalOrderHistory().map((order) => (
-        String(order.id) === String(orderId)
-          ? { ...order, status: "canceled" }
-          : order
-      ));
-      writeLocalJson(customerHistoryKey, history);
-    }
-
     function toggleOrderHistory() {
-      historyPanel.classList.toggle("open");
+      historyPanel.classList.toggle("hidden");
       renderOrderHistory();
-      if (historyPanel.classList.contains("open")) {
+      if (!historyPanel.classList.contains("hidden")) {
         historyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
 
-    function updateStockAndSummary() {
-      const selectedItems = getSelectedItems();
+    function getBusinessDateKey(date = new Date()) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
 
-      getAllOrderItems().forEach((product) => {
-        const qtyInput = document.getElementById(`qty-${product.id}`);
-        if (!qtyInput) {
-          return;
-        }
+    function normalizeText(value) {
+      return String(value || "").replace(/\s+/g, "").toLowerCase();
+    }
 
-        const maxQuantity = getMaxQuantity(product);
-        const safeQty = Math.min(Math.max(Number(qtyInput.value || 0), 0), maxQuantity);
-        qtyInput.value = safeQty || "";
+    function createEventOrderKey(customerName, phone, eventId) {
+      return [getBusinessDateKey(), normalizeText(customerName), String(phone || "").replace(/\D/g, ""), eventId].join("|");
+    }
 
-        const remainingBase = product.type === "event" ? Math.max(Number(product.stock || 0), 0) : maxQuantity;
-        const remaining = remainingBase - safeQty;
-        const stockBadge = document.getElementById(`stock-${product.id}`);
-        if (maxQuantity <= 0) {
-          stockBadge.textContent = product.type === "event" && !isEventOpen(product) ? "대기중" : "품절";
-          stockBadge.classList.add("sold-out");
-          stockBadge.classList.remove("low");
-        } else {
-          stockBadge.textContent = `남은 수량 ${remaining}개`;
-          stockBadge.classList.toggle("low", remaining <= 5);
-          stockBadge.classList.remove("sold-out");
-        }
-
-        const priceView = document.getElementById(`price-${product.id}`);
-        if (priceView) {
-          priceView.textContent = `${currency.format(getEffectivePrice(product) * safeQty)}원`;
-        }
-        const qtyView = document.getElementById(`qty-view-${product.id}`);
-        if (qtyView) {
-          qtyView.textContent = `${safeQty}개`;
-        }
+    function findDuplicateEventOrder(customerName, phone, eventItems) {
+      if (eventItems.length === 0) return null;
+      const activeHistory = getLocalOrderHistory().filter((order) => order.status !== "canceled");
+      return eventItems.find((eventItem) => {
+        const key = createEventOrderKey(customerName, phone, eventItem.id);
+        return activeHistory.some((order) => order.event_key === key);
       });
-
-      if (selectedItems.length === 0) {
-        summaryList.innerHTML = `
-          <div class="summary-item">
-            <span>선택한 상품이 없습니다.</span>
-            <strong>0원</strong>
-          </div>
-        `;
-        grandTotal.textContent = "0원";
-        submitOrderBtnMobile.textContent = "주문하기";
-        return;
-      }
-
-      let total = 0;
-      summaryList.innerHTML = selectedItems.map((item) => {
-        const itemTotal = item.unitPrice * item.qty;
-        total += itemTotal;
-        return `
-          <div class="summary-item">
-            <span>${item.name} x ${item.qty}</span>
-            <strong>${currency.format(itemTotal)}원</strong>
-          </div>
-        `;
-      }).join("");
-
-      grandTotal.textContent = `${currency.format(total)}원`;
-      submitOrderBtnMobile.textContent = `주문하기 · ${currency.format(total)}원`;
     }
 
     function getOrderDraft() {
       const selectedItems = getSelectedItems();
-      if (!form.reportValidity()) {
-        return null;
-      }
-
+      if (!form.reportValidity()) return null;
       if (selectedItems.length === 0) {
         alert("최소 1개 이상의 상품을 선택해주세요.");
         return null;
       }
-
       const formData = new FormData(form);
       const customerName = String(formData.get("customerName") || "").trim();
       const phone = String(formData.get("phone") || "").trim();
@@ -4017,29 +626,10 @@
         alert(`오늘 이미 주문한 이벤트 상품입니다: ${duplicateEvent.name}`);
         return null;
       }
-      const total = selectedItems.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
-      const itemsText = selectedItems
-        .map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.unitPrice * item.qty)}원)`)
-        .join("\n");
-
-      const result = [
-        "[풍무농산 주문서]",
-        `주문자명: ${formData.get("customerName")}`,
-        `연락처: ${formData.get("phone")}`,
-        "결제 방식: 현장결제",
-        "",
-        "[주문 상품]",
-        itemsText,
-        "",
-        `총 금액: ${currency.format(total)}원`,
-        "",
-        "[주문 안내]",
-        `주문 마감: ${settings.orderDeadline}`,
-        `문의: ${settings.contact}`,
-      ].join("\n");
-
+      const total = selectedItems.reduce((sum, item) => sum + item.unitPrice * item.qty, 0);
+      const itemsText = selectedItems.map((item) => `- ${item.name} ${item.qty}개 (${currency.format(item.unitPrice * item.qty)}원)`).join("\n");
+      const orderText = ["[풍무농산 주문서]", `주문자명: ${customerName}`, `연락처: ${phone}`, "결제 방식: 현장결제", "", "[주문 상품]", itemsText, "", `총 금액: ${currency.format(total)}원`].join("\n");
       return {
-        text: result,
         payload: {
           customer_name: customerName,
           phone,
@@ -4053,64 +643,17 @@
           event_key: eventItems[0] ? createEventOrderKey(customerName, phone, eventItems[0].id) : null,
           cancel_token: crypto.randomUUID(),
           total_amount: total,
-          order_text: result,
+          order_text: orderText,
           status: "new"
         }
       };
     }
 
-    function getBusinessDateKey(date = new Date()) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    function normalizeText(value) {
-      return String(value || "").replace(/\s+/g, "").toLowerCase();
-    }
-
-    function createEventOrderKey(customerName, phone, eventId) {
-      return [
-        getBusinessDateKey(),
-        normalizeText(customerName),
-        String(phone || "").replace(/\D/g, ""),
-        eventId
-      ].join("|");
-    }
-
-    function findDuplicateEventOrder(customerName, phone, eventItems) {
-      if (eventItems.length === 0) {
-        return null;
-      }
-      const activeHistory = getLocalOrderHistory().filter((order) => order.status !== "canceled");
-      return eventItems.find((eventItem) => {
-        const key = createEventOrderKey(customerName, phone, eventItem.id);
-        return activeHistory.some((order) => (
-          order.event_key === key
-          || (
-            normalizeText(order.customer_name) === normalizeText(customerName)
-            && String(order.phone || "").replace(/\D/g, "") === String(phone || "").replace(/\D/g, "")
-            && new Date(order.created_at).toDateString() === new Date().toDateString()
-            && (order.items || []).some((item) => item.id === eventItem.id)
-          )
-        ));
-      });
-    }
-
     async function submitOrder() {
       const draft = getOrderDraft();
-      if (!draft) {
-        return;
-      }
-
-      const ok = confirm("주문을 접수하시겠습니까?");
-      if (!ok) {
-        return;
-      }
-
+      if (!draft) return;
+      if (!confirm("주문을 접수하시겠습니까?")) return;
       submitStatus.textContent = "주문을 저장하는 중입니다...";
-
       try {
         const savedOrder = await storage.createOrder(draft.payload);
         saveCustomerProfile();
@@ -4118,116 +661,32 @@
         resetAfterSubmit();
         submitStatus.textContent = storage.isCloudMode()
           ? "주문이 접수되었습니다. 감사합니다."
-          : "주문이 접수되었습니다. 이 휴대폰의 주문내역에 저장됐습니다.";
+          : "주문이 접수되었습니다. 이 휴대폰 주문내역에 저장됐습니다.";
       } catch (error) {
-        console.error(error);
         submitStatus.textContent = `주문 저장 실패: ${error.message}`;
       }
     }
 
     function resetAfterSubmit() {
       const remember = document.getElementById("rememberProfile").checked;
-      resetQuantities();
+      getAllOrderItems().forEach((item) => {
+        const input = document.getElementById(`qty-${item.id}`);
+        if (input) input.value = "";
+      });
       document.getElementById("agree").checked = false;
       if (!remember) {
         document.getElementById("customerName").value = "";
         document.getElementById("phone").value = "";
       }
-    }
-
-    function resetQuantities() {
-      getAllOrderItems().forEach((product) => {
-        const input = document.getElementById(`qty-${product.id}`);
-        if (input) {
-          input.value = "";
-        }
-      });
       updateStockAndSummary();
-      submitStatus.textContent = "";
-    }
-
-    function parseProducts(text) {
-      const lines = parseLines(text, "상품 목록이 비어 있습니다.");
-      return lines.map((line, index) => {
-        const parts = line.split("|").map((part) => part.trim());
-        const hasEmoji = parts.length >= 5;
-        if (parts.length < 4 || parts.length > 6) {
-          throw new Error(`${index + 1}번째 상품 형식이 올바르지 않습니다.`);
-        }
-
-        const emoji = hasEmoji ? parts[0] : fallbackProductEmoji;
-        const name = hasEmoji ? parts[1] : parts[0];
-        const desc = hasEmoji ? parts[2] : parts[1];
-        const price = Number((hasEmoji ? parts[3] : parts[2]).replace(/,/g, ""));
-        const stock = Number((hasEmoji ? parts[4] : parts[3]).replace(/,/g, ""));
-
-        if (Number.isNaN(price) || Number.isNaN(stock)) {
-          throw new Error(`${index + 1}번째 상품의 가격 또는 재고가 숫자가 아닙니다.`);
-        }
-
-        return {
-          id: createProductId(name, index),
-          emoji,
-          name,
-          desc,
-          price,
-          stock
-        };
-      });
-    }
-
-    function parseLines(text, message) {
-      const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
-      if (lines.length === 0) {
-        throw new Error(message);
-      }
-      return lines;
-    }
-
-    async function saveSettings() {
-      try {
-        settings = {
-          description: storeTitleInput.value.trim() || defaultSettings.description,
-          orderDeadline: deadlineInput.value.trim() || defaultSettings.orderDeadline,
-          deliverySchedule: "",
-          contact: contactInput.value.trim() || defaultSettings.contact,
-          paymentTitle: "",
-          liveLink: "",
-          bandLink: "",
-          notices: parseLines(noticeInput.value, "주문 안내 문구가 비어 있습니다."),
-          apartments: [],
-          paymentGuide: "",
-          events: settings.events || defaultSettings.events,
-          products: parseProducts(productsInput.value),
-          vegetables: settings.vegetables || defaultSettings.vegetables
-        };
-
-        await storage.saveSettings(settings);
-        applySettingsToView();
-        settingsStatus.textContent = storage.isCloudMode()
-          ? "설정을 저장했습니다. 모든 기기 주문서에 반영됩니다."
-          : "설정을 저장했습니다. 현재 브라우저 기준으로 반영됩니다.";
-      } catch (error) {
-        settingsStatus.textContent = error.message;
-      }
-    }
-
-    async function loadDefaults() {
-      settings = normalizeSettings(storage.clone(defaultSettings));
-      await storage.saveSettings(settings);
-      applySettingsToView();
-      settingsStatus.textContent = "기본값으로 되돌렸습니다.";
-      submitStatus.textContent = "";
     }
 
     function toggleMenu(open) {
-      sideMenu.classList.toggle("open", open);
-      menuOverlay.classList.toggle("open", open);
+      sideMenu.classList.toggle("drawer-open", open);
+      menuOverlay.classList.toggle("hidden", !open);
     }
 
-    document.getElementById("submitOrderBtn").addEventListener("click", submitOrder);
     document.getElementById("submitOrderBtnMobile").addEventListener("click", submitOrder);
-    document.getElementById("toggleHistoryBtn").addEventListener("click", toggleOrderHistory);
     document.getElementById("toggleHistoryBtnMobile").addEventListener("click", toggleOrderHistory);
     document.getElementById("headerHistoryBtn").addEventListener("click", toggleOrderHistory);
     document.getElementById("menuHistoryBtn").addEventListener("click", () => {
@@ -4236,31 +695,18 @@
     });
     document.getElementById("menuOpenBtn").addEventListener("click", () => toggleMenu(true));
     menuOverlay.addEventListener("click", () => toggleMenu(false));
-    document.querySelectorAll("[data-category-filter]").forEach((button) => {
+    document.querySelectorAll(".category-chip").forEach((button) => {
       button.addEventListener("click", () => applyCategoryFilter(button.dataset.categoryFilter));
     });
-    document.querySelectorAll("[data-day-tab]").forEach((button) => {
+    document.querySelectorAll(".date-pill").forEach((button) => {
       button.addEventListener("click", () => handleDayTab(button.dataset.dayTab));
-    });
-    document.getElementById("resetBtn").addEventListener("click", resetQuantities);
-    document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
-    document.getElementById("loadDefaultBtn").addEventListener("click", loadDefaults);
-    document.getElementById("toggleSettingsBtn").addEventListener("click", () => {
-      settingsPanel.classList.toggle("open");
-      document.getElementById("toggleSettingsBtn").textContent = settingsPanel.classList.contains("open")
-        ? "설정 닫기"
-        : "설정 열기";
     });
 
     async function init() {
-      if (!manageMode) {
-        settingsToggleWrap.style.display = "none";
-      }
       settings = normalizeSettings(await storage.loadSettings(defaultSettings));
-      applySettingsToView();
+      renderProducts();
       loadCustomerProfile();
       renderOrderHistory();
-      submitStatus.textContent = "";
     }
 
     init();
